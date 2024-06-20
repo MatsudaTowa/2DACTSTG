@@ -14,7 +14,7 @@
 #include "camera.h"
 
 //モデルパス
-const std::string CPlayer::MODEL_NAME = "data\\MODEL\\sphere.x";
+const std::string CPlayer::MODEL_NAME = "data\\MODEL\\face.x";
 
 //通常の移動速度
 const float CPlayer::DEFAULT_MOVE = 0.5f;
@@ -137,7 +137,7 @@ void CPlayer::Update()
 
 	if (pMouse->GetTrigger(0))
 	{
-		CBullet*pBullet = CBullet::Create(pos, D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 7.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 7.0f),
+		CBullet*pBullet = CBullet::Create(D3DXVECTOR3(pos.x,pos.y + 10.0f,pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 7.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 7.0f),
 										D3DXVECTOR3(10.0f,10.0f,0.0f),30);
 	}
 
@@ -176,7 +176,7 @@ CPlayer* CPlayer::Create(D3DXVECTOR3 pos,D3DXVECTOR3 rot)
 void CPlayer::ReSpawn()
 {
 	D3DXVECTOR3 PlayerPos = GetPos();
-	PlayerPos = D3DXVECTOR3(50.0f, 0.5f, 0.0f);
+	PlayerPos = D3DXVECTOR3(-450.0f, 0.5f, 0.0f);
 	SetPos(PlayerPos);
 }
 
@@ -199,9 +199,11 @@ void CPlayer::PlayerMove()
 	CInputKeyboard* pKeyboard = CManager::GetKeyboard();
 	D3DXVECTOR3 vecDirection(0.0f, 0.0f, 0.0f);
 
+	//カメラタイプ取得
 	CCamera::CANERA_TYPE pCameraType = CCamera::GetType();
+
 	switch (pCameraType)
-	{
+	{//サイドビューの時は横にしか動かないように設定
 	case CCamera::CANERA_TYPE::TYPE_SIDEVIEW:
 		if (pKeyboard->GetPress(DIK_A))
 		{
@@ -258,7 +260,7 @@ void CPlayer::PlayerMove()
 
 		m_move.x += sinf(rotMoveY) * DEFAULT_MOVE;
 		m_move.z += cosf(rotMoveY) * DEFAULT_MOVE;
-		//rot.x = rotMoveY + D3DX_PI;
+		rot.y = rotMoveY + D3DX_PI;
 		//rotを代入
 		SetRot(rot);
 		//if (g_Player.rot.y <= -D3DX_PI)
