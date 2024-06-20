@@ -199,6 +199,7 @@ void CObject3D::SetVtx(D3DXVECTOR3 nor, D3DCOLOR col)
 
 }
 
+
 //=============================================
 //頂点の設定(拡縮回転)
 //=============================================
@@ -216,19 +217,18 @@ void CObject3D::SetVtx(D3DXVECTOR3 nor, float fAngle, float fLength, D3DCOLOR co
 	//頂点バッファをロックし頂点情報へのポインタを取得
 	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
 
-
 	//頂点座標の設定
-	pVtx[0].pos = D3DXVECTOR3(-m_size.x
-		, m_size.y
+	pVtx[0].pos = D3DXVECTOR3(-m_size.x + sinf(m_rot.z - (D3DX_PI - fAngle)) * fLength
+		, m_size.y + cosf(m_rot.z - (D3DX_PI - fAngle)) * fLength
 		, m_size.z);
-	pVtx[1].pos = D3DXVECTOR3(m_size.x
-		, m_size.y
+	pVtx[1].pos = D3DXVECTOR3(m_pos.x + sinf(m_rot.z + (D3DX_PI - fAngle)) * fLength
+		, m_size.y + cosf(m_rot.z + (D3DX_PI - fAngle)) * fLength
 		, m_size.z);
-	pVtx[2].pos = D3DXVECTOR3(-m_size.x
-		, -m_size.y
+	pVtx[2].pos = D3DXVECTOR3(m_pos.x + sinf(m_rot.z - fAngle) * fLength
+		, -m_size.y + cosf(m_rot.z - fAngle) * fLength
 		, -m_size.z);
-	pVtx[3].pos = D3DXVECTOR3(m_size.x
-		, -m_size.y
+	pVtx[3].pos = D3DXVECTOR3(m_pos.x + sinf(m_rot.z + fAngle) * fLength
+		, -m_size.y + cosf(m_rot.z + fAngle) * fLength
 		, -m_size.z);
 
 	//rhwの設定

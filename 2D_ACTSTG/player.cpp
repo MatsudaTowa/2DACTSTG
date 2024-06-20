@@ -137,8 +137,16 @@ void CPlayer::Update()
 
 	if (pMouse->GetTrigger(0))
 	{
-		CBullet*pBullet = CBullet::Create(D3DXVECTOR3(pos.x,pos.y + 10.0f,pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 7.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 7.0f),
-										D3DXVECTOR3(10.0f,10.0f,0.0f),30);
+		if (m_bWay == true)
+		{//‰EŒü‚«
+			CBullet* pBullet = CBullet::Create(D3DXVECTOR3(pos.x, pos.y + 10.0f, pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 7.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 7.0f),
+				D3DXVECTOR3(0.0f, 0.0f, 3.14f),D3DXVECTOR3(10.0f,10.0f,0.0f),30);
+		}
+		else if (m_bWay == false)
+		{//‰EŒü‚«
+			CBullet* pBullet = CBullet::Create(D3DXVECTOR3(pos.x, pos.y + 10.0f, pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 7.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 7.0f),
+				D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(10.0f, 10.0f, 0.0f), 30);
+		}
 	}
 
 }
@@ -208,20 +216,24 @@ void CPlayer::PlayerMove()
 		if (pKeyboard->GetPress(DIK_A))
 		{
 			vecDirection.x -= 1.0f;
+			m_bWay = false;
 		}
 		if (pKeyboard->GetPress(DIK_D))
 		{
 			vecDirection.x += 1.0f;
+			m_bWay = true;
 		}
 		break;
 	case CCamera::CANERA_TYPE::TYPE_PARALLEL_SIDEVIEW:
 		if (pKeyboard->GetPress(DIK_A))
 		{
 			vecDirection.x -= 1.0f;
+			m_bWay = false;
 		}
 		if (pKeyboard->GetPress(DIK_D))
 		{
 			vecDirection.x += 1.0f;
+			m_bWay = true;
 		}
 		break;
 	default:
@@ -236,10 +248,12 @@ void CPlayer::PlayerMove()
 		if (pKeyboard->GetPress(DIK_A))
 		{
 			vecDirection.x -= 1.0f;
+			m_bWay = false;
 		}
 		if (pKeyboard->GetPress(DIK_D))
 		{
 			vecDirection.x += 1.0f;
+			m_bWay = true;
 		}
 		break;
 	}

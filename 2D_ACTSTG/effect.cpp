@@ -66,7 +66,7 @@ HRESULT CEffect::Init()
 	//SetAnimFrame(ANIMATION_FRAME);
 
 	//í∏ì_ê›íË
-	SetVtx(D3DXVECTOR3(0.0f,0.0f,-1.0f), m_fAngle, m_fLength, m_col);
+	SetVtx(D3DXVECTOR3(0.0f,0.0f,-1.0f), m_col);
 	return S_OK;
 }
 
@@ -107,7 +107,7 @@ void CEffect::Update()
 	//äpìx
 	m_fAngle = atan2f(size.x, size.y);
 	//í∏ì_ê›íË
-	SetVtx(D3DXVECTOR3(0.0f, 0.0f, -1.0f), m_fLength, m_fAngle, m_col);
+	SetVtx(D3DXVECTOR3(0.0f, 0.0f, -1.0f), m_col);
 }
 
 //=============================================  

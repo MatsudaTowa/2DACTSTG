@@ -47,6 +47,7 @@ private:
 	D3DXVECTOR3 m_oldpos; //過去の位置
 	bool m_bSize; //サイズ変更するかどうか
 	bool m_bLanding; //着地してるかどうか
+	bool m_bWay; //どっち向いてるか(true:右false:左)
 	int m_nJumpCnt; //ジャンプカウント
 
 	static LPDIRECT3DTEXTURE9 m_pTextureTemp;
