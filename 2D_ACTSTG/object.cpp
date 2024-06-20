@@ -27,7 +27,7 @@ CObject::CObject(int nPriority)
 		{
 			m_apObject[m_nPriority][nCnt] = this; //©•ª©g‚ğ‘ã“ü
 			m_nID = nCnt; //ID‘ã“ü
-			m_type = OBJECT_TYPE_PLAYER;
+			m_type = OBJECT_TYPE_NONE;
 			m_nNumAll++; //‘”‘‰Á
 			break;
 		}
