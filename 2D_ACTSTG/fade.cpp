@@ -96,6 +96,7 @@ void CFade::Draw()
 //=============================================
 void CFade::SetFade(CScene::MODE modeNext)
 {
+	Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f));
     m_fademode = modeNext;
     m_fade = FADE_OUT;
 }

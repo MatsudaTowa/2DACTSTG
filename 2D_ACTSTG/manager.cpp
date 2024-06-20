@@ -112,7 +112,6 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	if (m_pFade == nullptr)
 	{
 		m_pFade = new CFade();
-		m_pFade->Create(D3DXVECTOR3(SCREEN_WIDTH*0.5f,SCREEN_HEIGHT*0.5f,0.0f));
 	}
 
 	m_pFade->SetFade(CScene::MODE::MODE_TITLE);

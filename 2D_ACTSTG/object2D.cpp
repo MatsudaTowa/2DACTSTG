@@ -145,6 +145,7 @@ void CObject2D::SetVtx(float rhw, D3DCOLOR col)
 	}
 	VERTEX_2D* pVtx;
 	//頂点バッファをロックし頂点情報へのポインタを取得
+
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	//頂点座標の設定
