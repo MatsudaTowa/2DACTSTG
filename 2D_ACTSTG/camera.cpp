@@ -54,7 +54,7 @@ CCamera::~CCamera()
 HRESULT CCamera::Init()
 {
 
-	m_type = TYPE_BIRDVIEW;
+	m_type = TYPE_SIDEVIEW;
 	
 	m_posV = D3DXVECTOR3(0.0f, 200.0f, -180.0f); //視点
 	m_posR = D3DXVECTOR3(0.0f, 0.0f, 0.0f); //注視
@@ -112,6 +112,9 @@ void CCamera::Update()
 	case TYPE_SIDEVIEW:
 		SideViewCamera();
 		break;
+	case TYPE_PARALLEL_SIDEVIEW:
+		SideViewCamera();
+		break;
 	case TYPE_DEBUG:
 		CameraTurn();
 		CameraMove();
@@ -167,12 +170,27 @@ void CCamera::SetCamera()
 	//プロジェクションマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxProjection);
 
-	//プロジェクションマトリックスを作成
-	D3DXMatrixPerspectiveFovLH(&m_mtxProjection,
-		D3DXToRadian(45.0f),
-		(float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,
-		10.0f,
-		1800.0f);
+	switch (m_type)
+	{
+	case TYPE_PARALLEL_SIDEVIEW:
+		//平行投影
+		D3DXMatrixOrthoLH(&m_mtxProjection,
+		(float)SCREEN_WIDTH,
+		(float)SCREEN_HEIGHT,
+		5.0f,
+		500.0f);
+		break;
+	default:
+		//プロジェクションマトリックスを作成
+		D3DXMatrixPerspectiveFovLH(&m_mtxProjection,
+			D3DXToRadian(45.0f),
+			(float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,
+			10.0f,
+			1800.0f);
+		break;
+	}
+
+
 
 	//プロジェクションマトリックスの設定
 	pDevice->SetTransform(D3DTS_PROJECTION, &m_mtxProjection);
@@ -323,6 +341,14 @@ void CCamera::SideViewCamera()
 {
 	for (int nCnt = 0; nCnt < CObject::MAX_OBJECT; nCnt++)
 	{
+		//キーボード情報取得
+		CInputKeyboard* pKeyboard = CManager::GetKeyboard();
+		if (pKeyboard->GetTrigger(DIK_F4))
+		{
+			m_type = TYPE_PARALLEL_SIDEVIEW;
+
+		}
+
 		//オブジェクト取得
 		CObject* pObj = CObject::Getobject(CPlayer::PLAYER_PRIORITY, nCnt);
 		if (pObj != nullptr)
