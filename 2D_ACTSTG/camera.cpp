@@ -26,13 +26,15 @@ const float CCamera::DEFAULT_LENGTH_Z = 500.0f;
 const float CCamera::BIRDVIEW_LENGTH_Y = 300.0f;
 
 //サイドビュー時のXの距離
-const float CCamera::SIDEVIEW_LENGTH_X = 200.0f;
+const float CCamera::SIDEVIEW_LENGTH_X = 20.0f;
 
 //サイドビュー時のYの距離
 const float CCamera::SIDEVIEW_LENGTH_Y = 50.0f;
 
 //サイドビュー時のZの距離
 const float CCamera::SIDEVIEW_LENGTH_Z = 200.0f;
+
+CCamera::CANERA_TYPE CCamera::m_type = TYPE_SIDEVIEW;
 
 //=============================================
 //コンストラクタ
@@ -53,8 +55,6 @@ CCamera::~CCamera()
 //=============================================
 HRESULT CCamera::Init()
 {
-
-	m_type = TYPE_SIDEVIEW;
 	
 	m_posV = D3DXVECTOR3(0.0f, 200.0f, -180.0f); //視点
 	m_posR = D3DXVECTOR3(0.0f, 0.0f, 0.0f); //注視
@@ -212,6 +212,14 @@ void CCamera::SetCamera()
 
 	//ビューマトリックスの設定
 	pDevice->SetTransform(D3DTS_VIEW, &m_mtxView);
+}
+
+//=============================================
+//カメラタイプ取得
+//=============================================
+CCamera::CANERA_TYPE CCamera::GetType()
+{
+	return m_type;
 }
 
 //=============================================

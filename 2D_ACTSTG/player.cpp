@@ -11,6 +11,7 @@
 #include "block.h"
 #include "effect.h"
 #include "field.h"
+#include "camera.h"
 
 //ƒ‚ƒfƒ‹ƒpƒX
 const std::string CPlayer::MODEL_NAME = "data\\MODEL\\sphere.x";
@@ -198,22 +199,49 @@ void CPlayer::PlayerMove()
 	CInputKeyboard* pKeyboard = CManager::GetKeyboard();
 	D3DXVECTOR3 vecDirection(0.0f, 0.0f, 0.0f);
 
-	if (pKeyboard->GetPress(DIK_W))
+	CCamera::CANERA_TYPE pCameraType = CCamera::GetType();
+	switch (pCameraType)
 	{
-		vecDirection.z += 1.0f;
+	case CCamera::CANERA_TYPE::TYPE_SIDEVIEW:
+		if (pKeyboard->GetPress(DIK_A))
+		{
+			vecDirection.x -= 1.0f;
+		}
+		if (pKeyboard->GetPress(DIK_D))
+		{
+			vecDirection.x += 1.0f;
+		}
+		break;
+	case CCamera::CANERA_TYPE::TYPE_PARALLEL_SIDEVIEW:
+		if (pKeyboard->GetPress(DIK_A))
+		{
+			vecDirection.x -= 1.0f;
+		}
+		if (pKeyboard->GetPress(DIK_D))
+		{
+			vecDirection.x += 1.0f;
+		}
+		break;
+	default:
+		if (pKeyboard->GetPress(DIK_W))
+		{
+			vecDirection.z += 1.0f;
+		}
+		if (pKeyboard->GetPress(DIK_S))
+		{
+			vecDirection.z -= 1.0f;
+		}
+		if (pKeyboard->GetPress(DIK_A))
+		{
+			vecDirection.x -= 1.0f;
+		}
+		if (pKeyboard->GetPress(DIK_D))
+		{
+			vecDirection.x += 1.0f;
+		}
+		break;
 	}
-	if (pKeyboard->GetPress(DIK_S))
-	{
-		vecDirection.z -= 1.0f;
-	}
-	if (pKeyboard->GetPress(DIK_A))
-	{
-		vecDirection.x -= 1.0f;
-	}
-	if (pKeyboard->GetPress(DIK_D))
-	{
-		vecDirection.x += 1.0f;
-	}
+
 
 
 	if (vecDirection.x == 0.0f && vecDirection.z == 0.0f)
