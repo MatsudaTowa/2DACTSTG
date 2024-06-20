@@ -25,10 +25,10 @@ public:
 	}FADE;
 
 	//static const std::string TEXTURE_NAME;	//テクスチャの名前
-	static const int TITLE_SCREEN_PRIORITY = 98;  //描画順
+	static const int FADE_PRIORITY = 98;  //描画順
 	static const float FADE_VALUE;  //アルファ値減衰量
 
-	CFade(int nPriority = TITLE_SCREEN_PRIORITY);
+	CFade(int nPriority = FADE_PRIORITY);
 	~CFade()override;
 	HRESULT Init()override;
 	void Uninit()override;

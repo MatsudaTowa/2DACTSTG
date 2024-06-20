@@ -114,8 +114,8 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		m_pFade = new CFade();
 		m_pFade->Create(D3DXVECTOR3(SCREEN_WIDTH*0.5f,SCREEN_HEIGHT*0.5f,0.0f));
 	}
-	
-	SetMode(CScene::MODE::MODE_TITLE);
+
+	m_pFade->SetFade(CScene::MODE::MODE_TITLE);
 
 	return S_OK;
 }
@@ -166,6 +166,7 @@ void CManager::Update()
 	m_pCamera->Update();
 	m_pKeyboard->Update();
 	m_pMouse->Update();
+
 	//シーンの更新
 	if (m_pFade != nullptr)
 	{
@@ -189,7 +190,7 @@ void CManager::Draw()
 
 	if (m_pFade != nullptr)
 	{
-		//m_pFade->Draw();
+		m_pFade->Draw();
 
 	}
 
@@ -205,22 +206,19 @@ void CManager::Draw()
 //=============================================
 void CManager::SetMode(CScene::MODE mode)
 {
-	m_pFade->SetFade(mode);
-	if (m_pFade->FadeColor() <= 0.0f)
-	{
-		//シーン終了
-		if (m_pScene != nullptr)
-		{
-			m_pScene->Uninit();
-			delete m_pScene;
-			m_pScene = nullptr;
-		}
 
-		//シーン切り替え
-		if (m_pScene == nullptr)
-		{
-			m_pScene = CScene::Create(mode);
-		}
+	//シーン終了
+	if (m_pScene != nullptr)
+	{
+		m_pScene->Uninit();
+		delete m_pScene;
+		m_pScene = nullptr;
+	}
+
+	//シーン切り替え
+	if (m_pScene == nullptr)
+	{
+		m_pScene = CScene::Create(mode);
 	}
 }
 

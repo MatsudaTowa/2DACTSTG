@@ -74,7 +74,7 @@ void CFade::Update()
 			{
 				m_colorFade = 1.0f;
 				m_fade = FADE_IN; //フェードイン状態に
-				//CManager::SetMode(m_fademode);
+				CManager::SetMode(m_fademode);
 			}
 		}
 		//頂点カラーの設定
@@ -121,18 +121,18 @@ float CFade::FadeColor(void)
 //=============================================
 CFade* CFade::Create(D3DXVECTOR3 pos)
 {
-	CFade* pResult_Screen = new CFade;
+	CFade* pFade = new CFade;
 	//CObject *pObject = Getobject();
-	if (pResult_Screen != nullptr)
+	if (pFade != nullptr)
 	{
-		pResult_Screen->SetPos(pos); //pos設定
+		pFade->SetPos(pos); //pos設定
 
-		pResult_Screen->SetType(OBJECT_TYPE_FADE); //タイプ設定
+		pFade->SetType(OBJECT_TYPE_FADE); //タイプ設定
 
 		//pResult_Screen->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME)));
 
-		pResult_Screen->Init();
+		pFade->Init();
 
 	}
-	return pResult_Screen;
+	return pFade;
 }
