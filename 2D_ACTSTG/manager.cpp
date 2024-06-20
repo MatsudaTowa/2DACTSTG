@@ -20,7 +20,7 @@ CRenderer*CManager::m_pRenderer = nullptr;
 //キーボード設定
 CInputKeyboard*CManager::m_pKeyboard = nullptr;
 
-//キーボード設定
+//マウス設定
 CInputMouse* CManager::m_pMouse = nullptr;
 
 //カメラ設定
