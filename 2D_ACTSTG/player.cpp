@@ -22,7 +22,7 @@ const float CPlayer::DEFAULT_MOVE = 0.5f;
 const float CPlayer::DAMPING_COEFFICIENT = 0.3f;
 
 //通常のジャンプ力
-const float CPlayer::DEFAULT_JUMP = 22.0f;
+const float CPlayer::DEFAULT_JUMP = 25.0f;
 
 //ジャンプ回数
 const int CPlayer::MAX_JUMPCNT = 2;
@@ -31,7 +31,7 @@ const int CPlayer::MAX_JUMPCNT = 2;
 const float CPlayer::COLISION_CORRECTION = 15.5f;
 
 //重力値
-const float CPlayer::GRAVITY_MOVE = 0.8f;
+const float CPlayer::GRAVITY_MOVE = 1.5f;
 //重力最大値
 const float CPlayer::GRAVITY_MAX = 32.0f;
 
@@ -140,12 +140,12 @@ void CPlayer::Update()
 		if (m_bWay == true)
 		{//右向き
 			CBullet* pBullet = CBullet::Create(D3DXVECTOR3(pos.x, pos.y + 10.0f, pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 7.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 7.0f),
-				D3DXVECTOR3(0.0f, 0.0f, 3.14f),D3DXVECTOR3(10.0f,10.0f,0.0f),30);
+				D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 2.0f),D3DXVECTOR3(50.0f,50.0f,0.0f),30);
 		}
 		else if (m_bWay == false)
 		{//右向き
 			CBullet* pBullet = CBullet::Create(D3DXVECTOR3(pos.x, pos.y + 10.0f, pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 7.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 7.0f),
-				D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(10.0f, 10.0f, 0.0f), 30);
+				D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 4.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), 30);
 		}
 	}
 
@@ -218,7 +218,7 @@ void CPlayer::PlayerMove()
 			vecDirection.x -= 1.0f;
 			m_bWay = false;
 		}
-		if (pKeyboard->GetPress(DIK_D))
+		else if (pKeyboard->GetPress(DIK_D))
 		{
 			vecDirection.x += 1.0f;
 			m_bWay = true;
@@ -230,7 +230,7 @@ void CPlayer::PlayerMove()
 			vecDirection.x -= 1.0f;
 			m_bWay = false;
 		}
-		if (pKeyboard->GetPress(DIK_D))
+		else if (pKeyboard->GetPress(DIK_D))
 		{
 			vecDirection.x += 1.0f;
 			m_bWay = true;
@@ -241,7 +241,7 @@ void CPlayer::PlayerMove()
 		{
 			vecDirection.z += 1.0f;
 		}
-		if (pKeyboard->GetPress(DIK_S))
+		else if (pKeyboard->GetPress(DIK_S))
 		{
 			vecDirection.z -= 1.0f;
 		}
