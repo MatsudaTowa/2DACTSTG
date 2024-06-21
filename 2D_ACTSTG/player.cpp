@@ -17,7 +17,7 @@
 const std::string CPlayer::MODEL_NAME = "data\\MODEL\\face.x";
 
 //通常の移動速度
-const float CPlayer::DEFAULT_MOVE = 0.5f;
+const float CPlayer::DEFAULT_MOVE = 1.0f;
 //通常の移動速度
 const float CPlayer::DAMPING_COEFFICIENT = 0.3f;
 
@@ -26,14 +26,6 @@ const float CPlayer::DEFAULT_JUMP = 25.0f;
 
 //ジャンプ回数
 const int CPlayer::MAX_JUMPCNT = 2;
-
-//当たり判定補正値
-const float CPlayer::COLISION_CORRECTION = 15.5f;
-
-//重力値
-const float CPlayer::GRAVITY_MOVE = 1.5f;
-//重力最大値
-const float CPlayer::GRAVITY_MAX = 32.0f;
 
 //プレイヤーをリスポーンされる座標
 const float CPlayer::DEADZONE_Y = -100.0f;
@@ -49,9 +41,9 @@ DWORD CPlayer::m_dwNumMat = 0;
 //=============================================
 //コンストラクタ
 //=============================================
-CPlayer::CPlayer(int nPriority):CObjectX(nPriority),m_nJumpCnt(0)
+CPlayer::CPlayer(int nPriority):CCharacter(nPriority),m_nJumpCnt(0)
 {//イニシャライザーでジャンプカウント初期化
-	m_bLanding = false; //着地
+	
 }
 
 //=============================================
@@ -80,7 +72,10 @@ HRESULT CPlayer::Init()
 	m_bSize = false;
 
 	//移動量初期化
-	m_move = D3DXVECTOR3(0.0f,0.0f,0.0f);
+	D3DXVECTOR3 move = D3DXVECTOR3(0.0f,0.0f,0.0f);
+
+	//ムーブ値代入
+	SetMove(move);
 
 	return S_OK;
 }
@@ -106,16 +101,28 @@ void CPlayer::Update()
 
 	PlayerMove();
 
+	//位置取得
 	D3DXVECTOR3 pos = GetPos();
 
-	//移動量を更新(減速）
-	m_move *= 1.0f - DAMPING_COEFFICIENT;
+	//過去の位置
+	D3DXVECTOR3 oldpos = GetOldPos();
 
-	m_oldpos = pos;
+	//移動量取得
+	D3DXVECTOR3 move = GetMove();
+
+	//移動量を更新(減速）
+	move *= 1.0f - DAMPING_COEFFICIENT;
+
+	SetMove(move);
+
+	oldpos = pos;
+
+	//過去の位置代入
+	SetOldPos(oldpos);
 
 	CEffect* pEffect = CEffect::Create(D3DXVECTOR3(pos.x,pos.y + 8.0f,pos.z), D3DXVECTOR3(10.0f, 10.0f ,0.0f), D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.5f), 30);
 
-	pos += m_move;
+	pos += move;
 
 	//座標を更新
 	SetPos(pos);
@@ -123,7 +130,13 @@ void CPlayer::Update()
 	D3DXVECTOR3 minpos = GetMinPos();
 	D3DXVECTOR3 maxpos = GetMaxPos();
 	
-	HitBlock(m_oldpos);
+	//ブロックとの接触処理
+	HitBlock();
+
+	if (GetLaunding())
+	{
+		m_nJumpCnt = 0;
+	}
 
 	if (pos.y < DEADZONE_Y)
 	{//リスポーン処理
@@ -133,16 +146,20 @@ void CPlayer::Update()
 	//Turn(); //回転処理
 	//SizeChange(); //拡縮
 
+	//マウスの情報取得
 	CInputMouse* pMouse = CManager::GetMouse();
+
+	//どっち向いてるか取得
+	bool bWay = GetWay();
 
 	if (pMouse->GetTrigger(0))
 	{
-		if (m_bWay == true)
+		if (bWay == true)
 		{//右向き
 			CBullet* pBullet = CBullet::Create(D3DXVECTOR3(pos.x, pos.y + 10.0f, pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 7.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 7.0f),
 				D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 2.0f),D3DXVECTOR3(50.0f,50.0f,0.0f),30);
 		}
-		else if (m_bWay == false)
+		else if (bWay == false)
 		{//右向き
 			CBullet* pBullet = CBullet::Create(D3DXVECTOR3(pos.x, pos.y + 10.0f, pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 7.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 7.0f),
 				D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 4.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), 30);
@@ -189,17 +206,6 @@ void CPlayer::ReSpawn()
 }
 
 //=============================================
-//重力処理
-//=============================================
-void CPlayer::Gravity()
-{
-	if (m_move.y < GRAVITY_MAX)
-	{
-		m_move.y -= GRAVITY_MOVE;
-	}
-}
-
-//=============================================
 //移動処理
 //=============================================
 void CPlayer::PlayerMove()
@@ -210,30 +216,33 @@ void CPlayer::PlayerMove()
 	//カメラタイプ取得
 	CCamera::CANERA_TYPE pCameraType = CCamera::GetType();
 
+	//どっち向いてるか取得
+	bool bWay = GetWay();
+
 	switch (pCameraType)
 	{//サイドビューの時は横にしか動かないように設定
 	case CCamera::CANERA_TYPE::TYPE_SIDEVIEW:
 		if (pKeyboard->GetPress(DIK_A))
 		{
 			vecDirection.x -= 1.0f;
-			m_bWay = false;
+			bWay = false;
 		}
 		else if (pKeyboard->GetPress(DIK_D))
 		{
 			vecDirection.x += 1.0f;
-			m_bWay = true;
+			bWay = true;
 		}
 		break;
 	case CCamera::CANERA_TYPE::TYPE_PARALLEL_SIDEVIEW:
 		if (pKeyboard->GetPress(DIK_A))
 		{
 			vecDirection.x -= 1.0f;
-			m_bWay = false;
+			bWay = false;
 		}
 		else if (pKeyboard->GetPress(DIK_D))
 		{
 			vecDirection.x += 1.0f;
-			m_bWay = true;
+			bWay = true;
 		}
 		break;
 	default:
@@ -241,29 +250,36 @@ void CPlayer::PlayerMove()
 		{
 			vecDirection.z += 1.0f;
 		}
-		else if (pKeyboard->GetPress(DIK_S))
+		if (pKeyboard->GetPress(DIK_S))
 		{
 			vecDirection.z -= 1.0f;
 		}
 		if (pKeyboard->GetPress(DIK_A))
 		{
 			vecDirection.x -= 1.0f;
-			m_bWay = false;
+			bWay = false;
 		}
-		if (pKeyboard->GetPress(DIK_D))
+		else if (pKeyboard->GetPress(DIK_D))
 		{
 			vecDirection.x += 1.0f;
-			m_bWay = true;
+			bWay = true;
 		}
 		break;
 	}
 
+	//どっち向いてるか代入
+	SetWay(bWay);
 
+	//移動量取得
+	D3DXVECTOR3 move = GetMove();
+
+	//着地してるか取得
+	bool bLanding = GetLaunding();
 
 	if (vecDirection.x == 0.0f && vecDirection.z == 0.0f)
 	{ // 動いてない。
-		m_move.x = 0.0f;
-		m_move.z = 0.0f;
+		move.x = 0.0f;
+		move.z = 0.0f;
 	}
 	else
 	{
@@ -272,8 +288,8 @@ void CPlayer::PlayerMove()
 		//オブジェクト2Dからrotを取得
 		D3DXVECTOR3 rot = GetRot();
 
-		m_move.x += sinf(rotMoveY) * DEFAULT_MOVE;
-		m_move.z += cosf(rotMoveY) * DEFAULT_MOVE;
+		move.x += sinf(rotMoveY) * DEFAULT_MOVE;
+		move.z += cosf(rotMoveY) * DEFAULT_MOVE;
 		rot.y = rotMoveY + D3DX_PI;
 		//rotを代入
 		SetRot(rot);
@@ -286,11 +302,17 @@ void CPlayer::PlayerMove()
 	{//ジャンプ数以下だったら
 		if (pKeyboard->GetTrigger(DIK_SPACE))
 		{
-			m_move.y = DEFAULT_JUMP;
-			m_bLanding = false; //空中
+			move.y = DEFAULT_JUMP;
+			bLanding = false; //空中
 			m_nJumpCnt++; //ジャンプ数加算
 		}
 	}
+
+	//移動量代入
+	SetMove(move);
+
+	//着地してるか代入
+	SetLanding(bLanding);
 
 }
 
@@ -322,133 +344,3 @@ void CPlayer::SizeChange()
 
 }
 
-//=============================================
-//当たり判定
-//=============================================
-void CPlayer::HitBlock(D3DXVECTOR3 oldpos)
-{
-	D3DXVECTOR3 PlayerPos = GetPos();
-
-	//サイズ取得
-	D3DXVECTOR3 PlayerMin = GetMinPos();
-	D3DXVECTOR3 PlayerMax = GetMaxPos();
-
-	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
-	{
-		//オブジェクト取得
-		CObject* pObj = CObject::Getobject(CBlock::BLOCK_PRIORITY, nCnt);
-		if (pObj != nullptr)
-		{//ヌルポインタじゃなければ
-			//タイプ取得
-			CObject::OBJECT_TYPE type = pObj->GetType();
-
-			//ブロックとの当たり判定
-			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_BLOCK)
-			{
-				CBlock* pBlock = (CBlock*)pObj;
-				if (oldpos.x + PlayerMax.x <= pBlock->GetPos().x + pBlock->GetMinPos().x 
-					&&PlayerPos.x + PlayerMax.x > pBlock->GetPos().x + pBlock->GetMinPos().x)
-				{
-					if (oldpos.z + PlayerMin.z < pBlock->GetPos().z + pBlock->GetMaxPos().z
-						&& oldpos.z + PlayerMax.z > pBlock->GetPos().z + pBlock->GetMinPos().z
-						&& oldpos.y + PlayerMin.y < pBlock->GetPos().y + pBlock->GetMaxPos().y
-						&& oldpos.y + PlayerMax.y > pBlock->GetPos().y + pBlock->GetMinPos().y)
-					{//当たり判定(X)
-						PlayerPos.x = oldpos.x;
-						m_move.x = 0.0f;
-					}
-				}
-
-				if (oldpos.x + PlayerMin.x >= pBlock->GetPos().x + pBlock->GetMaxPos().x
-					&& PlayerPos.x + PlayerMin.x < pBlock->GetPos().x + pBlock->GetMaxPos().x)
-				{
-					 if (oldpos.z + PlayerMin.z < pBlock->GetPos().z + pBlock->GetMaxPos().z 
-					&& oldpos.z + PlayerMax.z > pBlock->GetPos().z + pBlock->GetMinPos().z 
-					&& oldpos.y + PlayerMin.y < pBlock->GetPos().y + pBlock->GetMaxPos().y 
-					&& oldpos.y + PlayerMax.y > pBlock->GetPos().y + pBlock->GetMinPos().y )
-					{//当たり判定(X)
-						PlayerPos.x = oldpos.x;
-						m_move.x = 0.0f;
-					}
-				}
-
-				if (oldpos.z + PlayerMax.z <= pBlock->GetPos().z + pBlock->GetMinPos().z
-					&& PlayerPos.z + PlayerMax.z > pBlock->GetPos().z + pBlock->GetMinPos().z)
-				{
-					if (oldpos.x + PlayerMin.x < pBlock->GetPos().x + pBlock->GetMaxPos().x
-						&& oldpos.x + PlayerMax.x > pBlock->GetPos().x + pBlock->GetMinPos().x
-						&& oldpos.y + PlayerMin.y < pBlock->GetPos().y + pBlock->GetMaxPos().y
-						&& oldpos.y + PlayerMax.y > pBlock->GetPos().y + pBlock->GetMinPos().y
-						)
-					{//当たり判定(Z)
-						PlayerPos.z = oldpos.z;
-						m_move.z = 0.0f;
-					}
-				}
-
-				if (oldpos.z + PlayerMin.z >= pBlock->GetPos().z + pBlock->GetMaxPos().z
-					&& PlayerPos.z + PlayerMin.z < pBlock->GetPos().z + pBlock->GetMaxPos().z)
-				{
-					if ( oldpos.x + PlayerMin.x < pBlock->GetPos().x + pBlock->GetMaxPos().x
-						&& oldpos.x + PlayerMax.x > pBlock->GetPos().x + pBlock->GetMinPos().x
-						&& oldpos.y + PlayerMin.y < pBlock->GetPos().y + pBlock->GetMaxPos().y
-						&& oldpos.y + PlayerMax.y > pBlock->GetPos().y + pBlock->GetMinPos().y
-						)
-					{//当たり判定(Z)
-						PlayerPos.z = oldpos.z;
-						m_move.z = 0.0f;
-					}
-				}
-				if (oldpos.y + PlayerMin.y >= pBlock->GetPos().y + pBlock->GetMaxPos().y
-					&& PlayerPos.y + PlayerMin.y < pBlock->GetPos().y + pBlock->GetMaxPos().y)
-				{//当たり判定(Y)上
-					if (oldpos.x + PlayerMin.x < pBlock->GetPos().x + pBlock->GetMaxPos().x
-						&& oldpos.x + PlayerMax.x > pBlock->GetPos().x + pBlock->GetMinPos().x
-						&& oldpos.z + PlayerMin.z < pBlock->GetPos().z + pBlock->GetMaxPos().z
-						&& oldpos.z + PlayerMax.z > pBlock->GetPos().z + pBlock->GetMinPos().z)
-					{
-						PlayerPos.y = oldpos.y;
-						m_bLanding = true; //着地
-						m_move.y = 0.0f;
-						m_nJumpCnt = 0; //ジャンプ数リセット
-					}
-				}
-				if (oldpos.y + PlayerMax.y <= pBlock->GetPos().y + pBlock->GetMinPos().y
-					&& PlayerPos.y + PlayerMax.y > pBlock->GetPos().y + pBlock->GetMinPos().y)
-				{//当たり判定(Y)下
-					if (oldpos.x + PlayerMin.x < pBlock->GetPos().x + pBlock->GetMaxPos().x
-						&& oldpos.x + PlayerMax.x > pBlock->GetPos().x + pBlock->GetMinPos().x
-						&& oldpos.z + PlayerMin.z < pBlock->GetPos().z + pBlock->GetMaxPos().z
-						&& oldpos.z + PlayerMax.z > pBlock->GetPos().z + pBlock->GetMinPos().z)
-					{
-						PlayerPos.y = oldpos.y;
-					}
-				}
-			}
-
-			//床との当たり判定
-			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_FIELD)
-			{
-				CField* pField = (CField*)pObj;
-				if (oldpos.y + PlayerMin.y >= pField->GetPos().y
-					&& PlayerPos.y + PlayerMin.y <= pField->GetPos().y)
-				{
-					if (oldpos.x + PlayerMin.x < pField->GetPos().x + pField->GetSize().x
-						&& oldpos.x + PlayerMax.x > pField->GetPos().x - pField->GetSize().x
-						&& oldpos.z + PlayerMin.z < pField->GetPos().z + pField->GetSize().z
-						&& oldpos.z + PlayerMax.z > pField->GetPos().z - pField->GetSize().z)
-					{//当たり判定(Y)
-						PlayerPos.y = oldpos.y;
-						m_move.y = 0.0f;
-						m_bLanding = true; //着地
-						m_nJumpCnt = 0; //ジャンプ数リセット
-					}
-				}
-
-
-				
-			}
-		}
-	}
-	SetPos(PlayerPos);
-}

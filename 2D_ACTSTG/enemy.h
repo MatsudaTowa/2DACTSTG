@@ -8,9 +8,9 @@
 //
 //#define _ENEMY_H_
 //#include "main.h"
-//#include "object2D.h"
+//#include "objectX.h"
 ////レンダラークラス
-//class CEnemy : public CMove_Texture
+//class CEnemy : public CObjectX
 //{
 //public:
 //	static const int EFFECT_PRIORITY = 4; //描画順
