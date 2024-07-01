@@ -250,8 +250,6 @@ void CCharacter::HitPlayer()
 					}
 				}
 
-
-
 				if (m_oldpos.y + CharacterMin.y >= pPlayer->GetPos().y + pPlayer->GetMaxPos().y
 					&& CharacterPos.y + CharacterMin.y < pPlayer->GetPos().y + pPlayer->GetMaxPos().y)
 				{//“–‚½‚è”»’è(Y)ã

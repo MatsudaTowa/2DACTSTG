@@ -53,6 +53,7 @@ HRESULT CBullet::Init()
 //=============================================
 void CBullet::Uninit()
 {
+	//親クラスの終了
 	CObject3D::Uninit();
 }
 
@@ -61,11 +62,8 @@ void CBullet::Uninit()
 //=============================================
 void CBullet::Update()
 {
-
-
-
 	if (m_nLife > 0)
-	{
+	{//ライフがあれば処理実行
 		m_nLife--;
 		D3DXVECTOR3 pos = GetPos();
 		//CEffect* pEffect = CEffect::Create(D3DXVECTOR3(pos.x, pos.y + 8.0f, pos.z), D3DXVECTOR3(10.0f, 10.0f, 0.0f), D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.5f), 30);
@@ -90,6 +88,7 @@ void CBullet::Update()
 //=============================================
 void CBullet::Draw()
 {
+	//親クラスの描画
 	CObject3D::Draw();
 }
 
