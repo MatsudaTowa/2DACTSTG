@@ -75,6 +75,7 @@ void CBullet::Update()
 		//頂点座標
 		SetVtx(D3DXVECTOR3(0.0f, 0.0f, -1.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
+		//当たったかチェック
 		HitBullet();
 	}
 	else
