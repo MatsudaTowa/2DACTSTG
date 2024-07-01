@@ -127,6 +127,7 @@ void CEffect::Draw()
 	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 
+	//
 	CBillboard::Draw();
 
 	//zの比較方法変更
@@ -145,19 +146,27 @@ void CEffect::Draw()
 //=============================================
 CEffect* CEffect::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXCOLOR col, int nLife)
 {
+	CEffect* pEffect = new CEffect;
+
+	// nullならnullを返す
+	if (pEffect == nullptr) { return nullptr; }
+
+	//テクスチャ取得
 	CTexture* pTexture = CManager::GetTexture();
 
-	CEffect* pEffect = new CEffect;
-	if (pEffect != nullptr)
-	{
-		pEffect->SetPos(pos); //pos設定
-		pEffect->SetSize(size); //サイズ設定
-		pEffect->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME)));
-		pEffect->m_col = col;
-		pEffect->m_nLife = nLife;
-		pEffect->SetType(OBJECT_TYPE_EFFECT);
-		pEffect->Init();
-	}
+	pEffect->SetPos(pos); //pos設定
+
+	pEffect->SetSize(size); //サイズ設定
+
+	pEffect->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME))); //テクスチャの設定
+
+	pEffect->m_col = col; //カラーの設定
+
+	pEffect->m_nLife = nLife; //引数の寿命を代入
+
+	pEffect->SetType(OBJECT_TYPE_EFFECT); //オブジェクトのタイプ設定
+
+	pEffect->Init(); //エフェクトの初期化処理
 
 	return pEffect;
 }

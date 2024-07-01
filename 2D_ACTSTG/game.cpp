@@ -50,6 +50,8 @@ HRESULT CGame::Init()
 	CField* pField = CField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(500.0f, 0.0f, 500.0f));
 
 	CPlayer* pPlayer = CPlayer::Create(D3DXVECTOR3(-450.0f, 0.5f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+	CEnemy* pEnemy = CEnemy::Create(D3DXVECTOR3(450.0f, 10.5f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	return S_OK;
 }
 

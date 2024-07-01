@@ -23,8 +23,6 @@ public:
 	void Update()override;
 	void Draw()override;
 
-	static CObjectX* Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot); //オブジェクト作成
-
 	void BindTexture(LPDIRECT3DTEXTURE9 pTex);
 
 	void BindXFile(LPD3DXBUFFER pBuffMat, DWORD dwNumMat, LPD3DXMESH pMesh);

@@ -77,7 +77,7 @@ void CBullet::Update()
 	}
 	else
 	{
-		Release();
+		Uninit();
 		//CExplosion*pExplosion = CExplosion::Create(pos,D3DXVECTOR2(20.0f,20.0f));
 	}
 }
@@ -95,11 +95,12 @@ void CBullet::Draw()
 //=============================================
 CBullet* CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, D3DXVECTOR3 size,int nLife)
 {
-	CTexture* pTexture = CManager::GetTexture();
 	CBullet* pBullet = new CBullet;
 
 	if (pBullet != nullptr)
 	{
+		CTexture* pTexture = CManager::GetTexture();
+
 		pBullet->SetPos(pos); //posÝ’è
 		pBullet->SetSize(size); //ƒTƒCƒYÝ’è
 		pBullet->SetRot(rot);

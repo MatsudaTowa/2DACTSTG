@@ -71,11 +71,12 @@ void CBlock::Draw()
 //=============================================
 CBlock* CBlock::Create(BLOCKTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nLife, bool bBreak)
 {
-	CModel* pModel = CManager::GetModel();
 
 	CBlock* pBlock = new CBlock;
 	if (pBlock != nullptr)
 	{
+		CModel* pModel = CManager::GetModel();
+
 		pBlock->m_type = type;
 		pBlock->SetPos(pos); //posÝ’è
 		pBlock->SetRot(rot); //posÝ’è

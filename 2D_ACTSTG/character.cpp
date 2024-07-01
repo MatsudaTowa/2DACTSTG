@@ -192,9 +192,6 @@ void CCharacter::HitBlock()
 						//m_nJumpCnt = 0; //ジャンプ数リセット
 					}
 				}
-
-
-
 			}
 		}
 	}

@@ -61,7 +61,6 @@ void CObject3D::Uninit()
 {
 	if (m_pTexture != nullptr)
 	{
-		//m_pTexture->Release();
 		m_pTexture = nullptr;
 	}
 
@@ -123,21 +122,6 @@ void CObject3D::Draw()
 }
 
 //=============================================
-//生成
-//=============================================
-CObject3D* CObject3D::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size)
-{
-	CObject3D* pObject3D = new CObject3D;
-	if (pObject3D != nullptr)
-	{
-		pObject3D->m_pos = pos;
-		pObject3D->m_size = size;
-		pObject3D->Init();
-	}
-	return pObject3D;
-}
-
-//=============================================
 //テクスチャ設定
 //=============================================
 void CObject3D::BindTexture(LPDIRECT3DTEXTURE9 pTex)
@@ -156,7 +140,6 @@ void CObject3D::SetVtx(D3DXVECTOR3 nor, D3DCOLOR col)
 	if (m_pVtxBuff == nullptr)
 	{
 		pDevice->CreateVertexBuffer(sizeof(VERTEX_3D) * 4, D3DUSAGE_WRITEONLY, FVF_VERTEX_3D, D3DPOOL_MANAGED, &m_pVtxBuff, NULL);
-
 	}
 	VERTEX_3D* pVtx;
 	//頂点バッファをロックし頂点情報へのポインタを取得

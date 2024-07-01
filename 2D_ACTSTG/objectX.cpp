@@ -217,21 +217,6 @@ void CObjectX::Draw()
 }
 
 //=============================================
-//生成
-//=============================================
-CObjectX* CObjectX::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
-{
-	CObjectX* pObjectX = new CObjectX;
-	if (pObjectX != nullptr)
-	{
-		pObjectX->m_pos = pos;
-		pObjectX->m_rot = rot;
-		pObjectX->Init();
-	}
-	return pObjectX;
-}
-
-//=============================================
 //テクスチャ設定
 //=============================================
 void CObjectX::BindTexture(LPDIRECT3DTEXTURE9 pTex)

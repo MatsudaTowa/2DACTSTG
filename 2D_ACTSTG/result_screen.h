@@ -14,7 +14,6 @@
 class CResult_Screen : public CObject2D
 {
 public:
-	static const std::string TEXTURE_NAME;	//テクスチャの名前
 	static const int RESULT_SCREEN_PRIORITY = 90;  //描画順
 	CResult_Screen(int nPriority = RESULT_SCREEN_PRIORITY);
 	~CResult_Screen()override;
@@ -24,6 +23,7 @@ public:
 	void Draw()override;
 	static CResult_Screen* Create(D3DXVECTOR3 pos);
 private:
+	static const std::string TEXTURE_NAME;	//テクスチャの名前
 	static LPDIRECT3DTEXTURE9 m_pTexture;
 };
 #endif

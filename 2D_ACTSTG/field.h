@@ -14,7 +14,6 @@
 class CField : public CObject3D
 {
 public:
-	static const std::string TEXTURE_NAME;	//テクスチャの名前
 
 	static const int FIELD_PRIORITY = 3; //描画順
 
@@ -26,6 +25,8 @@ public:
 	void Draw()override;
 	static CField* Create(D3DXVECTOR3 pos,D3DXVECTOR3 size);
 private:
+	static const std::string TEXTURE_NAME;	//テクスチャの名前
+
 	static LPDIRECT3DTEXTURE9 m_pTextureTemp;
 };
 #endif

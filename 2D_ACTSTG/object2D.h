@@ -21,7 +21,6 @@ public:
 	void Update()override;
 	void Draw()override;
 
-	static CObject2D*Create(D3DXVECTOR3 pos,D3DXVECTOR2 size); //オブジェクト作成
 	void BindTexture(LPDIRECT3DTEXTURE9 pTex);
 
 	//posの代入

@@ -29,8 +29,9 @@ CLight::~CLight()
 //=============================================
 HRESULT CLight::Init()
 {
-	CRenderer* pRender = CManager::GetRenderer();
-	LPDIRECT3DDEVICE9 pDevice = pRender->GetDevice();
+	//CRenderer* pRender = CManager::GetRenderer();
+	//LPDIRECT3DDEVICE9 pDevice = pRender->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
 	D3DXVECTOR3 vecDir; //İ’è•ûŒüƒxƒNƒgƒ‹
 

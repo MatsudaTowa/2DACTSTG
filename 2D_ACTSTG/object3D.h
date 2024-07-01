@@ -10,7 +10,9 @@
 #include "main.h"
 #include "object.h"
 
+//=============================================
 //2Dオブジェクトクラス
+//=============================================
 class CObject3D : public CObject
 {
 public:
@@ -21,7 +23,6 @@ public:
 	void Update()override;
 	void Draw()override;
 
-	static CObject3D* Create(D3DXVECTOR3 pos, D3DXVECTOR3 size); //オブジェクト作成
 	void BindTexture(LPDIRECT3DTEXTURE9 pTex);
 
 	//posの代入
@@ -86,9 +87,9 @@ private:
 	LPDIRECT3DTEXTURE9 m_pTexture; //テクスチャへのポインタ
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff; //頂点バッファへのポインタ
 
-	D3DXVECTOR3 m_pos;
-	D3DXVECTOR3 m_rot;
-	D3DXVECTOR3 m_size;
+	D3DXVECTOR3 m_pos; //位置
+	D3DXVECTOR3 m_rot; //方向
+	D3DXVECTOR3 m_size; //サイズ
 	D3DXVECTOR2 m_tex_pos; //tex座標
 
 	D3DXMATRIX m_mtxWorld; //ワールドマトリックス

@@ -29,28 +29,6 @@ CObject2D::~CObject2D()
 //=============================================
 HRESULT CObject2D::Init()
 {
-	CRenderer* pRender = CManager::GetRenderer();
-	LPDIRECT3DDEVICE9 pDevice = pRender->GetDevice();
-
-	//頂点バッファ生成
-	pDevice->CreateVertexBuffer(sizeof(VERTEX_2D) * 4, D3DUSAGE_WRITEONLY, FVF_VERTEX_2D, D3DPOOL_MANAGED, &m_pVtxBuff, NULL);
-	m_rot = D3DXVECTOR3(0.0f,0.0f,0.0f);
-
-	VERTEX_2D* pVtx;
-
-	//頂点バッファをロックし頂点情報へのポインタを取得
-	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
-	
-	pVtx[0].tex = D3DXVECTOR2(0.0f,0.0f);
-	pVtx[1].tex = D3DXVECTOR2(1.0f,0.0f);
-	pVtx[2].tex = D3DXVECTOR2(0.0f,1.0f);
-	pVtx[3].tex = D3DXVECTOR2(1.0f,1.0f);
-
-	//アンロック
-	m_pVtxBuff->Unlock();
-
-	SetVtx(1.0f,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f));
-
 	return S_OK;
 }
 
@@ -61,8 +39,6 @@ void CObject2D::Uninit()
 {
 	if (m_pTexture != nullptr)
 	{
-
-		//m_pTexture->Release();
 		m_pTexture = nullptr;
 	}
 
@@ -74,6 +50,7 @@ void CObject2D::Uninit()
 		m_pVtxBuff = nullptr;
 	}
 
+	//自分自身の解放
 	Release();
 }
 
@@ -113,22 +90,6 @@ void CObject2D::Draw()
 	//テクスチャ拡大時の色を線形補間
 	pDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 
-}
-
-//=============================================
-//生成
-//=============================================
-CObject2D* CObject2D::Create(D3DXVECTOR3 pos, D3DXVECTOR2 size)
-{
-	CObject2D* pObject2D = new CObject2D;
-	if (pObject2D != nullptr)
-	{
-		pObject2D->m_pos = pos;
-		pObject2D->m_size.x = size.x;
-		pObject2D->m_size.y = size.y;
-		pObject2D->Init();
-	}
-	return pObject2D;
 }
 
 //=============================================

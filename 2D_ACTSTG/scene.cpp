@@ -29,7 +29,7 @@ CScene::~CScene()
 HRESULT CScene::Init()
 {
 
-    return E_NOTIMPL;
+    return S_OK;
 }
 
 //=============================================
@@ -89,7 +89,6 @@ CScene* CScene::Create(MODE mode)
        
     //¡‚ÌƒV[ƒ“‚Ì‰Šú‰»
     pScene->Init();
-    
 
     return pScene;
 }

@@ -61,13 +61,6 @@ HRESULT CPlayer::Init()
 	CRenderer* pRender = CManager::GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRender->GetDevice();
 	LPDIRECT3DTEXTURE9 pTex;
-	////テクスチャの読み込み
-	//D3DXCreateTextureFromFile(pDevice,
-	//	"data\\TEXTURE\\PlayerAnimation.png",
-	//	&pTex);
-
-	//CObjectX::BindTexture(pTex);
-
 
 	m_bSize = false;
 
@@ -80,12 +73,12 @@ HRESULT CPlayer::Init()
 	return S_OK;
 }
 
-
 //=============================================
 //終了
 //=============================================
 void CPlayer::Uninit()
 {
+	//親クラスの終了処理を呼ぶ
 	CObjectX::Uninit();
 }
 
@@ -173,6 +166,7 @@ void CPlayer::Update()
 //=============================================
 void CPlayer::Draw()
 {
+	//親クラスの描画を呼ぶ
 	CObjectX::Draw();
 }
 
@@ -184,13 +178,21 @@ CPlayer* CPlayer::Create(D3DXVECTOR3 pos,D3DXVECTOR3 rot)
 	CModel* pModel = CManager::GetModel();
 
 	CPlayer* pPlayer = new CPlayer;
+
+	// nullならnullを返す
+	if (pPlayer == nullptr) {return nullptr;}
+
 	pPlayer->SetPos(pos); //pos設定
-	pPlayer->SetRot(rot); //pos設定
+	pPlayer->SetRot(rot); //rot設定
+
+	//xファイル読み込み
 	pPlayer->BindXFile(pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).pBuffMat,
 					pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).dwNumMat,
 					pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).pMesh);
+
 	pPlayer->SetType(OBJECT_TYPE_PLAYER); //タイプ設定
-	pPlayer->Init();
+
+	pPlayer->Init(); //初期化処理
 	
 	return pPlayer;
 }

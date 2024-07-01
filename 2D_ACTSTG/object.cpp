@@ -11,6 +11,8 @@
 //総数初期化
 int CObject::m_nNumAll = 0;
 
+
+
 //オブジェクトポインタ初期化
 CObject* CObject::m_apObject[MAX_PRIORITY][CObject::MAX_OBJECT] = {};
 
