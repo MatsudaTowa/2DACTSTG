@@ -82,7 +82,7 @@ CResult_Screen* CResult_Screen::Create(D3DXVECTOR3 pos)
 	CResult_Screen* pResult_Screen = new CResult_Screen;
 
 	//null‚È‚çnull‚ğ•Ô‚·
-	if (pResult_Screen == nullptr) { return nullptr;}
+	if (pResult_Screen == nullptr) {return nullptr;}
 
 	pResult_Screen->SetPos(pos); //posİ’è
 

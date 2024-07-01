@@ -6,6 +6,7 @@
 //=============================================
 #include "character.h"
 #include "block.h"
+#include "player.h"
 #include "field.h"
 
 //重力値
@@ -196,6 +197,114 @@ void CCharacter::HitBlock()
 		}
 	}
 	SetPos(CharacterPos);
+}
+
+//=============================================
+//プレイヤーとの当たり判定
+//=============================================
+void CCharacter::HitPlayer()
+{
+	D3DXVECTOR3 CharacterPos = GetPos();
+
+	//サイズ取得
+	D3DXVECTOR3 CharacterMin = GetMinPos();
+	D3DXVECTOR3 CharacterMax = GetMaxPos();
+
+	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
+	{
+		//オブジェクト取得
+		CObject* pObj = CObject::Getobject(CPlayer::PLAYER_PRIORITY, nCnt);
+		if (pObj != nullptr)
+		{//ヌルポインタじゃなければ
+			//タイプ取得
+			CObject::OBJECT_TYPE type = pObj->GetType();
+
+			//ブロックとの当たり判定
+			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_PLAYER)
+			{
+				CPlayer* pPlayer = (CPlayer*)pObj;
+				if (m_oldpos.x + CharacterMax.x <= pPlayer->GetPos().x + pPlayer->GetMinPos().x
+					&& CharacterPos.x + CharacterMax.x > pPlayer->GetPos().x + pPlayer->GetMinPos().x)
+				{
+					if (m_oldpos.z + CharacterMin.z < pPlayer->GetPos().z + pPlayer->GetMaxPos().z
+						&& m_oldpos.z + CharacterMax.z > pPlayer->GetPos().z + pPlayer->GetMinPos().z
+						&& m_oldpos.y + CharacterMin.y < pPlayer->GetPos().y + pPlayer->GetMaxPos().y
+						&& m_oldpos.y + CharacterMax.y > pPlayer->GetPos().y + pPlayer->GetMinPos().y)
+					{//当たり判定(X)
+						CharacterPos.x = m_oldpos.x;
+						m_move.x = 0.0f;
+					}
+				}
+
+				if (m_oldpos.x + CharacterMin.x >= pPlayer->GetPos().x + pPlayer->GetMaxPos().x
+					&& CharacterPos.x + CharacterMin.x < pPlayer->GetPos().x + pPlayer->GetMaxPos().x)
+				{
+					if (m_oldpos.z + CharacterMin.z < pPlayer->GetPos().z + pPlayer->GetMaxPos().z
+						&& m_oldpos.z + CharacterMax.z > pPlayer->GetPos().z + pPlayer->GetMinPos().z
+						&& m_oldpos.y + CharacterMin.y < pPlayer->GetPos().y + pPlayer->GetMaxPos().y
+						&& m_oldpos.y + CharacterMax.y > pPlayer->GetPos().y + pPlayer->GetMinPos().y)
+					{//当たり判定(X)
+						CharacterPos.x = m_oldpos.x;
+						m_move.x = 0.0f;
+					}
+				}
+
+				if (m_oldpos.z + CharacterMax.z <= pPlayer->GetPos().z + pPlayer->GetMinPos().z
+					&& CharacterPos.z + CharacterMax.z > pPlayer->GetPos().z + pPlayer->GetMinPos().z)
+				{
+					if (m_oldpos.x + CharacterMin.x < pPlayer->GetPos().x + pPlayer->GetMaxPos().x
+						&& m_oldpos.x + CharacterMax.x > pPlayer->GetPos().x + pPlayer->GetMinPos().x
+						&& m_oldpos.y + CharacterMin.y < pPlayer->GetPos().y + pPlayer->GetMaxPos().y
+						&& m_oldpos.y + CharacterMax.y > pPlayer->GetPos().y + pPlayer->GetMinPos().y
+						)
+					{//当たり判定(Z)
+						CharacterPos.z = m_oldpos.z;
+						m_move.z = 0.0f;
+					}
+				}
+
+				if (m_oldpos.z + CharacterMin.z >= pPlayer->GetPos().z + pPlayer->GetMaxPos().z
+					&& CharacterPos.z + CharacterMin.z < pPlayer->GetPos().z + pPlayer->GetMaxPos().z)
+				{
+					if (m_oldpos.x + CharacterMin.x < pPlayer->GetPos().x + pPlayer->GetMaxPos().x
+						&& m_oldpos.x + CharacterMax.x > pPlayer->GetPos().x + pPlayer->GetMinPos().x
+						&& m_oldpos.y + CharacterMin.y < pPlayer->GetPos().y + pPlayer->GetMaxPos().y
+						&& m_oldpos.y + CharacterMax.y > pPlayer->GetPos().y + pPlayer->GetMinPos().y
+						)
+					{//当たり判定(Z)
+						CharacterPos.z = m_oldpos.z;
+						m_move.z = 0.0f;
+					}
+				}
+				if (m_oldpos.y + CharacterMin.y >= pPlayer->GetPos().y + pPlayer->GetMaxPos().y
+					&& CharacterPos.y + CharacterMin.y < pPlayer->GetPos().y + pPlayer->GetMaxPos().y)
+				{//当たり判定(Y)上
+					if (m_oldpos.x + CharacterMin.x < pPlayer->GetPos().x + pPlayer->GetMaxPos().x
+						&& m_oldpos.x + CharacterMax.x > pPlayer->GetPos().x + pPlayer->GetMinPos().x
+						&& m_oldpos.z + CharacterMin.z < pPlayer->GetPos().z + pPlayer->GetMaxPos().z
+						&& m_oldpos.z + CharacterMax.z > pPlayer->GetPos().z + pPlayer->GetMinPos().z)
+					{
+						CharacterPos.y = m_oldpos.y;
+						m_bLanding = true; //着地
+						m_move.y = 0.0f;
+					}
+				}
+				if (m_oldpos.y + CharacterMax.y <= pPlayer->GetPos().y + pPlayer->GetMinPos().y
+					&& CharacterPos.y + CharacterMax.y > pPlayer->GetPos().y + pPlayer->GetMinPos().y)
+				{//当たり判定(Y)下
+					if (m_oldpos.x + CharacterMin.x < pPlayer->GetPos().x + pPlayer->GetMaxPos().x
+						&& m_oldpos.x + CharacterMax.x > pPlayer->GetPos().x + pPlayer->GetMinPos().x
+						&& m_oldpos.z + CharacterMin.z < pPlayer->GetPos().z + pPlayer->GetMaxPos().z
+						&& m_oldpos.z + CharacterMax.z > pPlayer->GetPos().z + pPlayer->GetMinPos().z)
+					{
+						CharacterPos.y = m_oldpos.y;
+					}
+				}
+			}
+		}
+	}
+	SetPos(CharacterPos);
+
 }
 
 //=============================================

@@ -34,94 +34,6 @@ CObjectX::~CObjectX()
 //=============================================
 HRESULT CObjectX::Init()
 {
-	CRenderer* pRender = CManager::GetRenderer();
-	LPDIRECT3DDEVICE9 pDevice = pRender->GetDevice();
-
-	if (m_pBuffMat == nullptr && m_pMesh == nullptr)
-	{
-		//Xファイルの読み込み
-		D3DXLoadMeshFromX("data\\MODEL\\jihanki.x",
-			D3DXMESH_SYSTEMMEM,
-			pDevice,
-			NULL,
-			&m_pBuffMat,
-			NULL,
-			&m_dwNumMat,
-			&m_pMesh);
-	}
-
-
-
-	D3DXMATERIAL* pMat; //マテリアルポインタ
-	pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
-
-	for (int nCntMat = 0; nCntMat < (int)m_dwNumMat; nCntMat++)
-	{
-
-		if (pMat[nCntMat].pTextureFilename != NULL)
-		{
-			//テクスチャの読み込み
-			D3DXCreateTextureFromFile(pDevice,
-				pMat[nCntMat].pTextureFilename,
-				&m_pTexture[nCntMat]
-			);
-		}
-		//m_tex.push_back(pT);
-	}
-
-	int nNumVtx; //頂点数
-	DWORD sizeFVF; //頂点フォーマットのサイズ
-	BYTE* pVtxBuff; //頂点バッファのポインタ
-
-		//頂点数の取得
-	nNumVtx = m_pMesh->GetNumVertices();
-	//頂点フォーマットのサイズを取得
-	sizeFVF = D3DXGetFVFVertexSize(m_pMesh->GetFVF());
-
-	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f); //モデルの初期位置
-	m_minpos = D3DXVECTOR3(100000.0f, 1000000.0f, 1000000.0f); //モデルの最小位置
-	m_maxpos = D3DXVECTOR3(-100000.0f, -1000000.0f, -100000.0f); //モデルの最大位置
-	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f); //初期の方向
-
-	//頂点バッファのロック
-	m_pMesh->LockVertexBuffer(D3DLOCK_READONLY, (void**)&pVtxBuff);
-	for (int nCntVtx = 0; nCntVtx < nNumVtx; nCntVtx++)
-	{
-		//頂点座標の代入
-		D3DXVECTOR3 vtx = *(D3DXVECTOR3*)pVtxBuff;
-
-		//x座標の最大値最小値チェック
-		if (vtx.x > m_maxpos.x)
-		{
-			m_maxpos.x = vtx.x;
-		}
-		if (vtx.x < m_minpos.x)
-		{
-			m_minpos.x = vtx.x;
-		}
-
-		//y座標の最大値最小値チェック
-		if (vtx.y > m_maxpos.y)
-		{
-			m_maxpos.y = vtx.y;
-		}
-		if (vtx.y < m_minpos.y)
-		{
-			m_minpos.y = vtx.y;
-		}
-
-		//z座標の最大値最小値チェック
-		if (vtx.z > m_maxpos.z)
-		{
-			m_maxpos.z = vtx.z;
-		}
-		if (vtx.z < m_minpos.z)
-		{
-			m_minpos.z = vtx.z;
-		}
-	}
-
-	m_pMesh->UnlockVertexBuffer();
 	return S_OK;
 }
 
@@ -168,7 +80,7 @@ void CObjectX::Draw()
 		D3DMATERIAL9 matDef; //現在のマテリアルの保存
 		D3DXMATRIX mtxRot, mtxTrans; //計算用マトリックス
 
-	//マトリックスの初期化
+		//マトリックスの初期化
 		D3DXMatrixIdentity(&m_mtxWorld);
 
 		//αテストを有効

@@ -26,6 +26,7 @@ public:
 
 	void Gravity(); //重力処理
 	void HitBlock(); //ブロック当たり判定
+	void HitPlayer(); //プレイヤーとの当たり判定
 
 	//移動量代入
 	void SetMove(D3DXVECTOR3 move)

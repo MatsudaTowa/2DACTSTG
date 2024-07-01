@@ -70,6 +70,7 @@ void CEnemy::Uninit()
 //=============================================
 void CEnemy::Update()
 {
+
 	//重力処理
 	Gravity();
 
@@ -104,6 +105,9 @@ void CEnemy::Update()
 
 	//D3DXVECTOR3 minpos = GetMinPos();
 	//D3DXVECTOR3 maxpos = GetMaxPos();
+
+	//プレイヤーとの接触処理
+	HitPlayer();
 
 	//ブロックとの接触処理
 	HitBlock();
