@@ -29,6 +29,10 @@ CResult_Screen::~CResult_Screen()
 //=============================================
 HRESULT CResult_Screen::Init()
 {
+	//親クラスの初期化を呼ぶ
+	CObject2D::Init();
+
+	//自分自身のサイズ取得
 	D3DXVECTOR2 size = GetSize();
 
 	size = D3DXVECTOR2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f);
@@ -46,6 +50,7 @@ HRESULT CResult_Screen::Init()
 //=============================================
 void CResult_Screen::Uninit()
 {
+	//親クラスの終了を呼ぶ
 	CObject2D::Uninit();
 
 }
@@ -55,6 +60,8 @@ void CResult_Screen::Uninit()
 //=============================================
 void CResult_Screen::Update()
 {
+	//親クラスの更新
+	CObject2D::Update();
 }
 
 //=============================================
@@ -62,6 +69,7 @@ void CResult_Screen::Update()
 //=============================================
 void CResult_Screen::Draw()
 {
+	//親クラスの描画
 	CObject2D::Draw();
 }
 
@@ -72,17 +80,17 @@ CResult_Screen* CResult_Screen::Create(D3DXVECTOR3 pos)
 {
 	CTexture* pTexture = CManager::GetTexture();
 	CResult_Screen* pResult_Screen = new CResult_Screen;
-	//CObject *pObject = Getobject();
-	if (pResult_Screen != nullptr)
-	{
-		pResult_Screen->SetPos(pos); //pos設定
 
-		pResult_Screen->SetType(OBJECT_TYPE_RESULT); //タイプ設定
+	//nullならnullを返す
+	if (pResult_Screen == nullptr) { return nullptr;}
 
-		pResult_Screen->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME)));
+	pResult_Screen->SetPos(pos); //pos設定
 
-		pResult_Screen->Init();
+	pResult_Screen->SetType(OBJECT_TYPE_RESULT); //タイプ設定
 
-	}
+	pResult_Screen->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME)));
+
+	pResult_Screen->Init();
+
 	return pResult_Screen;
 }

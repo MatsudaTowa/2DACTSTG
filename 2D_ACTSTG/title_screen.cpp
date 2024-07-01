@@ -31,6 +31,11 @@ CTitle_Screen::~CTitle_Screen()
 //=============================================
 HRESULT CTitle_Screen::Init()
 {
+
+	//親クラスの初期化を呼ぶ
+	CObject2D::Init();
+
+	//自分自身のサイズ取得
 	D3DXVECTOR2 size = GetSize();
 
 	size = D3DXVECTOR2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f);
@@ -48,8 +53,8 @@ HRESULT CTitle_Screen::Init()
 //=============================================
 void CTitle_Screen::Uninit()
 {
+	//親クラスの終了呼ぶ
 	CObject2D::Uninit();
-
 }
 
 //=============================================
@@ -57,6 +62,8 @@ void CTitle_Screen::Uninit()
 //=============================================
 void CTitle_Screen::Update()
 {
+	//親クラスの更新呼ぶ
+	CObject2D::Update();
 }
 
 //=============================================
@@ -64,6 +71,7 @@ void CTitle_Screen::Update()
 //=============================================
 void CTitle_Screen::Draw()
 {
+	//親クラスの描画呼ぶ
 	CObject2D::Draw();
 }
 
@@ -74,17 +82,17 @@ CTitle_Screen* CTitle_Screen::Create(D3DXVECTOR3 pos)
 {
 	CTexture* pTexture = CManager::GetTexture();
 	CTitle_Screen* pTitle_Screen = new CTitle_Screen;
-	//CObject *pObject = Getobject();
-	if (pTitle_Screen != nullptr)
-	{
-		pTitle_Screen->SetPos(pos); //pos設定
 
-		pTitle_Screen->SetType(OBJECT_TYPE_TITLE); //タイプ設定
+	//nullならnullを返す
+	if (pTitle_Screen == nullptr) {return nullptr;}
 
-		pTitle_Screen->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME)));
+	pTitle_Screen->SetPos(pos); //pos設定
 
-		pTitle_Screen->Init();
+	pTitle_Screen->SetType(OBJECT_TYPE_TITLE); //タイプ設定
 
-	}
+	pTitle_Screen->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME)));
+
+	pTitle_Screen->Init();
+
 	return pTitle_Screen;
 }

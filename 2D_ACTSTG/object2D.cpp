@@ -59,7 +59,6 @@ void CObject2D::Uninit()
 //=============================================
 void CObject2D::Update()
 {
-
 }
 
 //=============================================
@@ -315,6 +314,9 @@ D3DXVECTOR2& CObject2D::GetTexPos()
 	return m_tex_pos;
 }
 
+//=============================================
+//í∏ì_èÓïÒéÊìæ
+//=============================================
 LPDIRECT3DVERTEXBUFFER9& CObject2D::GetVtxBuff()
 {
 	return m_pVtxBuff;
