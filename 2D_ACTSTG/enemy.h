@@ -13,9 +13,9 @@
 class CEnemy : public CCharacter
 {
 public:
-	static const int EFFECT_PRIORITY = 4; //ï`âÊèá
+	static const int ENEMY_PRIORITY = 4; //ï`âÊèá
 
-	CEnemy(int nPriority = EFFECT_PRIORITY);
+	CEnemy(int nPriority = ENEMY_PRIORITY);
 	~CEnemy()override;
 	HRESULT Init()override;
 	void Uninit()override;

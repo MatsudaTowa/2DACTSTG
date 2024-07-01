@@ -126,6 +126,9 @@ void CPlayer::Update()
 	//ブロックとの接触処理
 	HitBlock();
 
+	//エネミーとの接触処理
+	HitEnemy();
+
 	if (GetLaunding())
 	{
 		m_nJumpCnt = 0;
