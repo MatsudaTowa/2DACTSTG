@@ -250,33 +250,8 @@ void CCharacter::HitPlayer()
 					}
 				}
 
-				if (m_oldpos.z + CharacterMax.z <= pPlayer->GetPos().z + pPlayer->GetMinPos().z
-					&& CharacterPos.z + CharacterMax.z > pPlayer->GetPos().z + pPlayer->GetMinPos().z)
-				{
-					if (m_oldpos.x + CharacterMin.x < pPlayer->GetPos().x + pPlayer->GetMaxPos().x
-						&& m_oldpos.x + CharacterMax.x > pPlayer->GetPos().x + pPlayer->GetMinPos().x
-						&& m_oldpos.y + CharacterMin.y < pPlayer->GetPos().y + pPlayer->GetMaxPos().y
-						&& m_oldpos.y + CharacterMax.y > pPlayer->GetPos().y + pPlayer->GetMinPos().y
-						)
-					{//ìñÇΩÇËîªíË(Z)
-						CharacterPos.z = m_oldpos.z;
-						m_move.z = 0.0f;
-					}
-				}
 
-				if (m_oldpos.z + CharacterMin.z >= pPlayer->GetPos().z + pPlayer->GetMaxPos().z
-					&& CharacterPos.z + CharacterMin.z < pPlayer->GetPos().z + pPlayer->GetMaxPos().z)
-				{
-					if (m_oldpos.x + CharacterMin.x < pPlayer->GetPos().x + pPlayer->GetMaxPos().x
-						&& m_oldpos.x + CharacterMax.x > pPlayer->GetPos().x + pPlayer->GetMinPos().x
-						&& m_oldpos.y + CharacterMin.y < pPlayer->GetPos().y + pPlayer->GetMaxPos().y
-						&& m_oldpos.y + CharacterMax.y > pPlayer->GetPos().y + pPlayer->GetMinPos().y
-						)
-					{//ìñÇΩÇËîªíË(Z)
-						CharacterPos.z = m_oldpos.z;
-						m_move.z = 0.0f;
-					}
-				}
+
 				if (m_oldpos.y + CharacterMin.y >= pPlayer->GetPos().y + pPlayer->GetMaxPos().y
 					&& CharacterPos.y + CharacterMin.y < pPlayer->GetPos().y + pPlayer->GetMaxPos().y)
 				{//ìñÇΩÇËîªíË(Y)è„

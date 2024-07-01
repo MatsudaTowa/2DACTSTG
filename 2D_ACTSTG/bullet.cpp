@@ -61,19 +61,21 @@ void CBullet::Uninit()
 //=============================================
 void CBullet::Update()
 {
-	D3DXVECTOR3 pos = GetPos();
-	//CEffect* pEffect = CEffect::Create(D3DXVECTOR3(pos.x, pos.y + 8.0f, pos.z), D3DXVECTOR3(10.0f, 10.0f, 0.0f), D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.5f), 30);
-	pos += m_move;
-	//座標を更新
-	SetPos(pos);
-	//頂点座標
-	SetVtx(D3DXVECTOR3(0.0f, 0.0f, -1.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
-	HitBullet();
+
 
 	if (m_nLife > 0)
 	{
 		m_nLife--;
+		D3DXVECTOR3 pos = GetPos();
+		//CEffect* pEffect = CEffect::Create(D3DXVECTOR3(pos.x, pos.y + 8.0f, pos.z), D3DXVECTOR3(10.0f, 10.0f, 0.0f), D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.5f), 30);
+		pos += m_move;
+		//座標を更新
+		SetPos(pos);
+		//頂点座標
+		SetVtx(D3DXVECTOR3(0.0f, 0.0f, -1.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+
+		HitBullet();
 	}
 	else
 	{
@@ -115,7 +117,7 @@ CBullet* CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, D3D
 }
 
 //=============================================
-//弾との当たり判定
+//弾の当たり判定
 //=============================================
 void CBullet::HitBullet()
 {
@@ -126,13 +128,49 @@ void CBullet::HitBullet()
 	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
 	{
 		//オブジェクト取得
-		CObject*pObj =CObject::Getobject(4,nCnt);
+		CObject* pObj = CObject::Getobject(CEnemy::ENEMY_PRIORITY, nCnt);
 		if (pObj != nullptr)
 		{//ヌルポインタじゃなければ
 			//タイプ取得
 			CObject::OBJECT_TYPE type = pObj->GetType();
+
+			//敵との当たり判定
 			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_ENEMY)
 			{
+				CEnemy* pEnemy = (CEnemy*)pObj;	
+
+
+				if (Bulletpos.x + Bulletsize.x > pEnemy->GetPos().x + pEnemy->GetMinPos().x
+					&&Bulletpos.x - Bulletsize.x < pEnemy->GetPos().x + pEnemy->GetMaxPos().x)
+				{
+					if (Bulletpos.z - Bulletsize.z< pEnemy->GetPos().z + pEnemy->GetMaxPos().z
+						&& Bulletpos.z + Bulletsize.z > pEnemy->GetPos().z + pEnemy->GetMinPos().z
+						&& Bulletpos.y - Bulletsize.y < pEnemy->GetPos().y + pEnemy->GetMaxPos().y
+						&& Bulletpos.y + Bulletsize.y > pEnemy->GetPos().y + pEnemy->GetMinPos().y)
+					{//当たり判定(X)
+						pEnemy->HitBullet();
+						//弾の削除
+						Uninit();
+					}
+				}
+
+
+				else if (Bulletpos.z + Bulletsize.z > pEnemy->GetPos().z + pEnemy->GetMinPos().z
+					&&Bulletpos.z - Bulletsize.z < pEnemy->GetPos().z + pEnemy->GetMaxPos().z)
+				{
+					if (Bulletpos.x - Bulletsize.x < pEnemy->GetPos().x + pEnemy->GetMaxPos().x
+						&& Bulletpos.x + Bulletsize.x > pEnemy->GetPos().x + pEnemy->GetMinPos().x
+						&& Bulletpos.y - Bulletsize.y < pEnemy->GetPos().y + pEnemy->GetMaxPos().y
+						&& Bulletpos.y + Bulletsize.y > pEnemy->GetPos().y + pEnemy->GetMinPos().y
+						)
+					{//当たり判定(Z)
+						pEnemy->HitBullet();
+						//弾の削除
+						Uninit();
+					}
+				}
+			}
+
 				//CEnemy* pEnemy = (CEnemy*)pObj;
 				//pEnemy->GetPos(); //位置取得
 				//pEnemy->GetSize(); //サイズ取得
@@ -145,7 +183,7 @@ void CBullet::HitBullet()
 				//	//弾の削除
 				//	Release();
 				//}
-			}
+			
 		}
 	}
 }

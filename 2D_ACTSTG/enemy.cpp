@@ -160,6 +160,7 @@ CEnemy* CEnemy::Create(const D3DXVECTOR3& pos,const D3DXVECTOR3& rot)
 //=============================================
 void CEnemy::HitBullet()
 {
+	Release();
 }
 
 //=============================================
