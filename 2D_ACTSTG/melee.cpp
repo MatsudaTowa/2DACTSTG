@@ -7,6 +7,7 @@
 #include "melee.h"
 #include "manager.h"
 #include "enemy.h"
+#include "player.h"
 
 //=============================================
 //コンストラクタ
@@ -67,8 +68,40 @@ void CMelee::Update()
 	{//ライフがあれば処理実行
 		m_nLife--;
 
-		//頂点座標
-		SetVtx(D3DXVECTOR3(0.0f, 0.0f, -1.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f));
+		for (int nCnt = 0; nCnt < CObject::MAX_OBJECT; nCnt++)
+		{
+			//オブジェクト取得
+			CObject* pObj = CObject::Getobject(CPlayer::PLAYER_PRIORITY, nCnt);
+
+			if (pObj != nullptr)
+			{//ヌルポインタじゃなければ
+				//タイプ取得
+				CObject::OBJECT_TYPE type = pObj->GetType();
+				if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_PLAYER)
+				{
+					CPlayer* pPlayer = (CPlayer*)pObj;
+
+					//自分自身のpos取得
+					D3DXVECTOR3 pos = GetPos();
+
+					//プレイヤーのムーブを自分に追加
+					pos.y = pPlayer->GetPos().y;
+					pos.z = pPlayer->GetPos().z;
+
+					if (pPlayer->GetWay() == true)
+					{//右向いてるなら
+						pos.x = pPlayer->GetPos().x + pPlayer->GetMaxPos().x;
+					}
+					else if (pPlayer->GetWay() == false)
+					{//左向いてるなら
+						pos.x = pPlayer->GetPos().x + pPlayer->GetMinPos().x;
+					}
+					//posを代入
+					SetPos(pos);
+				}
+			}
+
+		}
 
 		//当たったかチェック
 		HitMelee();

@@ -354,3 +354,11 @@ DWORD& CObjectX::GetNumMat()
 {
 	return m_dwNumMat;
 }
+
+//=============================================
+//ワールドマトリックス取得
+//=============================================
+D3DXMATRIX& CObjectX::GetMtxWorld()
+{
+	return m_mtxWorld;
+}

@@ -49,7 +49,7 @@ public:
 		m_tex_pos = tex;
 	}
 
-	//テクスチャ座標の代入
+	//ワールドマトリックスの代入
 	void SetMtxWorld(D3DXMATRIX mtxWorld)
 	{
 		m_mtxWorld = mtxWorld;

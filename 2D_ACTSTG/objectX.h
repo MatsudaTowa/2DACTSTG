@@ -51,6 +51,12 @@ public:
 		m_maxpos = MaxPos;
 	}
 
+	//ワールドマトリックスの代入
+	void SetMtxWorld(D3DXMATRIX mtxWorld)
+	{
+		m_mtxWorld = mtxWorld;
+	}
+
 	//posの取得
 	D3DXVECTOR3& GetPos();
 
@@ -71,6 +77,9 @@ public:
 
 	//マテリアル数取得
 	DWORD& GetNumMat();
+
+	//ワールドマトリックス取得
+	D3DXMATRIX& GetMtxWorld();
 
 private:
 

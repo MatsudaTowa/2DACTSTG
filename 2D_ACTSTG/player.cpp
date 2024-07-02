@@ -61,7 +61,6 @@ HRESULT CPlayer::Init()
 {
 	CRenderer* pRender = CManager::GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRender->GetDevice();
-	LPDIRECT3DTEXTURE9 pTex;
 
 	m_bSize = false;
 
