@@ -12,6 +12,7 @@
 #include "effect.h"
 #include "field.h"
 #include "camera.h"
+#include "melee.h"
 
 //モデルパス
 const std::string CPlayer::MODEL_NAME = "data\\MODEL\\face.x";
@@ -149,16 +150,30 @@ void CPlayer::Update()
 	bool bWay = GetWay();
 
 	if (pMouse->GetTrigger(0))
-	{
+	{//右クリックが入力されたら
 		if (bWay == true)
 		{//右向き
 			CBullet* pBullet = CBullet::Create(D3DXVECTOR3(pos.x, pos.y + 10.0f, pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 7.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 7.0f),
 				D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 2.0f),D3DXVECTOR3(20.0f,50.0f,0.0f),30);
 		}
 		else if (bWay == false)
-		{//右向き
+		{//左向き
 			CBullet* pBullet = CBullet::Create(D3DXVECTOR3(pos.x, pos.y + 10.0f, pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 7.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 7.0f),
 				D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 4.0f), D3DXVECTOR3(20.0f, 50.0f, 0.0f), 30);
+		}
+	}
+
+	if (pMouse->GetTrigger(1))
+	{//左クリックが入力されたら
+		if (bWay == true)
+		{//右向き
+			CMelee* pMelee = CMelee::Create(D3DXVECTOR3(pos.x + GetMaxPos().x, pos.y + 10.0f, pos.z),
+				D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 2.0f), D3DXVECTOR3(10.0f, 10.0f, 0.0f), 30);
+		}
+		else if (bWay == false)
+		{//左向き
+			CMelee* pMelee = CMelee::Create(D3DXVECTOR3(pos.x + GetMinPos().x, pos.y + 10.0f, pos.z),
+				D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 4.0f), D3DXVECTOR3(10.0f, 10.0f, 0.0f), 30);
 		}
 	}
 
@@ -205,8 +220,12 @@ CPlayer* CPlayer::Create(D3DXVECTOR3 pos,D3DXVECTOR3 rot)
 //=============================================
 void CPlayer::ReSpawn()
 {
+	//自分自身のpos取得
 	D3DXVECTOR3 PlayerPos = GetPos();
+
 	PlayerPos = D3DXVECTOR3(-450.0f, 0.5f, 0.0f);
+
+	//pos代入
 	SetPos(PlayerPos);
 }
 

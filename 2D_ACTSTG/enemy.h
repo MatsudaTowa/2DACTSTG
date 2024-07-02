@@ -25,7 +25,7 @@ public:
 	//エネミー作成
 	static CEnemy* Create(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot);
 
-	void HitBullet(); //当たり判定
+	void HitDamage(); //当たり判定
 
 private:
 	static const std::string MODEL_NAME;	//モデルの名前

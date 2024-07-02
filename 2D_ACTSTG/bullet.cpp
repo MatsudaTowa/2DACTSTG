@@ -99,19 +99,17 @@ CBullet* CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, D3D
 {
 	CBullet* pBullet = new CBullet;
 
-	if (pBullet != nullptr)
-	{
-		CTexture* pTexture = CManager::GetTexture();
+	if (pBullet == nullptr) {return nullptr;}
+	CTexture* pTexture = CManager::GetTexture();
 
-		pBullet->SetPos(pos); //pos設定
-		pBullet->SetSize(size); //サイズ設定
-		pBullet->SetRot(rot);
-		pBullet->m_move = move; //移動量代入
-		pBullet->m_nLife = nLife; //寿命代入
-     	pBullet->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME)));
-		pBullet->SetType(OBJECT_TYPE_BULLET); //タイプ設定
-		pBullet->Init();
-	}
+	pBullet->SetPos(pos); //pos設定
+	pBullet->SetSize(size); //サイズ設定
+	pBullet->SetRot(rot);
+	pBullet->m_move = move; //移動量代入
+	pBullet->m_nLife = nLife; //寿命代入
+    pBullet->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME)));
+	pBullet->SetType(OBJECT_TYPE_BULLET); //タイプ設定
+	pBullet->Init();
 
 	return pBullet;
 }
@@ -148,7 +146,7 @@ void CBullet::HitBullet()
 						&& Bulletpos.y - Bulletsize.y < pEnemy->GetPos().y + pEnemy->GetMaxPos().y
 						&& Bulletpos.y + Bulletsize.y > pEnemy->GetPos().y + pEnemy->GetMinPos().y)
 					{//当たり判定(X)
-						pEnemy->HitBullet();
+						pEnemy->HitDamage();
 						//弾の削除
 						Uninit();
 					}
@@ -164,26 +162,12 @@ void CBullet::HitBullet()
 						&& Bulletpos.y + Bulletsize.y > pEnemy->GetPos().y + pEnemy->GetMinPos().y
 						)
 					{//当たり判定(Z)
-						pEnemy->HitBullet();
+						pEnemy->HitDamage();
 						//弾の削除
 						Uninit();
 					}
 				}
 			}
-
-				//CEnemy* pEnemy = (CEnemy*)pObj;
-				//pEnemy->GetPos(); //位置取得
-				//pEnemy->GetSize(); //サイズ取得
-				//if (Bulletpos.x - Bulletsize.x >= pEnemy->GetPos().x - pEnemy->GetSize().x
-				//	&& Bulletpos.x + Bulletsize.x <= pEnemy->GetPos().x + pEnemy->GetSize().x
-				//	&& Bulletpos.y - Bulletsize.y >= pEnemy->GetPos().y - pEnemy->GetSize().y
-				//	&& Bulletpos.y + Bulletsize.y <= pEnemy->GetPos().y + pEnemy->GetSize().y)
-				//{//敵と弾が当たった時
-				//	pEnemy->HitBullet();
-				//	//弾の削除
-				//	Release();
-				//}
-			
 		}
 	}
 }

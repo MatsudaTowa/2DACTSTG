@@ -156,9 +156,9 @@ CEnemy* CEnemy::Create(const D3DXVECTOR3& pos,const D3DXVECTOR3& rot)
 }
 
 //=============================================
-//’e‚Æ‚Ì“–‚½‚è”»’è
+//ƒ_ƒ[ƒW‚ğó‚¯‚½‚Æ‚«
 //=============================================
-void CEnemy::HitBullet()
+void CEnemy::HitDamage()
 {
 	Release();
 }
