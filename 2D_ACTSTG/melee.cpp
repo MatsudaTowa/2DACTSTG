@@ -12,7 +12,7 @@
 //=============================================
 //コンストラクタ
 //=============================================
-CMelee::CMelee(int nPriority) :CObject3D(nPriority)
+CMelee::CMelee(int nPriority) :CObject3D(nPriority),m_nLife(0)
 {
 }
 
@@ -85,8 +85,8 @@ void CMelee::Update()
 					D3DXVECTOR3 pos = GetPos();
 
 					//プレイヤーのムーブを自分に追加
-					pos.y = pPlayer->GetPos().y;
-					pos.z = pPlayer->GetPos().z;
+					pos.y += pPlayer->GetMove().y;
+					pos.z += pPlayer->GetMove().z;
 
 					if (pPlayer->GetWay() == true)
 					{//右向いてるなら
