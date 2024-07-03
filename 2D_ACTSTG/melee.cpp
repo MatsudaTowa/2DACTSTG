@@ -85,8 +85,8 @@ void CMelee::Update()
 					D3DXVECTOR3 pos = GetPos();
 
 					//プレイヤーのムーブを自分に追加
-					pos.y += pPlayer->GetMove().y;
-					pos.z += pPlayer->GetMove().z;
+					pos.y = pPlayer->GetPos().y + pPlayer->GetMaxPos().y * 0.5f;
+					pos.z = pPlayer->GetPos().z;
 
 					if (pPlayer->GetWay() == true)
 					{//右向いてるなら
