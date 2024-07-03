@@ -14,6 +14,7 @@
 #include "bullet.h"
 //#include "explosion.h"
 #include "effect.h"
+#include "gauge_fream.h"
 #include "enemy.h"
 #include "block.h"
 #include "field.h"
@@ -46,6 +47,8 @@ HRESULT CGame::Init()
 
 	pBlock = CBlock::Create(CBlock::BLOCKTYPE_DEFAULT, D3DXVECTOR3(5.0f, 50.0f, 0.0f),
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f), 3, false);
+
+	CGauge_Fream* pGauge_Fream = CGauge_Fream::Create(D3DXVECTOR3(980.0f,80.0f,0.0f),D3DXVECTOR2(280.0f,120.0f));
 
 	CField* pField = CField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(500.0f, 0.0f, 500.0f));
 

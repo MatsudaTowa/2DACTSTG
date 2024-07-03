@@ -84,7 +84,7 @@ void CMelee::Update()
 					//自分自身のpos取得
 					D3DXVECTOR3 pos = GetPos();
 
-					//プレイヤーのムーブを自分に追加
+					//プレイヤーのposを自分に代入
 					pos.y = pPlayer->GetPos().y + pPlayer->GetMaxPos().y * 0.5f;
 					pos.z = pPlayer->GetPos().z;
 
