@@ -183,7 +183,6 @@ void CPlayer::Update()
 
 	if (pMouse->GetTrigger(1))
 	{//¶ƒNƒŠƒbƒN‚ª“ü—Í‚³‚ê‚½‚ç
-
 		//‹ßÚUŒ‚ˆ—
 		PerformMelee(pos, bWay);
 	}

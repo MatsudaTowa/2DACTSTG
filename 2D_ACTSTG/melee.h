@@ -19,11 +19,11 @@ public:
 	void Draw()override;
 	//ãﬂê⁄çUåÇçÏê¨
 	static CMelee* Create(D3DXVECTOR3 pos,D3DXVECTOR3 rot, D3DXVECTOR3 size, int nLife);
-	int m_nLife;
+
 private:
 	void HitMelee();
 	float m_fAngle;
 	float m_fLength;
-
+	int m_nLife;
 	static LPDIRECT3DTEXTURE9 m_pTextureTemp;
 };
