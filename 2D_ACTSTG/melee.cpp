@@ -146,6 +146,7 @@ CMelee* CMelee::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 size, int n
 //=============================================
 void CMelee::HitMelee()
 {
+	//位置取得
 	D3DXVECTOR3 Meleepos = GetPos();
 	//サイズ取得
 	D3DXVECTOR3 Meleesize = GetSize();
@@ -173,7 +174,7 @@ void CMelee::HitMelee()
 						&& Meleepos.y + Meleesize.y > pEnemy->GetPos().y + pEnemy->GetMinPos().y)
 					{//当たり判定(X)
 						pEnemy->HitDamage();
-						//弾の削除
+						//近接攻撃の削除
 						Uninit();
 					}
 				}
@@ -189,7 +190,7 @@ void CMelee::HitMelee()
 						)
 					{//当たり判定(Z)
 						pEnemy->HitDamage();
-						//弾の削除
+						//近接攻撃の削除
 						Uninit();
 					}
 				}

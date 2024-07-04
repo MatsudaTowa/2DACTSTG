@@ -9,7 +9,7 @@
 #include "manager.h"
 
 //ゲージの最大値
-const float CGauge::MAX_GAUGE_WIDE = 370.0f;
+const float CGauge::MAX_GAUGE_WIDE = 350.0f;
 
 //=============================================
 //コンストラクタ

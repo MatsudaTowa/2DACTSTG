@@ -186,9 +186,9 @@ void CEnemy::EnemyMove()
 	move.z += cosf(rotMoveY) * DEFAULT_MOVE;
 	rot.y = rotMoveY + D3DX_PI;
 
-	//rot‚ð‘ã“ü
-	SetRot(rot); //ˆÚ“®—Ê‘ã“ü
-	SetMove(move);
+	
+	SetRot(rot); //rot‚ð‘ã“ü
+	SetMove(move);//ˆÚ“®—Ê‘ã“ü
 
 	//’…’n‚µ‚Ä‚é‚©‘ã“ü
 	SetLanding(bLanding);

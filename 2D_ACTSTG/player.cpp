@@ -87,11 +87,10 @@ void CPlayer::Uninit()
 //=============================================
 void CPlayer::Update()
 {
-	//if (m_bLanding != true)
-	//{//着地してなかったら重力処理実行
-		Gravity();
-	//}
+	//重力処理
+	Gravity();
 
+	//移動処理
 	PlayerMove();
 
 	//位置取得
@@ -106,20 +105,25 @@ void CPlayer::Update()
 	//移動量を更新(減速）
 	move *= 1.0f - DAMPING_COEFFICIENT;
 
+	//移動量代入
 	SetMove(move);
 
+	//過去の位置に今の位置を代入
 	oldpos = pos;
 
 	//過去の位置代入
 	SetOldPos(oldpos);
 
+	//エフェクト生成
 	CEffect* pEffect = CEffect::Create(D3DXVECTOR3(pos.x,pos.y + 8.0f,pos.z), D3DXVECTOR3(10.0f, 10.0f ,0.0f), D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.5f), 30);
 
+	//移動量追加
 	pos += move;
 
 	//座標を更新
 	SetPos(pos);
 
+	//最大最小値取得
 	D3DXVECTOR3 minpos = GetMinPos();
 	D3DXVECTOR3 maxpos = GetMaxPos();
 	
@@ -130,7 +134,8 @@ void CPlayer::Update()
 	HitEnemy();
 
 	if (GetLaunding())
-	{
+	{//着地してるなら
+		//ジャンプ数リセット
 		m_nJumpCnt = 0;
 	}
 
