@@ -24,7 +24,7 @@ public:
 	void Update()override;
 	void Draw()override;
 	void AddGauge();
-	void SubGauge();
+	void SubGauge(float fCost);
 	void SetGaugeVtx(float rhw, D3DCOLOR col);
 	static CGauge* Create(D3DXVECTOR3 pos, D3DXVECTOR2 size);
 private:

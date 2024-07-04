@@ -91,9 +91,15 @@ void CGauge::AddGauge()
 //=============================================
 //ゲージ減少処理
 //=============================================
-void CGauge::SubGauge()
+void CGauge::SubGauge(float fCost)
 {
+	//自分自身のサイズ取得
+	D3DXVECTOR2 size = GetSize();
 
+	size.x -= fCost;
+
+	//サイズ代入
+	SetSize(size);
 }
 
 //=============================================

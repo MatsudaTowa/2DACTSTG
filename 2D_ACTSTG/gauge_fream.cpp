@@ -86,7 +86,7 @@ CGauge_Fream* CGauge_Fream::Create(D3DXVECTOR3 pos, D3DXVECTOR2 size)
 
     pGauge_Fream->SetType(OBJECT_TYPE_GAUGE_FREAM); //タイプ設定
 
-    pGauge_Fream->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME)));
+    pGauge_Fream->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME))); //テクスチャ設定
 
-    pGauge_Fream->Init();
+    pGauge_Fream->Init(); //初期化処理
 }

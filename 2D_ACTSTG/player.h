@@ -34,8 +34,8 @@ private:
 
 	void ReSpawn(); //リスポーン
 	void PlayerMove(); //プレイヤー移動処理
-	void Turn();	//回転処理
-	void SizeChange();	//サイズ変更処理
+	void ShotBullet(D3DXVECTOR3 pos,bool bWay); //弾発射処理
+	void PerformMelee(D3DXVECTOR3 pos, bool bWay); //近接攻撃処理
 
 	bool m_bSize; //サイズ変更するかどうか
 	int m_nJumpCnt; //ジャンプカウント

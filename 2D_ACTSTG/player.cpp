@@ -13,6 +13,7 @@
 #include "field.h"
 #include "camera.h"
 #include "melee.h"
+#include "gauge.h"
 
 //モデルパス
 const std::string CPlayer::MODEL_NAME = "data\\MODEL\\face.x";
@@ -143,9 +144,6 @@ void CPlayer::Update()
 	{//リスポーン処理
 		ReSpawn();
 	}
-	
-	//Turn(); //回転処理
-	//SizeChange(); //拡縮
 
 	//マウスの情報取得
 	CInputMouse* pMouse = CManager::GetMouse();
@@ -155,30 +153,39 @@ void CPlayer::Update()
 
 	if (pMouse->GetTrigger(0))
 	{//右クリックが入力されたら
-		if (bWay == true)
-		{//右向き
-			CBullet* pBullet = CBullet::Create(D3DXVECTOR3(pos.x, pos.y + 10.0f, pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 7.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 7.0f),
-				D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 2.0f),D3DXVECTOR3(20.0f,50.0f,0.0f),30);
+		for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
+		{
+			//オブジェクト取得
+			CObject* pObj = CObject::Getobject(CGauge::GAUGE_PRIORITY, nCnt);
+			if (pObj != nullptr)
+			{//ヌルポインタじゃなければ
+				//タイプ取得
+				CObject::OBJECT_TYPE type = pObj->GetType();
+
+				//敵との当たり判定
+				if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_GAUGE)
+				{
+					CGauge* pGauge = (CGauge*)pObj;
+
+					if (pGauge->GetSize().x > 0.0f)
+					{//ゲージがあったら
+						//弾発射
+						ShotBullet(pos, bWay);
+
+						//ゲージ消費(後に押された時間に応じて消費量変更)
+						pGauge->SubGauge(50.0f);
+					}
+				}
+			}
 		}
-		else if (bWay == false)
-		{//左向き
-			CBullet* pBullet = CBullet::Create(D3DXVECTOR3(pos.x, pos.y + 10.0f, pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 7.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 7.0f),
-				D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 4.0f), D3DXVECTOR3(20.0f, 50.0f, 0.0f), 30);
-		}
+
 	}
 
 	if (pMouse->GetTrigger(1))
 	{//左クリックが入力されたら
-		if (bWay == true)
-		{//右向き
-			CMelee* pMelee = CMelee::Create(D3DXVECTOR3(pos.x + GetMaxPos().x, pos.y + 10.0f, pos.z),
-				D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 2.0f), D3DXVECTOR3(10.0f, 10.0f, 0.0f), 30);
-		}
-		else if (bWay == false)
-		{//左向き
-			CMelee* pMelee = CMelee::Create(D3DXVECTOR3(pos.x + GetMinPos().x, pos.y + 10.0f, pos.z),
-				D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 4.0f), D3DXVECTOR3(10.0f, 10.0f, 0.0f), 30);
-		}
+
+		//近接攻撃処理
+		PerformMelee(pos, bWay);
 	}
 
 }
@@ -345,30 +352,35 @@ void CPlayer::PlayerMove()
 }
 
 //=============================================
-//回転
+//弾発射処理
 //=============================================
-void CPlayer::Turn()
+void CPlayer::ShotBullet(D3DXVECTOR3 pos, bool bWay)
 {
-	//オブジェクト2Dからrotを取得
-	D3DXVECTOR3 rot = GetRot();
-
-	rot.z += 0.05f;
-
-	if (rot.z >= D3DX_PI)
-	{
-		rot.z = -D3DX_PI;
+	if (bWay == true)
+	{//右向き
+		CBullet* pBullet = CBullet::Create(D3DXVECTOR3(pos.x, pos.y + 10.0f, pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 7.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 7.0f),
+			D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 2.0f), D3DXVECTOR3(20.0f, 50.0f, 0.0f), 30);
 	}
-	
-	//rotを代入
-	SetRot(rot);
+	else if (bWay == false)
+	{//左向き
+		CBullet* pBullet = CBullet::Create(D3DXVECTOR3(pos.x, pos.y + 10.0f, pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 7.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 7.0f),
+			D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 4.0f), D3DXVECTOR3(20.0f, 50.0f, 0.0f), 30);
+	}
 }
 
 //=============================================
-//拡縮
+//近接攻撃処理
 //=============================================
-void CPlayer::SizeChange()
+void CPlayer::PerformMelee(D3DXVECTOR3 pos, bool bWay)
 {
-	//オブジェクト2Dからsizeを取得
-
+	if (bWay == true)
+	{//右向き
+		CMelee* pMelee = CMelee::Create(D3DXVECTOR3(pos.x + GetMaxPos().x, pos.y + 10.0f, pos.z),
+			D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 2.0f), D3DXVECTOR3(10.0f, 10.0f, 0.0f), 30);
+	}
+	else if (bWay == false)
+	{//左向き
+		CMelee* pMelee = CMelee::Create(D3DXVECTOR3(pos.x + GetMinPos().x, pos.y + 10.0f, pos.z),
+			D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 4.0f), D3DXVECTOR3(10.0f, 10.0f, 0.0f), 30);
+	}
 }
-
