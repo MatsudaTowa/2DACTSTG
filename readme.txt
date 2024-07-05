@@ -56,6 +56,3 @@ ENTERキー:画面遷移
 2024年7月4日　Reプロトタイプ版を公開
 2024年7月5日　Reプロトタイプ版ver1.5を公開
 
-◆github
-https://github.com/MatsudaTowa/2DACTSTG.git
-
