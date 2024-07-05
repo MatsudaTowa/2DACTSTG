@@ -51,6 +51,8 @@ HRESULT CEnemy::Init()
 	//移動量初期化
 	D3DXVECTOR3 move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
+	m_nLife = 5;
+
 	//ムーブ値代入
 	SetMove(move);
 
@@ -158,9 +160,18 @@ CEnemy* CEnemy::Create(const D3DXVECTOR3& pos,const D3DXVECTOR3& rot)
 //=============================================
 //ダメージを受けたとき
 //=============================================
-void CEnemy::HitDamage()
+void CEnemy::HitDamage(int nDamage)
 {
-	Release();
+	if (m_nLife > 0)
+	{//HPが残ってたら
+		m_nLife-= nDamage;
+	}
+	if (m_nLife <= 0)
+	{//HPが0以下だったら
+		//破棄
+		Release();
+
+	}
 }
 
 //=============================================

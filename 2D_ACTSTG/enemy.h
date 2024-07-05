@@ -25,11 +25,11 @@ public:
 	//エネミー作成
 	static CEnemy* Create(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot);
 
-	void HitDamage(); //当たり判定
+	void HitDamage(int nDamage); //当たり判定
 
 private:
 	static const std::string MODEL_NAME;	//モデルの名前
-	static const float DEFAULT_MOVE; //通常時の移動
+	static const float DEFAULT_MOVE; //通常時の移動	   
 	static const float DAMPING_COEFFICIENT; //移動抵抗
 	static const float DEADZONE_Y; //これを過ぎたら破棄
 	static const int EFFECT_LIFE = 3; //エネミーの体力

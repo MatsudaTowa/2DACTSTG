@@ -175,7 +175,7 @@ void CMelee::HitMelee()
 						&& Meleepos.y - Meleesize.y < pEnemy->GetPos().y + pEnemy->GetMaxPos().y
 						&& Meleepos.y + Meleesize.y > pEnemy->GetPos().y + pEnemy->GetMinPos().y)
 					{//“–‚½‚è”»’è(X)
-						pEnemy->HitDamage();
+						pEnemy->HitDamage(1);
 						//‹ßÚUŒ‚‚Ìíœ
 						Uninit();
 					}
@@ -191,7 +191,7 @@ void CMelee::HitMelee()
 						&& Meleepos.y + Meleesize.y > pEnemy->GetPos().y + pEnemy->GetMinPos().y
 						)
 					{//“–‚½‚è”»’è(Z)
-						pEnemy->HitDamage();
+						pEnemy->HitDamage(1);
 						//‹ßÚUŒ‚‚Ìíœ
 						Uninit();
 					}

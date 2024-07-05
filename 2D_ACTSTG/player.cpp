@@ -47,8 +47,8 @@ const int CPlayer::MAX_CHARGE = CGauge::MAX_GAUGE_WIDE / CHARGE_INTERVAL / SLASH
 //=============================================
 //コンストラクタ
 //=============================================
-CPlayer::CPlayer(int nPriority):CCharacter(nPriority),m_nJumpCnt(0),m_OldPress(false), m_nChargeCnt(0)
-{//イニシャライザーでジャンプカウント、プレス情報,チャージ段階初期化
+CPlayer::CPlayer(int nPriority):CCharacter(nPriority),m_nJumpCnt(0),m_OldPress(false), m_nChargeCnt(0), m_nSlashDamage(0)
+{//イニシャライザーでジャンプカウント、プレス情報,チャージ段階,斬撃のダメージ初期化
 	//斬撃の初期サイズ
 	m_SlashSize = D3DXVECTOR3(10.0f, 10.0f, 0.0f);
 }
@@ -176,7 +176,7 @@ void CPlayer::Update()
 					{//左クリックが押されてる間
 						//ゲージ消費(後に押された時間に応じて消費量変更)
 						m_PressCnt++;
-						if (m_PressCnt >= 5)
+						if (m_PressCnt >= CHARGE_INTERVAL)
 						{//押されたらサイズ増加
 							m_SlashSize.x += 3.0f; 
 							m_SlashSize.y += 3.0f;
@@ -188,6 +188,7 @@ void CPlayer::Update()
 							m_nChargeCnt++;
 						}
 
+						//ゲージ減少
 						pGauge->SubGauge(SLASH_COST);
 						m_OldPress = true;
 
@@ -195,7 +196,18 @@ void CPlayer::Update()
 				}
 				if (pMouse->GetRelease(0) && m_OldPress)
 				{//左クリックが離されたら
-
+					if (m_nChargeCnt >= MAX_CHARGE)
+					{//マックスチャージ量だったら
+						m_nSlashDamage = 5;
+					}
+					else if (m_nChargeCnt >= MAX_CHARGE * 0.5f && m_nChargeCnt < MAX_CHARGE)
+					{//半分より上だったら
+						m_nSlashDamage = 3;
+					}
+					else
+					{//それ以下だったら
+						m_nSlashDamage = 1;
+					}
 					//弾発射
 					ShotBullet(pos, m_SlashSize, bWay);
 
@@ -386,12 +398,12 @@ void CPlayer::ShotBullet(D3DXVECTOR3 pos, D3DXVECTOR3 size, bool bWay)
 	if (bWay == true)
 	{//右向き
 		CBullet* pBullet = CBullet::Create(D3DXVECTOR3(pos.x, pos.y + 10.0f, pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 7.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 7.0f),
-			D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 2.0f), D3DXVECTOR3(size.x, size.y, 0.0f), 30);
+			D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 2.0f), D3DXVECTOR3(size.x, size.y, 0.0f), 30, m_nSlashDamage);
 	}
 	else if (bWay == false)
 	{//左向き
 		CBullet* pBullet = CBullet::Create(D3DXVECTOR3(pos.x, pos.y + 10.0f, pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 7.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 7.0f),
-			D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 4.0f), D3DXVECTOR3(size.x, size.y, 0.0f), 30);
+			D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 4.0f), D3DXVECTOR3(size.x, size.y, 0.0f), 30, m_nSlashDamage);
 	}
 }
 

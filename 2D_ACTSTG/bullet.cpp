@@ -16,8 +16,8 @@ const std::string CBullet::TEXTURE_NAME ="data\\TEXTURE\\slash.png";
 //=============================================
 //コンストラクタ
 //=============================================
-CBullet::CBullet(int nPriority):CBillboard(nPriority)
-{
+CBullet::CBullet(int nPriority):CBillboard(nPriority),m_nLife(0),m_nDamage(0)
+{//イニシャライザーでライフとダメージ初期化
 	
 }
 
@@ -95,7 +95,7 @@ void CBullet::Draw()
 //=============================================
 //弾作成
 //=============================================
-CBullet* CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, D3DXVECTOR3 size,int nLife)
+CBullet* CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, D3DXVECTOR3 size,int nLife, int nDamage)
 {
 	CBullet* pBullet = new CBullet;
 
@@ -107,6 +107,7 @@ CBullet* CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, D3D
 	pBullet->SetRot(rot);
 	pBullet->m_move = move; //移動量代入
 	pBullet->m_nLife = nLife; //寿命代入
+	pBullet->m_nDamage = nDamage; //威力代入
     pBullet->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME)));
 	pBullet->SetType(OBJECT_TYPE_BULLET); //タイプ設定
 	pBullet->Init();
@@ -146,7 +147,7 @@ void CBullet::HitBullet()
 						&& Bulletpos.y - Bulletsize.y < pEnemy->GetPos().y + pEnemy->GetMaxPos().y
 						&& Bulletpos.y + Bulletsize.y > pEnemy->GetPos().y + pEnemy->GetMinPos().y)
 					{//当たり判定(X)
-						pEnemy->HitDamage();
+						pEnemy->HitDamage(m_nDamage);
 						//弾の削除
 						Uninit();
 					}
@@ -162,7 +163,7 @@ void CBullet::HitBullet()
 						&& Bulletpos.y + Bulletsize.y > pEnemy->GetPos().y + pEnemy->GetMinPos().y
 						)
 					{//当たり判定(Z)
-						pEnemy->HitDamage();
+						pEnemy->HitDamage(m_nDamage);
 						//弾の削除
 						Uninit();
 					}

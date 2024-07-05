@@ -48,6 +48,7 @@ private:
 	int m_PressCnt; //何秒間押されたか
 	int m_nJumpCnt; //ジャンプカウント
 	int m_nChargeCnt; //何段階目かカウント
+	int m_nSlashDamage; //斬撃のダメージ(引き渡し用)
 
 	static LPDIRECT3DTEXTURE9 m_pTextureTemp;
 
