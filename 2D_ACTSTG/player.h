@@ -34,6 +34,9 @@ private:
 	static const float DEFAULT_JUMP; //通常時のジャンプ力
 	static const int MAX_JUMPCNT; //ジャンプ回数
 	static const float DEADZONE_Y; //これを過ぎたらプレイヤー破棄
+	static const int SLASH_COST = 5; //斬撃コスト
+	static const int CHARGE_INTERVAL = 5; //段階が上がる間隔
+	static const int MAX_CHARGE; //最終段階
 
 	void ReSpawn(); //リスポーン
 	void PlayerMove(); //プレイヤー移動処理
@@ -42,9 +45,9 @@ private:
 
 	D3DXVECTOR3 m_SlashSize; //斬撃のサイズ
 	bool m_bSize; //サイズ変更するかどうか
-	float m_SlashCost; //斬撃を撃つのに必要なコスト
 	int m_PressCnt; //何秒間押されたか
 	int m_nJumpCnt; //ジャンプカウント
+	int m_nChargeCnt; //何段階目かカウント
 
 	static LPDIRECT3DTEXTURE9 m_pTextureTemp;
 

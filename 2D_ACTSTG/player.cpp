@@ -40,12 +40,17 @@ LPD3DXBUFFER CPlayer::m_pBuffMat = nullptr;
 LPD3DXMESH CPlayer::m_pMesh = nullptr;
 
 DWORD CPlayer::m_dwNumMat = 0;
+
+//最終段階
+const int CPlayer::MAX_CHARGE = CGauge::MAX_GAUGE_WIDE / CHARGE_INTERVAL / SLASH_COST;
+
 //=============================================
 //コンストラクタ
 //=============================================
-CPlayer::CPlayer(int nPriority):CCharacter(nPriority),m_nJumpCnt(0),m_OldPress(false)
-{//イニシャライザーでジャンプカウント、Press情報初期化
-	
+CPlayer::CPlayer(int nPriority):CCharacter(nPriority),m_nJumpCnt(0),m_OldPress(false), m_nChargeCnt(0)
+{//イニシャライザーでジャンプカウント、プレス情報,チャージ段階初期化
+	//斬撃の初期サイズ
+	m_SlashSize = D3DXVECTOR3(10.0f, 10.0f, 0.0f);
 }
 
 //=============================================
@@ -171,36 +176,38 @@ void CPlayer::Update()
 					{//左クリックが押されてる間
 						//ゲージ消費(後に押された時間に応じて消費量変更)
 						m_PressCnt++;
-						if (m_PressCnt >= 5.0f)
-						{//1秒間押されたらサイズ増加
-							m_SlashSize.x += 2.0f; 
-							m_SlashSize.y += m_SlashSize.x;
+						if (m_PressCnt >= 5)
+						{//押されたらサイズ増加
+							m_SlashSize.x += 3.0f; 
+							m_SlashSize.y += 3.0f;
 							m_SlashSize.z += 0.0f;
 
 							//カウントリセット
 							m_PressCnt = 0;
 
-							//コスト増加
-							m_SlashCost += 1.0f;
+							m_nChargeCnt++;
 						}
-						pGauge->SubGauge(m_SlashCost);
-						m_OldPress = true;
-					}
 
+						pGauge->SubGauge(SLASH_COST);
+						m_OldPress = true;
+
+					}
 				}
 				if (pMouse->GetRelease(0) && m_OldPress)
 				{//左クリックが離されたら
+
 					//弾発射
-					ShotBullet(pos,m_SlashSize, bWay);
+					ShotBullet(pos, m_SlashSize, bWay);
 
 					//斬撃のサイズリセット
-					m_SlashSize = D3DXVECTOR3(0.0f,0.0f,0.0f);
+					m_SlashSize = D3DXVECTOR3(10.0f, 10.0f, 0.0f);
 
 					//何も押されてない状態に
 					m_OldPress = false;
 
+					//カウントリセット
 					m_PressCnt = 0;
-					m_SlashCost = 0.0f;
+					
 				}
 			}
 		}
@@ -352,10 +359,6 @@ void CPlayer::PlayerMove()
 		rot.y = rotMoveY + D3DX_PI;
 		//rotを代入
 		SetRot(rot);
-		//if (g_Player.rot.y <= -D3DX_PI)
-		//{
-		//	g_Player.rot.y = D3DX_PI;
-		//}
 	}
 	if (m_nJumpCnt < MAX_JUMPCNT)
 	{//ジャンプ数以下だったら
