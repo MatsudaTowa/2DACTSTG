@@ -32,7 +32,8 @@ private:
 	static const float DEFAULT_MOVE; //通常時の移動	   
 	static const float DAMPING_COEFFICIENT; //移動抵抗
 	static const float DEADZONE_Y; //これを過ぎたら破棄
-	static const int EFFECT_LIFE = 3; //エネミーの体力
+	static const int EFFECT_LIFE = 3; //エフェクトの体力
+	static const int ENEMY_DEFAULT_LIFE = 5; //エネミーの体力
 
 
 	static LPDIRECT3DTEXTURE9 m_pTextureTemp;

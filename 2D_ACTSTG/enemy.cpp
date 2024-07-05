@@ -51,7 +51,8 @@ HRESULT CEnemy::Init()
 	//移動量初期化
 	D3DXVECTOR3 move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-	m_nLife = 5;
+	//エネミーの体力設定
+	m_nLife = ENEMY_DEFAULT_LIFE;
 
 	//ムーブ値代入
 	SetMove(move);
