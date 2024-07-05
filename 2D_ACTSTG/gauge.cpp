@@ -7,6 +7,7 @@
 #include "gauge_fream.h"
 #include "gauge.h"
 #include "manager.h"
+#include "player.h"
 
 //ゲージの最大値
 const float CGauge::MAX_GAUGE_WIDE = 350.0f;
@@ -56,10 +57,29 @@ void CGauge::Update()
     //親クラスの更新呼ぶ
     CObject2D::Update();
 
-	if (GetSize().x <= MAX_GAUGE_WIDE)
-	{//最大値以下なら加算
-		AddGauge();
+	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
+	{
+		//オブジェクト取得
+		CObject* pObj = CObject::Getobject(CPlayer::PLAYER_PRIORITY, nCnt);
+		if (pObj != nullptr)
+		{//ヌルポインタじゃなければ
+			//タイプ取得
+			CObject::OBJECT_TYPE type = pObj->GetType();
+
+			//敵との当たり判定
+			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_PLAYER)
+			{
+				CPlayer*pPlayer = (CPlayer*)pObj;
+
+				if (GetSize().x <= MAX_GAUGE_WIDE && pPlayer->m_OldPress != true)
+				{//最大値以下で左クリック押されてなかったら加算
+					AddGauge();
+				}
+
+			}
+		}
 	}
+
 
 	//頂点設定
 	SetGaugeVtx(1.0f, D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
@@ -82,7 +102,7 @@ void CGauge::AddGauge()
 	//自分自身のサイズ取得
    D3DXVECTOR2 size = GetSize();
 
-   //size.x += 1.0f;
+   size.x += 1.0f;
 
    //サイズ代入
    SetSize(size);

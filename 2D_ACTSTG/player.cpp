@@ -170,7 +170,20 @@ void CPlayer::Update()
 					if (pMouse->GetPress(0))
 					{//左クリックが押されてる間
 						//ゲージ消費(後に押された時間に応じて消費量変更)
-						pGauge->SubGauge(10.0f);
+						m_PressCnt++;
+						if (m_PressCnt >= 5.0f)
+						{//1秒間押されたらサイズ増加
+							m_SlashSize.x += 2.0f; 
+							m_SlashSize.y += m_SlashSize.x;
+							m_SlashSize.z += 0.0f;
+
+							//カウントリセット
+							m_PressCnt = 0;
+
+							//コスト増加
+							m_SlashCost += 1.0f;
+						}
+						pGauge->SubGauge(m_SlashCost);
 						m_OldPress = true;
 					}
 
@@ -178,10 +191,17 @@ void CPlayer::Update()
 				if (pMouse->GetRelease(0) && m_OldPress)
 				{//左クリックが離されたら
 					//弾発射
-					ShotBullet(pos, bWay);
-					m_OldPress = false;
-				}
+					ShotBullet(pos,m_SlashSize, bWay);
 
+					//斬撃のサイズリセット
+					m_SlashSize = D3DXVECTOR3(0.0f,0.0f,0.0f);
+
+					//何も押されてない状態に
+					m_OldPress = false;
+
+					m_PressCnt = 0;
+					m_SlashCost = 0.0f;
+				}
 			}
 		}
 	}
@@ -358,17 +378,17 @@ void CPlayer::PlayerMove()
 //=============================================
 //弾発射処理
 //=============================================
-void CPlayer::ShotBullet(D3DXVECTOR3 pos, bool bWay)
+void CPlayer::ShotBullet(D3DXVECTOR3 pos, D3DXVECTOR3 size, bool bWay)
 {
 	if (bWay == true)
 	{//右向き
 		CBullet* pBullet = CBullet::Create(D3DXVECTOR3(pos.x, pos.y + 10.0f, pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 7.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 7.0f),
-			D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 2.0f), D3DXVECTOR3(20.0f, 50.0f, 0.0f), 30);
+			D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 2.0f), D3DXVECTOR3(size.x, size.y, 0.0f), 30);
 	}
 	else if (bWay == false)
 	{//左向き
 		CBullet* pBullet = CBullet::Create(D3DXVECTOR3(pos.x, pos.y + 10.0f, pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 7.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 7.0f),
-			D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 4.0f), D3DXVECTOR3(20.0f, 50.0f, 0.0f), 30);
+			D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 4.0f), D3DXVECTOR3(size.x, size.y, 0.0f), 30);
 	}
 }
 

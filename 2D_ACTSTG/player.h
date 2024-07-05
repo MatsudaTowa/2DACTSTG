@@ -24,6 +24,9 @@ public:
 
 	//プレイヤー作成
 	static CPlayer* Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot);
+
+	bool m_OldPress; //左クリック押されてるかどうか
+
 private:
 	static const std::string MODEL_NAME;	//モデルの名前
 	static const float DEFAULT_MOVE; //通常時の移動
@@ -34,11 +37,13 @@ private:
 
 	void ReSpawn(); //リスポーン
 	void PlayerMove(); //プレイヤー移動処理
-	void ShotBullet(D3DXVECTOR3 pos,bool bWay); //弾発射処理
+	void ShotBullet(D3DXVECTOR3 pos,D3DXVECTOR3 size,bool bWay); //弾発射処理
 	void PerformMelee(D3DXVECTOR3 pos, bool bWay); //近接攻撃処理
 
+	D3DXVECTOR3 m_SlashSize; //斬撃のサイズ
 	bool m_bSize; //サイズ変更するかどうか
-	bool m_OldPress; //左クリック押されてるかどうか
+	float m_SlashCost; //斬撃を撃つのに必要なコスト
+	int m_PressCnt; //何秒間押されたか
 	int m_nJumpCnt; //ジャンプカウント
 
 	static LPDIRECT3DTEXTURE9 m_pTextureTemp;
