@@ -38,6 +38,7 @@ private:
 	void PerformMelee(D3DXVECTOR3 pos, bool bWay); //近接攻撃処理
 
 	bool m_bSize; //サイズ変更するかどうか
+	bool m_OldPress; //左クリック押されてるかどうか
 	int m_nJumpCnt; //ジャンプカウント
 
 	static LPDIRECT3DTEXTURE9 m_pTextureTemp;

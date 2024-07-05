@@ -43,8 +43,8 @@ DWORD CPlayer::m_dwNumMat = 0;
 //=============================================
 //コンストラクタ
 //=============================================
-CPlayer::CPlayer(int nPriority):CCharacter(nPriority),m_nJumpCnt(0)
-{//イニシャライザーでジャンプカウント初期化
+CPlayer::CPlayer(int nPriority):CCharacter(nPriority),m_nJumpCnt(0),m_OldPress(false)
+{//イニシャライザーでジャンプカウント、Press情報初期化
 	
 }
 
@@ -151,31 +151,37 @@ void CPlayer::Update()
 	//どっち向いてるか取得
 	bool bWay = GetWay();
 
-	if (pMouse->GetRelease(0))
-	{//右クリックが入力されたら
-		for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
-		{
-			//オブジェクト取得
-			CObject* pObj = CObject::Getobject(CGauge::GAUGE_PRIORITY, nCnt);
-			if (pObj != nullptr)
-			{//ヌルポインタじゃなければ
-				//タイプ取得
-				CObject::OBJECT_TYPE type = pObj->GetType();
+	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
+	{
+		//オブジェクト取得
+		CObject* pObj = CObject::Getobject(CGauge::GAUGE_PRIORITY, nCnt);
+		if (pObj != nullptr)
+		{//ヌルポインタじゃなければ
+			//タイプ取得
+			CObject::OBJECT_TYPE type = pObj->GetType();
 
-				//敵との当たり判定
-				if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_GAUGE)
-				{
-					CGauge* pGauge = (CGauge*)pObj;
+			//敵との当たり判定
+			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_GAUGE)
+			{
+				CGauge* pGauge = (CGauge*)pObj;
 
-					if (pGauge->GetSize().x > 0.0f)
-					{//ゲージがあったら
-						//弾発射
-						ShotBullet(pos, bWay);
-
+				if (pGauge->GetSize().x > 0.0f)
+				{//ゲージがあったら
+					if (pMouse->GetPress(0))
+					{//左クリックが押されてる間
 						//ゲージ消費(後に押された時間に応じて消費量変更)
-						pGauge->SubGauge(50.0f);
+						pGauge->SubGauge(10.0f);
+						m_OldPress = true;
 					}
+
 				}
+				if (pMouse->GetRelease(0) && m_OldPress)
+				{//左クリックが離されたら
+					//弾発射
+					ShotBullet(pos, bWay);
+					m_OldPress = false;
+				}
+
 			}
 		}
 	}

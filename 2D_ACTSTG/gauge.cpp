@@ -82,7 +82,7 @@ void CGauge::AddGauge()
 	//自分自身のサイズ取得
    D3DXVECTOR2 size = GetSize();
 
-   size.x += 1.0f;
+   //size.x += 1.0f;
 
    //サイズ代入
    SetSize(size);
