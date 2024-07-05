@@ -34,8 +34,10 @@ public:
 	void Update() override;//端末ごとに
 	bool GetPress(int nKey);
 	bool GetTrigger(int nKey);
+	bool GetRelease(int nKey);
 private:
 	BYTE m_aKeyStateTrigger[NUM_KEY_MAX]; //キーボードのトリガー情報
+	BYTE m_aKeyStateRelease[NUM_KEY_MAX]; //キーボードのリリース情報
 	BYTE m_aKeyState[NUM_KEY_MAX]; //キーボードのプレス情報
 };
 
@@ -51,9 +53,11 @@ public:
 	void Update() override;//端末ごとに
 	bool GetPress(int nKey);
 	bool GetTrigger(int nKey);
+	bool GetRelease(int nKey);
 	D3DXVECTOR3 GetMouseMove(void);
 private:
 	DIMOUSESTATE m_KeyStateTrigger; //マウスのトリガー情報
+	DIMOUSESTATE m_KeyStateRelease; //マウスのリリース情報
 	DIMOUSESTATE m_KeyState; //マウスのプレス情報
 	DIMOUSESTATE m_zdiMouseMove; //マウスムーブ
 	D3DXVECTOR3 m_MousePos;

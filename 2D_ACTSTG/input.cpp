@@ -122,6 +122,7 @@ void CInputKeyboard::Update()
 	{
 		for (nCntKey = 0; nCntKey < NUM_KEY_MAX; nCntKey++)
 		{
+			m_aKeyStateRelease[nCntKey] = (m_aKeyState[nCntKey] ^ aKeyState[nCntKey]) & ~aKeyState[nCntKey]; //リリース
 			m_aKeyStateTrigger[nCntKey] = (m_aKeyState[nCntKey] ^ aKeyState[nCntKey]) & aKeyState[nCntKey];
 			m_aKeyState[nCntKey] = aKeyState[nCntKey]; //キーボードのプレス情報を保存
 		}
@@ -142,6 +143,10 @@ bool CInputKeyboard::GetPress(int nKey)
 bool CInputKeyboard::GetTrigger(int nKey)
 {
 	return(m_aKeyStateTrigger[nKey] & 0x80) != 0;
+}
+bool CInputKeyboard::GetRelease(int nKey)
+{
+	return(m_aKeyStateRelease[nKey] & 0x80) != 0;
 }
 
 //↓からマウス
@@ -229,6 +234,7 @@ BYTE aMouseState[NUM_MOUSE_MAX]; //入力情報
 		if (SUCCEEDED(m_pDevice->GetDeviceState(sizeof(zdiMouseState), &zdiMouseState)))
 		{
 
+			m_KeyStateRelease.rgbButtons[nCntMouse] = (m_KeyState.rgbButtons[nCntMouse] ^ zdiMouseState.rgbButtons[nCntMouse]) & ~zdiMouseState.rgbButtons[nCntMouse];
 			m_KeyStateTrigger.rgbButtons[nCntMouse] = (m_KeyState.rgbButtons[nCntMouse] ^ zdiMouseState.rgbButtons[nCntMouse]) & zdiMouseState.rgbButtons[nCntMouse];
 			m_KeyState.rgbButtons[nCntMouse] = zdiMouseState.rgbButtons[nCntMouse]; //キーボードのプレス情報を保存
 		}
@@ -264,6 +270,10 @@ bool CInputMouse::GetPress(int nKey)
 bool CInputMouse::GetTrigger(int nKey)
 {
 	return(m_KeyStateTrigger.rgbButtons[nKey] & 0x80) != 0;
+}
+bool CInputMouse::GetRelease(int nKey)
+{
+	return(m_KeyStateRelease.rgbButtons[nKey] & 0x80) != 0;
 }
 D3DXVECTOR3 CInputMouse::GetMouseMove(void)
 {

@@ -151,7 +151,7 @@ void CPlayer::Update()
 	//どっち向いてるか取得
 	bool bWay = GetWay();
 
-	if (pMouse->GetTrigger(0))
+	if (pMouse->GetRelease(0))
 	{//右クリックが入力されたら
 		for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
 		{
@@ -178,7 +178,6 @@ void CPlayer::Update()
 				}
 			}
 		}
-
 	}
 
 	if (pMouse->GetTrigger(1))
