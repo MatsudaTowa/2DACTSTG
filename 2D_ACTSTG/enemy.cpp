@@ -65,6 +65,7 @@ HRESULT CEnemy::Init()
 //=============================================
 void CEnemy::Uninit()
 {
+	//親クラスの終了
 	CObjectX::Uninit();
 }
 
@@ -127,6 +128,7 @@ void CEnemy::Update()
 //=============================================
 void CEnemy::Draw()
 {
+	//親クラスの描画
 	CObjectX::Draw();
 }
 
@@ -189,7 +191,7 @@ void CEnemy::HitDamage(int nDamage)
 //=============================================
 //コンストラクタ
 //=============================================
-CNormalEnemy::CNormalEnemy(int nPriority):CEnemy(nPriority)
+CNormalEnemy::CNormalEnemy(int nPriority):CEnemy(nPriority),m_bFlip(true),m_nTurnFrameCnt(0)
 {
 }
 
