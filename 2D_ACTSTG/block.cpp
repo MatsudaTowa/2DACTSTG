@@ -78,6 +78,8 @@ CBlock* CBlock::Create(BLOCKTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nLi
 {
 
 	CBlock* pBlock = new CBlock;
+
+	//null‚È‚çnull‚ð•Ô‚·
 	if (pBlock == nullptr) {return nullptr;}
 	
 	CModel* pModel = CManager::GetModel();
@@ -97,7 +99,6 @@ CBlock* CBlock::Create(BLOCKTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nLi
 	pBlock->SetType(OBJECT_TYPE_BLOCK); //ƒ^ƒCƒvÝ’è
 	pBlock->Init();
 	
-
 	return pBlock;
 }
 

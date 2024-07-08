@@ -39,6 +39,7 @@ CGame::~CGame()
 //=============================================
 HRESULT CGame::Init()
 {
+	//ブロック生成
 	CBlock* pBlock = CBlock::Create(CBlock::BLOCKTYPE_DEFAULT, D3DXVECTOR3(0.0, 0.0f, 0.0f),
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f), 3, false);
 
@@ -48,13 +49,18 @@ HRESULT CGame::Init()
 	pBlock = CBlock::Create(CBlock::BLOCKTYPE_DEFAULT, D3DXVECTOR3(5.0f, 50.0f, 0.0f),
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f), 3, false);
 
+	//ゲージのフレームUI生成
 	CGauge_Fream* pGauge_Fream = CGauge_Fream::Create(D3DXVECTOR3(980.0f,80.0f,0.0f),D3DXVECTOR2(280.0f,120.0f));
 
+	//地面生成
 	CField* pField = CField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(500.0f, 0.0f, 500.0f));
 
+	//プレイヤー生成
 	CPlayer* pPlayer = CPlayer::Create(D3DXVECTOR3(-450.0f, 0.5f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
-	CEnemy* pEnemy = CEnemy::Create(D3DXVECTOR3(-100.0f, 10.5f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	//エネミー生成
+	CEnemy* pEnemy = CEnemy::Create(D3DXVECTOR3(-100.0f, 10.5f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),CEnemy::ENEMY_TYPE::ENEMY_TYPE_NORMAL);
+
 	return S_OK;
 }
 

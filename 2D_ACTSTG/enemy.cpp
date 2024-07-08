@@ -10,7 +10,7 @@
 #include "effect.h"
 
 //通常の移動速度
-const float CEnemy::DEFAULT_MOVE = 1.0f;
+const float CEnemy::DEFAULT_MOVE = 0.5f;
 //通常の移動速度
 const float CEnemy::DAMPING_COEFFICIENT = 0.3f;
 
@@ -133,7 +133,7 @@ void CEnemy::Draw()
 //=============================================
 //生成
 //=============================================
-CEnemy* CEnemy::Create(const D3DXVECTOR3& pos,const D3DXVECTOR3& rot)
+CEnemy* CEnemy::Create(const D3DXVECTOR3& pos,const D3DXVECTOR3& rot, const ENEMY_TYPE& type)
 {
 	CEnemy* pEnemy = new CEnemy;
 
@@ -142,6 +142,8 @@ CEnemy* CEnemy::Create(const D3DXVECTOR3& pos,const D3DXVECTOR3& rot)
 
 	//モデルを取得
 	CModel* pModel = CManager::GetModel();
+
+	pEnemy->m_Type = type; //エネミーのタイプ設定
 
 	pEnemy->SetPos(pos); //pos設定
 	pEnemy->SetRot(rot); //rot設定
@@ -180,9 +182,32 @@ void CEnemy::HitDamage(int nDamage)
 //=============================================
 void CEnemy::EnemyMove()
 {
+	switch (m_Type)
+	{
+	case ENEMY_TYPE_NORMAL:
+		m_nTurnFrameCnt++;
+		if (m_nTurnFrameCnt >= NORMAL_ENEMY_TURNFRAME)
+		{//指定フレーム数に到達したら
+			//進む方向を切り替える
+			m_bFlip = m_bFlip ? false : true;
+			m_nTurnFrameCnt = 0;
+		}
+	default:
+		break;
+	}
 	D3DXVECTOR3 vecDirection(0.0f, 0.0f, 0.0f);
-	vecDirection.x -= 1.0f;
-	vecDirection.z -= 0.0f;
+
+	if (m_bFlip == true)
+	{//右向きに進むなら
+		vecDirection.x += 1.0f;
+		vecDirection.z += 0.0f;
+	}
+	else if (m_bFlip == false)
+	{//左向きに進むなら
+		vecDirection.x -= 1.0f;
+		vecDirection.z -= 0.0f;
+	}
+
 
 	//移動量取得
 	D3DXVECTOR3 move = GetMove();
@@ -197,7 +222,6 @@ void CEnemy::EnemyMove()
 	move.x += sinf(rotMoveY) * DEFAULT_MOVE;
 	move.z += cosf(rotMoveY) * DEFAULT_MOVE;
 	rot.y = rotMoveY + D3DX_PI;
-
 	
 	SetRot(rot); //rotを代入
 	SetMove(move);//移動量代入
