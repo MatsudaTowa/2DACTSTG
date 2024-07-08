@@ -39,7 +39,8 @@ CBlock::~CBlock()
 //=============================================
 HRESULT CBlock::Init()
 {
-	
+	//親クラスの初期化処理
+	CObjectX::Init();
 	return S_OK;
 }
 
@@ -48,6 +49,7 @@ HRESULT CBlock::Init()
 //=============================================
 void CBlock::Uninit()
 {
+	//親クラスの終了処理
 	CObjectX::Uninit();
 }
 
@@ -56,6 +58,8 @@ void CBlock::Uninit()
 //=============================================
 void CBlock::Update()
 {
+	//親クラスの更新処理
+	CObjectX::Update();
 }
 
 //=============================================
@@ -63,6 +67,7 @@ void CBlock::Update()
 //=============================================
 void CBlock::Draw()
 {
+	//親クラスの描画処理
 	CObjectX::Draw();
 }
 
@@ -73,22 +78,25 @@ CBlock* CBlock::Create(BLOCKTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nLi
 {
 
 	CBlock* pBlock = new CBlock;
-	if (pBlock != nullptr)
-	{
-		CModel* pModel = CManager::GetModel();
+	if (pBlock == nullptr) {return nullptr;}
+	
+	CModel* pModel = CManager::GetModel();
 
-		pBlock->m_type = type;
-		pBlock->SetPos(pos); //pos設定
-		pBlock->SetRot(rot); //pos設定
-		pBlock->m_nLife = nLife; //寿命代入
-		pBlock->m_bBreak = bBreak; //壊せるかどうか
-		//pBlock->BindTexture(m_pTextureTemp);
-		pBlock->BindXFile(pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).pBuffMat,
-			pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).dwNumMat,
-			pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).pMesh);
-		pBlock->SetType(OBJECT_TYPE_BLOCK); //タイプ設定
-		pBlock->Init();
-	}
+	pBlock->m_type = type;
+	pBlock->SetPos(pos); //pos設定
+	pBlock->SetRot(rot); //pos設定
+	pBlock->m_nLife = nLife; //寿命代入
+	pBlock->m_bBreak = bBreak; //壊せるかどうか
+	//pBlock->BindTexture(m_pTextureTemp);
+
+	//Xファイル読み込み
+	pBlock->BindXFile(pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).pBuffMat,
+		pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).dwNumMat,
+		pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).pMesh);
+
+	pBlock->SetType(OBJECT_TYPE_BLOCK); //タイプ設定
+	pBlock->Init();
+	
 
 	return pBlock;
 }
