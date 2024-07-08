@@ -135,7 +135,16 @@ void CEnemy::Draw()
 //=============================================
 CEnemy* CEnemy::Create(const D3DXVECTOR3& pos,const D3DXVECTOR3& rot, const ENEMY_TYPE& type)
 {
-	CEnemy* pEnemy = new CEnemy;
+	CEnemy* pEnemy = nullptr;
+
+	switch (type)
+	{
+	case ENEMY_TYPE_NORMAL:
+		pEnemy = new CNormalEnemy;
+	default:
+		assert(true);
+		break;
+	}
 
 	// nullならnullを返す
 	if (pEnemy == nullptr) { return nullptr; }
@@ -178,24 +187,69 @@ void CEnemy::HitDamage(int nDamage)
 }
 
 //=============================================
+//コンストラクタ
+//=============================================
+CNormalEnemy::CNormalEnemy(int nPriority):CEnemy(nPriority)
+{
+}
+
+//=============================================
+//デストラクタ
+//=============================================
+CNormalEnemy::~CNormalEnemy()
+{
+}
+
+//=============================================
+//初期化
+//=============================================
+HRESULT CNormalEnemy::Init()
+{
+	//親クラスの初期化
+	CEnemy::Init();
+	return S_OK;
+}
+
+//=============================================
+//終了
+//=============================================
+void CNormalEnemy::Uninit()
+{
+	//親クラスの終了
+	CEnemy::Uninit();
+}
+
+//=============================================
+//更新
+//=============================================
+void CNormalEnemy::Update()
+{
+	//親クラスの更新
+	CEnemy::Update();
+}
+
+//=============================================
+//描画
+//=============================================
+void CNormalEnemy::Draw()
+{
+	//親クラスの描画
+	CEnemy::Draw();
+}
+
+//=============================================
 //移動処理
 //=============================================
-void CEnemy::EnemyMove()
+void CNormalEnemy::EnemyMove()
 {
-	switch (m_Type)
-	{
-	case ENEMY_TYPE_NORMAL:
-		m_nTurnFrameCnt++;
-		if (m_nTurnFrameCnt >= NORMAL_ENEMY_TURNFRAME)
-		{//指定フレーム数に到達したら
-			//進む方向を切り替える
-			m_bFlip = m_bFlip ? false : true;
+	m_nTurnFrameCnt++;
+	if (m_nTurnFrameCnt >= NORMAL_ENEMY_TURNFRAME)
+	{//指定フレーム数に到達したら
+		//進む方向を切り替える
+		m_bFlip = m_bFlip ? false : true;
 
-			//カウントリセット
-			m_nTurnFrameCnt = 0;
-		}
-	default:
-		break;
+		//カウントリセット
+		m_nTurnFrameCnt = 0;
 	}
 
 	//移動用単位ベクトル初期化
@@ -223,10 +277,10 @@ void CEnemy::EnemyMove()
 	//着地してるか取得
 	bool bLanding = GetLaunding();
 
-	move.x += sinf(rotMoveY) * DEFAULT_MOVE;
-	move.z += cosf(rotMoveY) * DEFAULT_MOVE;
+	move.x += sinf(rotMoveY) * CEnemy::DEFAULT_MOVE;
+	move.z += cosf(rotMoveY) * CEnemy::DEFAULT_MOVE;
 	rot.y = rotMoveY + D3DX_PI;
-	
+
 	SetRot(rot); //rotを代入
 	SetMove(move);//移動量代入
 
