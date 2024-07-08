@@ -190,11 +190,15 @@ void CEnemy::EnemyMove()
 		{//指定フレーム数に到達したら
 			//進む方向を切り替える
 			m_bFlip = m_bFlip ? false : true;
+
+			//カウントリセット
 			m_nTurnFrameCnt = 0;
 		}
 	default:
 		break;
 	}
+
+	//移動用単位ベクトル初期化
 	D3DXVECTOR3 vecDirection(0.0f, 0.0f, 0.0f);
 
 	if (m_bFlip == true)
