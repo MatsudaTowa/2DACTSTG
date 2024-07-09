@@ -57,6 +57,7 @@ HRESULT CEnemy::Init()
 	//ムーブ値代入
 	SetMove(move);
 
+
 	return S_OK;
 }
 
@@ -112,6 +113,7 @@ void CEnemy::Update()
 
 	//プレイヤーとの接触処理
 	HitPlayer();
+
 
 	//ブロックとの接触処理
 	HitBlock();

@@ -54,6 +54,7 @@ void CAttack_Manager::Update()
 
 	if (m_nLife > 0)
 	{
+		m_nLife--;
 		//攻撃が当たってるかチェック
 		HitAttack();
 	}
@@ -105,7 +106,7 @@ void CAttack_Manager::HitAttack()
 						&& Attackpos.y - Attacksize.y < pEnemy->GetPos().y + pEnemy->GetMaxPos().y
 						&& Attackpos.y + Attacksize.y > pEnemy->GetPos().y + pEnemy->GetMinPos().y)
 					{//当たり判定(X)
-						pEnemy->HitDamage(1);
+						pEnemy->HitDamage(m_nDamage);
 						//近接攻撃の削除
 						Uninit();
 					}
@@ -121,7 +122,7 @@ void CAttack_Manager::HitAttack()
 						&& Attackpos.y + Attacksize.y > pEnemy->GetPos().y + pEnemy->GetMinPos().y
 						)
 					{//当たり判定(Z)
-						pEnemy->HitDamage(1);
+						pEnemy->HitDamage(m_nDamage);
 						//近接攻撃の削除
 						Uninit();
 					}

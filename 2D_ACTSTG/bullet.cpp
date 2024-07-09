@@ -11,7 +11,7 @@
 
 //テクスチャ初期化
 LPDIRECT3DTEXTURE9 CBullet::m_pTextureTemp = nullptr;
-const std::string CBullet::TEXTURE_NAME ="data\\TEXTURE\\slash.png";
+const std::string CBullet::TEXTURE_NAME ="data\\TEXTURE\\slash_test.png";
 
 //=============================================
 //コンストラクタ
