@@ -7,6 +7,10 @@
 #include "main.h"
 #include "attack_manager.h"
 
+#ifndef _BULLET_H_ //‚±‚ê‚ª’è‹`‚³‚ê‚Ä‚È‚¢‚Æ‚«
+
+#define _BULLET_H_
+
 class CBullet : public CAttack_Manager
 {
 public:
@@ -24,3 +28,4 @@ private:
 	D3DXVECTOR3 m_move;
 	static LPDIRECT3DTEXTURE9 m_pTextureTemp;
 };
+#endif

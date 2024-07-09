@@ -4,6 +4,11 @@
 //Auther Matsuda Towa
 //
 //=============================================
+
+#ifndef _MELEE_H_ //‚±‚ê‚ª’è‹`‚³‚ê‚Ä‚È‚¢‚Æ‚«
+
+#define _MELEE_H_
+
 #include"main.h"
 #include "attack_manager.h"
 class CMelee : public CAttack_Manager
@@ -23,3 +28,4 @@ public:
 private:
 	static LPDIRECT3DTEXTURE9 m_pTextureTemp;
 };
+#endif

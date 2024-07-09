@@ -1,3 +1,9 @@
+//=============================================
+//
+//UŒ‚ŠÇ—ƒNƒ‰ƒX[attack_manager.cpp]
+//Auther Matsuda Towa
+//
+//=============================================
 #include "attack_manager.h"
 #include "enemy.h"
 
