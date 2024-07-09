@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="attack_manager.cpp" />
     <ClCompile Include="billboard.cpp" />
     <ClCompile Include="block.cpp" />
     <ClCompile Include="bullet.cpp" />
@@ -187,6 +188,7 @@
     <ClCompile Include="title_screen.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="attack_manager.h" />
     <ClInclude Include="billboard.h" />
     <ClInclude Include="block.h" />
     <ClInclude Include="bullet.h" />

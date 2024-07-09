@@ -16,7 +16,7 @@ const std::string CBullet::TEXTURE_NAME ="data\\TEXTURE\\slash.png";
 //=============================================
 //コンストラクタ
 //=============================================
-CBullet::CBullet(int nPriority):CBillboard(nPriority),m_nLife(0),m_nDamage(0)
+CBullet::CBullet(int nPriority):CAttack_Manager(nPriority)
 {//イニシャライザーでライフとダメージ初期化
 	
 }
@@ -33,17 +33,8 @@ CBullet::~CBullet()
 //=============================================
 HRESULT CBullet::Init()
 {
-	//サイズ取得
-	D3DXVECTOR3 size = GetSize();
-
-	//対角線
-	m_fLength = sqrtf(size.x * size.x + size.y * size.y);
-
-	//角度
-	m_fAngle = atan2f(size.x, size.y);
-
-	//頂点設定
-	SetVtx(D3DXVECTOR3(0.0f, 0.0f, -1.0f),D3DXCOLOR(1.0f,1.0f,1.0f,1.0f));
+	//親クラスの初期化
+	CAttack_Manager::Init();
 
 	return S_OK;
 }
@@ -54,7 +45,7 @@ HRESULT CBullet::Init()
 void CBullet::Uninit()
 {
 	//親クラスの終了
-	CObject3D::Uninit();
+	CAttack_Manager::Uninit();
 }
 
 //=============================================
@@ -62,24 +53,20 @@ void CBullet::Uninit()
 //=============================================
 void CBullet::Update()
 {
-	if (m_nLife > 0)
+	//親クラスの更新
+	CAttack_Manager::Update();
+
+	//体力取得
+	int nLife = GetLife();
+
+	if (nLife > 0)
 	{//ライフがあれば処理実行
-		m_nLife--;
 		D3DXVECTOR3 pos = GetPos();
-		//CEffect* pEffect = CEffect::Create(D3DXVECTOR3(pos.x, pos.y + 8.0f, pos.z), D3DXVECTOR3(10.0f, 10.0f, 0.0f), D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.5f), 30);
 		pos += m_move;
 		//座標を更新
 		SetPos(pos);
 		//頂点座標
 		SetVtx(D3DXVECTOR3(0.0f, 0.0f, -1.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-
-		//当たったかチェック
-		HitBullet();
-	}
-	else
-	{
-		Uninit();
-		//CExplosion*pExplosion = CExplosion::Create(pos,D3DXVECTOR2(20.0f,20.0f));
 	}
 }
 
@@ -89,7 +76,7 @@ void CBullet::Update()
 void CBullet::Draw()
 {
 	//親クラスの描画
-	CObject3D::Draw();
+	CAttack_Manager::Draw();
 }
 
 //=============================================
@@ -106,8 +93,8 @@ CBullet* CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, D3D
 	pBullet->SetSize(size); //サイズ設定
 	pBullet->SetRot(rot);
 	pBullet->m_move = move; //移動量代入
-	pBullet->m_nLife = nLife; //寿命代入
-	pBullet->m_nDamage = nDamage; //威力代入
+	pBullet->SetLife(nLife); //寿命代入
+	pBullet->SetDamage(nDamage); //威力代入
     pBullet->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME)));
 	pBullet->SetType(OBJECT_TYPE_BULLET); //タイプ設定
 	pBullet->Init();
@@ -115,60 +102,3 @@ CBullet* CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, D3D
 	return pBullet;
 }
 
-//=============================================
-//弾の当たり判定
-//=============================================
-void CBullet::HitBullet()
-{
-	D3DXVECTOR3 Bulletpos = GetPos();
-	//サイズ取得
-	D3DXVECTOR3 Bulletsize = GetSize();
-
-	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
-	{
-		//オブジェクト取得
-		CObject* pObj = CObject::Getobject(CEnemy::ENEMY_PRIORITY, nCnt);
-		if (pObj != nullptr)
-		{//ヌルポインタじゃなければ
-			//タイプ取得
-			CObject::OBJECT_TYPE type = pObj->GetType();
-
-			//敵との当たり判定
-			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_ENEMY)
-			{
-				CEnemy* pEnemy = (CEnemy*)pObj;	
-
-
-				if (Bulletpos.x + Bulletsize.x > pEnemy->GetPos().x + pEnemy->GetMinPos().x
-					&&Bulletpos.x - Bulletsize.x < pEnemy->GetPos().x + pEnemy->GetMaxPos().x)
-				{
-					if (Bulletpos.z - Bulletsize.z< pEnemy->GetPos().z + pEnemy->GetMaxPos().z
-						&& Bulletpos.z + Bulletsize.z > pEnemy->GetPos().z + pEnemy->GetMinPos().z
-						&& Bulletpos.y - Bulletsize.y < pEnemy->GetPos().y + pEnemy->GetMaxPos().y
-						&& Bulletpos.y + Bulletsize.y > pEnemy->GetPos().y + pEnemy->GetMinPos().y)
-					{//当たり判定(X)
-						pEnemy->HitDamage(m_nDamage);
-						//弾の削除
-						Uninit();
-					}
-				}
-
-
-				else if (Bulletpos.z + Bulletsize.z > pEnemy->GetPos().z + pEnemy->GetMinPos().z
-					&&Bulletpos.z - Bulletsize.z < pEnemy->GetPos().z + pEnemy->GetMaxPos().z)
-				{
-					if (Bulletpos.x - Bulletsize.x < pEnemy->GetPos().x + pEnemy->GetMaxPos().x
-						&& Bulletpos.x + Bulletsize.x > pEnemy->GetPos().x + pEnemy->GetMinPos().x
-						&& Bulletpos.y - Bulletsize.y < pEnemy->GetPos().y + pEnemy->GetMaxPos().y
-						&& Bulletpos.y + Bulletsize.y > pEnemy->GetPos().y + pEnemy->GetMinPos().y
-						)
-					{//当たり判定(Z)
-						pEnemy->HitDamage(m_nDamage);
-						//弾の削除
-						Uninit();
-					}
-				}
-			}
-		}
-	}
-}

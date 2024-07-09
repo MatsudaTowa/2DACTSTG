@@ -5,9 +5,9 @@
 //
 //=============================================
 #include "main.h"
-#include "billboard.h"
+#include "attack_manager.h"
 
-class CBullet : public CBillboard
+class CBullet : public CAttack_Manager
 {
 public:
 	static const std::string TEXTURE_NAME;	//テクスチャの名前
@@ -21,11 +21,6 @@ public:
 	//弾作成
 	static CBullet* Create(D3DXVECTOR3 pos,D3DXVECTOR3 move,D3DXVECTOR3 rot, D3DXVECTOR3 size,int nLife,int nDamage);
 private:
-	void HitBullet();
 	D3DXVECTOR3 m_move;
-	float m_fAngle;
-	float m_fLength;
-	int m_nDamage;
-	int m_nLife;
 	static LPDIRECT3DTEXTURE9 m_pTextureTemp;
 };

@@ -29,14 +29,20 @@ public:
 
 private:
 	static const std::string MODEL_NAME;	//モデルの名前
+
+	//プレイヤーの移動関連
 	static const float DEFAULT_MOVE; //通常時の移動
 	static const float DAMPING_COEFFICIENT; //移動抵抗
 	static const float DEFAULT_JUMP; //通常時のジャンプ力
 	static const int MAX_JUMPCNT; //ジャンプ回数
 	static const float DEADZONE_Y; //これを過ぎたらプレイヤー破棄
+
+	//斬撃関連
 	static const int SLASH_COST = 5; //斬撃コスト
 	static const int CHARGE_INTERVAL = 5; //段階が上がる間隔
 	static const int MAX_CHARGE; //最終段階
+
+	static const int MELEE_DAMAGE = 1; //近接ダメージ
 
 	void ReSpawn(); //リスポーン
 	void PlayerMove(); //プレイヤー移動処理
