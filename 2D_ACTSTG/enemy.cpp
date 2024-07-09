@@ -244,6 +244,7 @@ void CNormalEnemy::Draw()
 //=============================================
 void CNormalEnemy::EnemyMove()
 {
+	//カウント加算
 	m_nTurnFrameCnt++;
 	if (m_nTurnFrameCnt >= NORMAL_ENEMY_TURNFRAME)
 	{//指定フレーム数に到達したら
