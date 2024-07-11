@@ -37,6 +37,9 @@ HRESULT CResult_Screen::Init()
 
 	size = D3DXVECTOR2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f);
 
+	//テクスチャ座標設定
+	SetTexPos(D3DXVECTOR2(1.0f, 1.0f));
+
 	//サイズを代入
 	SetSize(size);
 

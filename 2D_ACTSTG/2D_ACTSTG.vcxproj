@@ -170,6 +170,7 @@
     <ClCompile Include="manager.cpp" />
     <ClCompile Include="melee.cpp" />
     <ClCompile Include="model.cpp" />
+    <ClCompile Include="number.cpp" />
     <ClCompile Include="object.cpp" />
     <ClCompile Include="object2D.cpp" />
     <ClCompile Include="object3D.cpp" />
@@ -184,6 +185,7 @@
     <ClCompile Include="result_screen.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="texture.cpp" />
+    <ClCompile Include="timer.cpp" />
     <ClCompile Include="title.cpp" />
     <ClCompile Include="title_screen.cpp" />
   </ItemGroup>
@@ -207,6 +209,7 @@
     <ClInclude Include="manager.h" />
     <ClInclude Include="melee.h" />
     <ClInclude Include="model.h" />
+    <ClInclude Include="number.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="object2D.h" />
     <ClInclude Include="object3D.h" />
@@ -219,6 +222,7 @@
     <ClInclude Include="result_screen.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="texture.h" />
+    <ClInclude Include="timer.h" />
     <ClInclude Include="title.h" />
     <ClInclude Include="title_screen.h" />
   </ItemGroup>

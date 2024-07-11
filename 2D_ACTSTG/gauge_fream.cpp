@@ -33,6 +33,9 @@ HRESULT CGauge_Fream::Init()
     //親クラスの初期化を呼ぶ
     CObject2D::Init();
 
+    //テクスチャ座標設定
+    SetTexPos(D3DXVECTOR2(1.0f,1.0f));
+
     //頂点設定
     SetVtx(1.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
