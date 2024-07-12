@@ -114,7 +114,6 @@ void CEnemy::Update()
 	//プレイヤーとの接触処理
 	HitPlayer();
 
-
 	//ブロックとの接触処理
 	HitBlock();
 
@@ -181,6 +180,16 @@ void CEnemy::HitDamage(int nDamage)
 	if (m_nLife > 0)
 	{//HPが残ってたら
 		m_nLife-= nDamage;
+		////デバイスの取得
+		//CRenderer* pRender = CManager::GetRenderer();
+		//LPDIRECT3DDEVICE9 pDevice = pRender->GetDevice();
+
+		//D3DXMATERIAL* pMat; //マテリアル
+
+		//pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
+		//pMat->MatD3D.Diffuse.r = 1.0f;
+
+		//pDevice->SetMaterial(&pMat[MatD3D);
 	}
 	if (m_nLife <= 0)
 	{//HPが0以下だったら
