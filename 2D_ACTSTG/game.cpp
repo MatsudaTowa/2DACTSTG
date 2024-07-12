@@ -50,7 +50,7 @@ HRESULT CGame::Init()
 	pBlock = CBlock::Create(CBlock::BLOCKTYPE_DEFAULT, D3DXVECTOR3(5.0f, 50.0f, 0.0f),
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f), 3, false);
 
-	CTimer*pTimer =CTimer::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f,100.0f,0.0f),D3DXVECTOR2(50.0f,80.0f));
+	//CTimer*pTimer =CTimer::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.2f,100.0f,0.0f),D3DXVECTOR2(30.0f,50.0f));
 
 	//ゲージのフレームUI生成
 	CGauge_Fream* pGauge_Fream = CGauge_Fream::Create(D3DXVECTOR3(980.0f,80.0f,0.0f),D3DXVECTOR2(280.0f,120.0f));
