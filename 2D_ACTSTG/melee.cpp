@@ -92,6 +92,7 @@ void CMelee::Update()
 			}
 
 		}
+		HitEnemy();
 	}
 }
 

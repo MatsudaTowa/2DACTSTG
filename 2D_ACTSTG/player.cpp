@@ -14,6 +14,7 @@
 #include "camera.h"
 #include "melee.h"
 #include "gauge.h"
+#include "game.h"
 
 //ƒ‚ƒfƒ‹ƒpƒX
 const std::string CPlayer::MODEL_NAME = "data\\MODEL\\face.x";
@@ -290,6 +291,8 @@ void CPlayer::Damage(int nDamage)
 		//”jŠü
 		Release();
 
+		//€‚ñ‚¾ó‘Ô‚É
+		CGame::m_PlayerDeath = true;
 	}
 }
 

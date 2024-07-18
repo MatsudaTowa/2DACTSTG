@@ -121,7 +121,7 @@ void CEnemy::Update()
 		if (m_nShotCnt >= NORMAL_SHOT_FRAME)
 		{//フレーム数に達したら
 			//弾発射
-			ShotBullet(pos, D3DXVECTOR3(30.0f, 30.0f, 0.0f), bWay, 1, CBullet::BULLET_TYPE_ENEMY);
+			ShotBullet(pos, D3DXVECTOR3(20.0f, 20.0f, 0.0f), bWay, 1, CBullet::BULLET_TYPE_ENEMY);
 
 			//ショットカウントリセット
 			m_nShotCnt = 0;
@@ -138,7 +138,6 @@ void CEnemy::Update()
 	{//破棄処理
 		Release();
 	}
-
 }
 
 //=============================================
