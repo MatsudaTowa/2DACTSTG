@@ -9,6 +9,7 @@
 #include "player.h"
 #include "enemy.h"
 #include "field.h"
+#include"bullet.h"
 
 //èdóÕíl
 const float CCharacter::GRAVITY_MOVE = 1.5f;
@@ -388,6 +389,23 @@ void CCharacter::HitEnemy()
 }
 
 //=============================================
+//íeî≠éÀèàóù
+//=============================================
+void CCharacter::ShotBullet(D3DXVECTOR3 pos, D3DXVECTOR3 size, bool bWay,int nDamage,CBullet::BULLET_TYPE type)
+{
+	if (bWay == true)
+	{//âEå¸Ç´
+		CBullet* pBullet = CBullet::Create(D3DXVECTOR3(pos.x, pos.y + 10.0f, pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 7.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 7.0f),
+			D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 2.0f), D3DXVECTOR3(size.x, size.y, 0.0f), 30, nDamage, type);
+	}
+	else if (bWay == false)
+	{//ç∂å¸Ç´
+		CBullet* pBullet = CBullet::Create(D3DXVECTOR3(pos.x, pos.y + 10.0f, pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 7.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 7.0f),
+			D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 4.0f), D3DXVECTOR3(size.x, size.y, 0.0f), 30, nDamage, type);
+	}
+}
+
+//=============================================
 //à⁄ìÆó éÊìæ
 //=============================================
 D3DXVECTOR3& CCharacter::GetMove()
@@ -417,4 +435,12 @@ bool& CCharacter::GetLaunding()
 bool& CCharacter::GetWay()
 {
     return m_bWay;
+}
+
+//=============================================
+//ëÃóÕéÊìæ
+//=============================================
+int& CCharacter::GetLife()
+{
+	return m_nLife;
 }

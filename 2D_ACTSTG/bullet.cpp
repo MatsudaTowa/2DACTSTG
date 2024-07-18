@@ -67,6 +67,21 @@ void CBullet::Update()
 		SetPos(pos);
 		//頂点座標
 		SetVtx(D3DXVECTOR3(0.0f, 0.0f, -1.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+
+		switch (m_type)
+		{
+		case BULLET_TYPE_PLAYER:
+			HitEnemy();
+			break;
+
+		case BULLET_TYPE_ENEMY:
+			HitPlayer();
+			break;
+
+		default:
+			assert(true);
+			break;
+		}
 	}
 }
 
@@ -82,7 +97,7 @@ void CBullet::Draw()
 //=============================================
 //弾作成
 //=============================================
-CBullet* CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, D3DXVECTOR3 size,int nLife, int nDamage)
+CBullet* CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, D3DXVECTOR3 size,int nLife, int nDamage, BULLET_TYPE type)
 {
 	CBullet* pBullet = new CBullet;
 
@@ -96,6 +111,7 @@ CBullet* CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, D3D
 	pBullet->SetLife(nLife); //寿命代入
 	pBullet->SetDamage(nDamage); //威力代入
     pBullet->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME)));
+	pBullet->m_type = type; //弾の設定
 	pBullet->SetType(OBJECT_TYPE_BULLET); //タイプ設定
 	pBullet->Init();
 

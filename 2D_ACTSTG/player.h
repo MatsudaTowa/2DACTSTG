@@ -23,7 +23,9 @@ public:
 	void Draw()override;
 
 	//プレイヤー作成
-	static CPlayer* Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot);
+	static CPlayer* Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nLife);
+
+	void Damage(int nDamage); //当たり判定
 
 	bool m_OldPress; //左クリック押されてるかどうか
 
@@ -46,7 +48,6 @@ private:
 
 	void ReSpawn(); //リスポーン
 	void PlayerMove(); //プレイヤー移動処理
-	void ShotBullet(D3DXVECTOR3 pos,D3DXVECTOR3 size,bool bWay); //弾発射処理
 	void PerformMelee(D3DXVECTOR3 pos, bool bWay); //近接攻撃処理
 
 	D3DXVECTOR3 m_SlashSize; //斬撃のサイズ

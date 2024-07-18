@@ -7,7 +7,9 @@
 #include "enemy.h"
 #include "camera.h"
 #include "manager.h"
+#include "player.h"
 #include "effect.h"
+#include "bullet.h"
 
 //通常の移動速度
 const float CEnemy::DEFAULT_MOVE = 0.5f;
@@ -32,7 +34,7 @@ DWORD CEnemy::m_dwNumMat = 0;
 //=============================================
 //コンストラクタ
 //=============================================
-CEnemy::CEnemy(int nPriority):CCharacter(nPriority)
+CEnemy::CEnemy(int nPriority):CCharacter(nPriority),m_nShotCnt(0)
 {
 }
 
@@ -50,9 +52,6 @@ HRESULT CEnemy::Init()
 {
 	//移動量初期化
 	D3DXVECTOR3 move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
-	//エネミーの体力設定
-	m_nLife = ENEMY_DEFAULT_LIFE;
 
 	//ムーブ値代入
 	SetMove(move);
@@ -75,7 +74,6 @@ void CEnemy::Uninit()
 //=============================================
 void CEnemy::Update()
 {
-
 	//重力処理
 	Gravity();
 
@@ -101,6 +99,7 @@ void CEnemy::Update()
 	//過去の位置代入
 	SetOldPos(oldpos);
 
+	//エフェクト生成
 	CEffect* pEffect = CEffect::Create(D3DXVECTOR3(pos.x, pos.y, pos.z), D3DXVECTOR3(10.0f, 10.0f, 0.0f), D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.5f), 30);
 
 	pos += move;
@@ -108,8 +107,26 @@ void CEnemy::Update()
 	//座標を更新
 	SetPos(pos);
 
-	//D3DXVECTOR3 minpos = GetMinPos();
-	//D3DXVECTOR3 maxpos = GetMaxPos();
+	//プレイヤーとの距離を測る
+	bool bDistance = PlayerDistance();
+
+	if (bDistance == true)
+	{//近かったら
+		//向きを取得
+		bool bWay = GetWay();
+
+		//ショットカウント加算
+		m_nShotCnt++;
+
+		if (m_nShotCnt >= NORMAL_SHOT_FRAME)
+		{//フレーム数に達したら
+			//弾発射
+			ShotBullet(pos, D3DXVECTOR3(30.0f, 30.0f, 0.0f), bWay, 1, CBullet::BULLET_TYPE_ENEMY);
+
+			//ショットカウントリセット
+			m_nShotCnt = 0;
+		}
+	}
 
 	//プレイヤーとの接触処理
 	HitPlayer();
@@ -157,6 +174,9 @@ CEnemy* CEnemy::Create(const D3DXVECTOR3& pos,const D3DXVECTOR3& rot, const ENEM
 
 	pEnemy->m_Type = type; //エネミーのタイプ設定
 
+	//エネミーの体力設定
+	pEnemy->SetLife(ENEMY_DEFAULT_LIFE);
+
 	pEnemy->SetPos(pos); //pos設定
 	pEnemy->SetRot(rot); //rot設定
 
@@ -175,23 +195,19 @@ CEnemy* CEnemy::Create(const D3DXVECTOR3& pos,const D3DXVECTOR3& rot, const ENEM
 //=============================================
 //ダメージを受けたとき
 //=============================================
-void CEnemy::HitDamage(int nDamage)
+void CEnemy::Damage(int nDamage)
 {
-	if (m_nLife > 0)
+	//体力取得
+	int nLife = GetLife();
+
+	if (nLife > 0)
 	{//HPが残ってたら
-		m_nLife-= nDamage;
-		////デバイスの取得
-		//CRenderer* pRender = CManager::GetRenderer();
-		//LPDIRECT3DDEVICE9 pDevice = pRender->GetDevice();
+		nLife -= nDamage;
 
-		//D3DXMATERIAL* pMat; //マテリアル
-
-		//pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
-		//pMat->MatD3D.Diffuse.r = 1.0f;
-
-		//pDevice->SetMaterial(&pMat[MatD3D);
+		//体力代入
+		SetLife(nLife);
 	}
-	if (m_nLife <= 0)
+	if (nLife <= 0)
 	{//HPが0以下だったら
 		//破棄
 		Release();
@@ -200,9 +216,61 @@ void CEnemy::HitDamage(int nDamage)
 }
 
 //=============================================
+//プレイヤーとの距離を測る
+//=============================================
+bool CEnemy::PlayerDistance()
+{
+	bool bNear = false; //近かったらtrueを返す
+
+	bool bWay = GetWay(); //向きを取得
+
+	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
+	{
+		//オブジェクト取得
+		CObject* pObj = CObject::Getobject(CPlayer::PLAYER_PRIORITY, nCnt);
+		if (pObj != nullptr)
+		{//ヌルポインタじゃなければ
+			//タイプ取得
+			CObject::OBJECT_TYPE type = pObj->GetType();
+
+			//敵との当たり判定
+			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_PLAYER)
+			{
+				CPlayer* pPlayer = (CPlayer*)pObj;
+
+				float fDistance = 0.0f; //プレイヤーとの距離
+				
+				fDistance = GetPos().x - pPlayer->GetPos().x;
+
+				if (fDistance >= 0.0f && fDistance < 100.0f)
+				{//エネミーのminに近い
+					bNear = true;
+					
+					bWay = false; //向きをプレイヤーのほうに切り替える
+				}
+				else if (fDistance <= 0.0f && fDistance > -100.0f)
+				{//エネミーのmaxに近い
+					bNear = true;
+
+					bWay = true; //向きをプレイヤーのほうに切り替える
+				}
+				else
+				{//近くない
+					bNear = false;
+				}
+			}
+		}
+	}
+
+	//向きを代入
+	SetWay(bWay);
+	return bNear;
+}
+
+//=============================================
 //コンストラクタ
 //=============================================
-CNormalEnemy::CNormalEnemy(int nPriority):CEnemy(nPriority),m_bFlip(true),m_nTurnFrameCnt(0)
+CNormalEnemy::CNormalEnemy(int nPriority):CEnemy(nPriority),m_nTurnFrameCnt(0), m_bOldWay(false)
 {
 }
 
@@ -257,11 +325,24 @@ void CNormalEnemy::EnemyMove()
 {
 	//カウント加算
 	m_nTurnFrameCnt++;
+
+	//向きを取得
+	bool bWay = GetWay();
+
+	if (m_bOldWay != bWay)
+	{//過去の向きと違ったらフレームリセット
+		m_nTurnFrameCnt = 0;
+	}
+
 	if (m_nTurnFrameCnt >= NORMAL_ENEMY_TURNFRAME)
 	{//指定フレーム数に到達したら
-		//進む方向を切り替える
-		m_bFlip = m_bFlip ? false : true;
 
+		//進む方向を切り替える
+		bWay = bWay ? false : true;
+		SetWay(bWay);
+
+		//過去の向きに今の向きを代入
+		m_bOldWay = bWay;
 		//カウントリセット
 		m_nTurnFrameCnt = 0;
 	}
@@ -269,12 +350,12 @@ void CNormalEnemy::EnemyMove()
 	//移動用単位ベクトル初期化
 	D3DXVECTOR3 vecDirection(0.0f, 0.0f, 0.0f);
 
-	if (m_bFlip == true)
+	if (bWay == true)
 	{//右向きに進むなら
 		vecDirection.x += 1.0f;
 		vecDirection.z += 0.0f;
 	}
-	else if (m_bFlip == false)
+	else if (bWay == false)
 	{//左向きに進むなら
 		vecDirection.x -= 1.0f;
 		vecDirection.z -= 0.0f;

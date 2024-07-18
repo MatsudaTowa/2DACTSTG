@@ -6,6 +6,7 @@
 //=============================================
 #include "attack_manager.h"
 #include "enemy.h"
+#include "player.h"
 
 //=============================================
 //コンストラクタ
@@ -55,8 +56,6 @@ void CAttack_Manager::Update()
 	if (m_nLife > 0)
 	{
 		m_nLife--;
-		//攻撃が当たってるかチェック
-		HitAttack();
 	}
 	else
 	{
@@ -75,9 +74,9 @@ void CAttack_Manager::Draw()
 }
 
 //=============================================
-//攻撃当たり判定
+//攻撃当たり判定(エネミー)
 //=============================================
-void CAttack_Manager::HitAttack()
+void CAttack_Manager::HitEnemy()
 {
 	//位置取得
 	D3DXVECTOR3 Attackpos = GetPos();
@@ -106,7 +105,7 @@ void CAttack_Manager::HitAttack()
 						&& Attackpos.y - Attacksize.y < pEnemy->GetPos().y + pEnemy->GetMaxPos().y
 						&& Attackpos.y + Attacksize.y > pEnemy->GetPos().y + pEnemy->GetMinPos().y)
 					{//当たり判定(X)
-						pEnemy->HitDamage(m_nDamage);
+						pEnemy->Damage(m_nDamage);
 						//近接攻撃の削除
 						Uninit();
 					}
@@ -122,7 +121,65 @@ void CAttack_Manager::HitAttack()
 						&& Attackpos.y + Attacksize.y > pEnemy->GetPos().y + pEnemy->GetMinPos().y
 						)
 					{//当たり判定(Z)
-						pEnemy->HitDamage(m_nDamage);
+						pEnemy->Damage(m_nDamage);
+						//近接攻撃の削除
+						Uninit();
+					}
+				}
+			}
+		}
+	}
+}
+
+//=============================================
+//攻撃当たり判定(プレイヤー)
+//=============================================
+void CAttack_Manager::HitPlayer()
+{
+	//位置取得
+	D3DXVECTOR3 Attackpos = GetPos();
+	//サイズ取得
+	D3DXVECTOR3 Attacksize = GetSize();
+
+	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
+	{
+		//オブジェクト取得
+		CObject* pObj = CObject::Getobject(CPlayer::PLAYER_PRIORITY, nCnt);
+		if (pObj != nullptr)
+		{//ヌルポインタじゃなければ
+			//タイプ取得
+			CObject::OBJECT_TYPE type = pObj->GetType();
+
+			//敵との当たり判定
+			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_PLAYER)
+			{
+				CPlayer* pPlayer = (CPlayer*)pObj;
+
+				if (Attackpos.x + Attacksize.x > pPlayer->GetPos().x + pPlayer->GetMinPos().x
+					&& Attackpos.x - Attacksize.x < pPlayer->GetPos().x + pPlayer->GetMaxPos().x)
+				{
+					if (Attackpos.z - Attacksize.z< pPlayer->GetPos().z + pPlayer->GetMaxPos().z
+						&& Attackpos.z + Attacksize.z > pPlayer->GetPos().z + pPlayer->GetMinPos().z
+						&& Attackpos.y - Attacksize.y < pPlayer->GetPos().y + pPlayer->GetMaxPos().y
+						&& Attackpos.y + Attacksize.y > pPlayer->GetPos().y + pPlayer->GetMinPos().y)
+					{//当たり判定(X)
+						pPlayer->Damage(m_nDamage);
+						//近接攻撃の削除
+						Uninit();
+					}
+				}
+
+
+				else if (Attackpos.z + Attacksize.z > pPlayer->GetPos().z + pPlayer->GetMinPos().z
+					&& Attackpos.z - Attacksize.z < pPlayer->GetPos().z + pPlayer->GetMaxPos().z)
+				{
+					if (Attackpos.x - Attacksize.x < pPlayer->GetPos().x + pPlayer->GetMaxPos().x
+						&& Attackpos.x + Attacksize.x > pPlayer->GetPos().x + pPlayer->GetMinPos().x
+						&& Attackpos.y - Attacksize.y < pPlayer->GetPos().y + pPlayer->GetMaxPos().y
+						&& Attackpos.y + Attacksize.y > pPlayer->GetPos().y + pPlayer->GetMinPos().y
+						)
+					{//当たり判定(Z)
+						pPlayer->Damage(m_nDamage);
 						//近接攻撃の削除
 						Uninit();
 					}

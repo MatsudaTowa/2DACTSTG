@@ -25,7 +25,8 @@ public:
 	void Uninit()override;
 	void Update()override;
 	void Draw()override;
-	void HitAttack();
+	void HitEnemy();
+	void HitPlayer();
 
 	//õ–½‚Ìİ’è
 	void SetLife(int nLife)

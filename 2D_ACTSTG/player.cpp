@@ -209,7 +209,7 @@ void CPlayer::Update()
 						m_nSlashDamage = 1;
 					}
 					//弾発射
-					ShotBullet(pos, m_SlashSize, bWay);
+					ShotBullet(pos, m_SlashSize, bWay,m_nSlashDamage, CBullet::BULLET_TYPE_PLAYER);
 
 					//斬撃のサイズリセット
 					m_SlashSize = D3DXVECTOR3(10.0f, 10.0f, 0.0f);
@@ -245,7 +245,7 @@ void CPlayer::Draw()
 //=============================================
 //生成
 //=============================================
-CPlayer* CPlayer::Create(D3DXVECTOR3 pos,D3DXVECTOR3 rot)
+CPlayer* CPlayer::Create(D3DXVECTOR3 pos,D3DXVECTOR3 rot, int nLife)
 {
 	CModel* pModel = CManager::GetModel();
 
@@ -256,6 +256,7 @@ CPlayer* CPlayer::Create(D3DXVECTOR3 pos,D3DXVECTOR3 rot)
 
 	pPlayer->SetPos(pos); //pos設定
 	pPlayer->SetRot(rot); //rot設定
+	pPlayer->SetLife(nLife); //体力代入
 
 	//xファイル読み込み
 	pPlayer->BindXFile(pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).pBuffMat,
@@ -267,6 +268,29 @@ CPlayer* CPlayer::Create(D3DXVECTOR3 pos,D3DXVECTOR3 rot)
 	pPlayer->Init(); //初期化処理
 	
 	return pPlayer;
+}
+
+//=============================================
+//ダメージを受けたとき
+//=============================================
+void CPlayer::Damage(int nDamage)
+{
+	//体力取得
+	int nLife = GetLife();
+
+	if (nLife > 0)
+	{//HPが残ってたら
+		nLife -= nDamage;
+
+		//体力代入
+		SetLife(nLife);
+	}
+	if (nLife <= 0)
+	{//HPが0以下だったら
+		//破棄
+		Release();
+
+	}
 }
 
 //=============================================
@@ -388,23 +412,6 @@ void CPlayer::PlayerMove()
 	//着地してるか代入
 	SetLanding(bLanding);
 
-}
-
-//=============================================
-//弾発射処理
-//=============================================
-void CPlayer::ShotBullet(D3DXVECTOR3 pos, D3DXVECTOR3 size, bool bWay)
-{
-	if (bWay == true)
-	{//右向き
-		CBullet* pBullet = CBullet::Create(D3DXVECTOR3(pos.x, pos.y + 10.0f, pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 7.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 7.0f),
-			D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 2.0f), D3DXVECTOR3(size.x, size.y, 0.0f), 30, m_nSlashDamage);
-	}
-	else if (bWay == false)
-	{//左向き
-		CBullet* pBullet = CBullet::Create(D3DXVECTOR3(pos.x, pos.y + 10.0f, pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 7.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 7.0f),
-			D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 4.0f), D3DXVECTOR3(size.x, size.y, 0.0f), 30, m_nSlashDamage);
-	}
 }
 
 //=============================================

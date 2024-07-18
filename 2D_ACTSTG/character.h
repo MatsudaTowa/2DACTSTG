@@ -9,6 +9,7 @@
 #define _CHARACTER_H_
 #include "main.h"
 #include "objectX.h"
+#include "bullet.h"
 //プレイヤークラス
 class CCharacter : public CObjectX
 {
@@ -28,6 +29,7 @@ public:
 	void HitBlock(); //ブロック当たり判定
 	void HitPlayer(); //プレイヤーとの当たり判定
 	void HitEnemy(); //敵との当たり判定
+	void ShotBullet(D3DXVECTOR3 pos, D3DXVECTOR3 size, bool bWay, int nDamage, CBullet::BULLET_TYPE type); //弾発射処理
 
 	//移動量代入
 	void SetMove(D3DXVECTOR3 move)
@@ -53,6 +55,12 @@ public:
 		m_bWay = bWay;
 	}
 
+	//体力代入
+	void SetLife(int nLife)
+	{
+		m_nLife = nLife;
+	}
+
 	//移動量取得
 	D3DXVECTOR3& GetMove();
 
@@ -65,6 +73,9 @@ public:
 	//どっち向いてるかどうかを取得(true:右false:左)
 	bool& GetWay();
 
+	//体力取得
+	int& GetLife();
+
 private:
 	static const float GRAVITY_MOVE; //重力値
 	static const float GRAVITY_MAX; //重力最大値
@@ -73,5 +84,6 @@ private:
 	D3DXVECTOR3 m_oldpos; //過去の位置
 	bool m_bLanding; //着地してるかどうか
 	bool m_bWay; //どっち向いてるか(true:右false:左)
+	int m_nLife; //体力
 };
 #endif
