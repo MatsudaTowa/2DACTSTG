@@ -12,14 +12,14 @@
 class CGame:public CScene
 {
 public:
+	static const int DELAY_CNT = 30; //リザルトに飛ぶまでのディレイ
 	CGame();
 	~CGame() override;
 	HRESULT Init() override;
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;
-
-	static bool m_PlayerDeath;
 private:
+	int m_nResultDelay; //リザルトへのディレイ
 };
 #endif

@@ -21,11 +21,11 @@
 #include "field.h"
 #include "manager.h"
 
-bool CGame::m_PlayerDeath = false;
+
 //=============================================
 //コンストラクタ
 //=============================================
-CGame::CGame()
+CGame::CGame():m_nResultDelay(0)
 {
 }
 
@@ -84,10 +84,28 @@ void CGame::Update()
 	CObject::UpdateAll();
 
 	CInputKeyboard* pKeyboard = CManager::GetKeyboard();
+	if (CPlayer::m_PlayerDeath || CEnemy::m_nNumEnemy <= 0)
+	{//プレイヤーが死ぬかエネミーを全部殺したら
+		//カウント加算
+		m_nResultDelay++;
+		if (m_nResultDelay >= DELAY_CNT)
+		{
+			//ディレイカウントリセット
+			m_nResultDelay = 0;
+
+			//リザルト遷移
+			CManager::SetMode(CScene::MODE::MODE_RESULT);
+		}
+	}
+
+#ifdef _DEBUG
 	if (pKeyboard->GetTrigger(DIK_RETURN))
 	{
 		CManager::SetMode(CScene::MODE::MODE_RESULT);
 	}
+#endif // DEBUG
+
+
 }
 
 //=============================================

@@ -31,11 +31,16 @@ LPD3DXMESH CEnemy::m_pMesh = nullptr;
 
 DWORD CEnemy::m_dwNumMat = 0;
 
+//エネミーの総数
+int CEnemy::m_nNumEnemy = 0;
+
 //=============================================
 //コンストラクタ
 //=============================================
 CEnemy::CEnemy(int nPriority):CCharacter(nPriority),m_nShotCnt(0)
 {
+	//総数加算
+	m_nNumEnemy++;
 }
 
 //=============================================
@@ -67,6 +72,10 @@ void CEnemy::Uninit()
 {
 	//親クラスの終了
 	CObjectX::Uninit();
+
+	//総数減らす
+	m_nNumEnemy--;
+
 }
 
 //=============================================
@@ -136,7 +145,7 @@ void CEnemy::Update()
 
 	if (pos.y < DEADZONE_Y)
 	{//破棄処理
-		Release();
+		Uninit();
 	}
 }
 
@@ -209,8 +218,7 @@ void CEnemy::Damage(int nDamage)
 	if (nLife <= 0)
 	{//HPが0以下だったら
 		//破棄
-		Release();
-
+		Uninit();
 	}
 }
 

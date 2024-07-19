@@ -45,6 +45,8 @@ public:
 
 	ENEMY_TYPE m_Type; //エネミーの種類
 
+	static int m_nNumEnemy; //エネミーの総数
+
 private:
 	static const std::string MODEL_NAME;	//モデルの名前  
 	static const float DAMPING_COEFFICIENT; //移動抵抗
@@ -59,6 +61,7 @@ private:
 	static	DWORD m_dwNumMat; //マテリアル数
 
 	int m_nShotCnt; //弾を発射するカウント
+
 };
 
 //=============================================

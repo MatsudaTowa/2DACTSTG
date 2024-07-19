@@ -29,6 +29,8 @@ public:
 
 	bool m_OldPress; //左クリック押されてるかどうか
 
+	static bool m_PlayerDeath;
+
 private:
 	static const std::string MODEL_NAME;	//モデルの名前
 

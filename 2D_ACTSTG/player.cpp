@@ -45,11 +45,14 @@ DWORD CPlayer::m_dwNumMat = 0;
 //最終段階
 const int CPlayer::MAX_CHARGE = CGauge::MAX_GAUGE_WIDE / CHARGE_INTERVAL / SLASH_COST;
 
+bool CPlayer::m_PlayerDeath = false;
+
 //=============================================
 //コンストラクタ
 //=============================================
 CPlayer::CPlayer(int nPriority):CCharacter(nPriority),m_nJumpCnt(0),m_OldPress(false), m_nChargeCnt(0), m_nSlashDamage(0)
 {//イニシャライザーでジャンプカウント、プレス情報,チャージ段階,斬撃のダメージ初期化
+	m_PlayerDeath = false;
 	//斬撃の初期サイズ
 	m_SlashSize = D3DXVECTOR3(10.0f, 10.0f, 0.0f);
 }
@@ -90,6 +93,7 @@ void CPlayer::Uninit()
 {
 	//親クラスの終了処理を呼ぶ
 	CObjectX::Uninit();
+
 }
 
 //=============================================
@@ -311,10 +315,10 @@ void CPlayer::Damage(int nDamage)
 	}
 	if (nLife <= 0)
 	{//HPが0以下だったら
-		//破棄
-		Release();
+		//終了
+		Uninit();
 		//死んだ状態に
-		CGame::m_PlayerDeath = true;
+		m_PlayerDeath = true;
 	}
 }
 
