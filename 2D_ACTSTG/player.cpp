@@ -74,6 +74,9 @@ HRESULT CPlayer::Init()
 	//移動量初期化
 	D3DXVECTOR3 move = D3DXVECTOR3(0.0f,0.0f,0.0f);
 
+	//ゲージ生成
+	CGauge* pGauge = CGauge::Create(D3DXVECTOR3(0.0f, 70.0f, 0.0f), D3DXVECTOR2(500.0f, 30.0f), CGauge::GAUGE_TYPE_LIFE, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+
 	//ムーブ値代入
 	SetMove(move);
 
@@ -160,17 +163,17 @@ void CPlayer::Update()
 	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
 	{
 		//オブジェクト取得
-		CObject* pObj = CObject::Getobject(CGauge::GAUGE_PRIORITY, nCnt);
+		CObject* pObj = CObject::Getobject(CGauge_Slash::GAUGE_PRIORITY, nCnt);
 		if (pObj != nullptr)
 		{//ヌルポインタじゃなければ
 			//タイプ取得
 			CObject::OBJECT_TYPE type = pObj->GetType();
 
 			//敵との当たり判定
-			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_GAUGE)
+			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_GAUGE_SLASH)
 			{
-				CGauge* pGauge = (CGauge*)pObj;
-
+				CGauge_Slash* pGauge = (CGauge_Slash*)pObj;
+			
 				if (pGauge->GetSize().x > 0.0f)
 				{//ゲージがあったら
 					if (pMouse->GetPress(0))
@@ -283,6 +286,26 @@ void CPlayer::Damage(int nDamage)
 	{//HPが残ってたら
 		nLife -= nDamage;
 
+		for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
+		{
+			//オブジェクト取得
+			CObject* pObj = CObject::Getobject(CGauge_Life::GAUGE_PRIORITY, nCnt);
+			if (pObj != nullptr)
+			{//ヌルポインタじゃなければ
+				//タイプ取得
+				CObject::OBJECT_TYPE type = pObj->GetType();
+
+				//敵との当たり判定
+				if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_GAUGE_LIFE)
+				{
+					CGauge_Life* pGauge = (CGauge_Life*)pObj;
+
+					//ゲージ減少
+					pGauge->SubGauge(100);
+				}
+			}
+		}
+
 		//体力代入
 		SetLife(nLife);
 	}
@@ -290,7 +313,6 @@ void CPlayer::Damage(int nDamage)
 	{//HPが0以下だったら
 		//破棄
 		Release();
-
 		//死んだ状態に
 		CGame::m_PlayerDeath = true;
 	}

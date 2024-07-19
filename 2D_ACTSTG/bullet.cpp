@@ -79,7 +79,7 @@ void CBullet::Update()
 			break;
 
 		default:
-			assert(true);
+			assert(false);
 			break;
 		}
 	}

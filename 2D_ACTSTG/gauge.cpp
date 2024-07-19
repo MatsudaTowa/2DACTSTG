@@ -38,7 +38,7 @@ HRESULT CGauge::Init()
 	SetTexPos(D3DXVECTOR2(1.0f, 1.0f));
 
     //頂点設定
-	SetGaugeVtx(1.0f, D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
+	SetGaugeVtx(1.0f, m_col);
 
     return S_OK;
 }
@@ -60,32 +60,8 @@ void CGauge::Update()
     //親クラスの更新呼ぶ
     CObject2D::Update();
 
-	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
-	{
-		//オブジェクト取得
-		CObject* pObj = CObject::Getobject(CPlayer::PLAYER_PRIORITY, nCnt);
-		if (pObj != nullptr)
-		{//ヌルポインタじゃなければ
-			//タイプ取得
-			CObject::OBJECT_TYPE type = pObj->GetType();
-
-			//敵との当たり判定
-			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_PLAYER)
-			{
-				CPlayer*pPlayer = (CPlayer*)pObj;
-
-				if (GetSize().x <= MAX_GAUGE_WIDE && pPlayer->m_OldPress != true)
-				{//最大値以下で左クリック押されてなかったら加算
-					AddGauge();
-				}
-
-			}
-		}
-	}
-
-
 	//頂点設定
-	SetGaugeVtx(1.0f, D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
+	SetGaugeVtx(1.0f, m_col);
 }
 
 //=============================================
@@ -141,7 +117,6 @@ void CGauge::SetGaugeVtx(float rhw, D3DCOLOR col)
     VERTEX_2D* pVtx;
 
 	//頂点バッファをロックし頂点情報へのポインタを取得
-
 	GetVtxBuff()->Lock(0, 0, (void**)&pVtx, 0);
 
 	//頂点座標の設定
@@ -182,10 +157,25 @@ void CGauge::SetGaugeVtx(float rhw, D3DCOLOR col)
 //=============================================
 //生成
 //=============================================
-CGauge* CGauge::Create(D3DXVECTOR3 pos, D3DXVECTOR2 size)
+CGauge* CGauge::Create(D3DXVECTOR3 pos, D3DXVECTOR2 size, GAUGE_TYPE type, D3DXCOLOR col)
 {
     CTexture* pTexture = CManager::GetTexture();
-    CGauge* pGauge = new CGauge;
+    CGauge* pGauge = nullptr;
+
+	switch (type)
+	{
+	case GAUGE_TYPE_SLASH:
+		pGauge = new CGauge_Slash;
+		pGauge->SetType(OBJECT_TYPE_GAUGE_SLASH); //タイプ設定
+		break;
+	case GAUGE_TYPE_LIFE:
+		pGauge = new CGauge_Life;
+		pGauge->SetType(OBJECT_TYPE_GAUGE_LIFE); //タイプ設定
+		break;
+	default:
+		assert(false);
+		break;
+	}
 
     // nullならnullを返す
     if (pGauge == nullptr) { return nullptr; }
@@ -194,9 +184,140 @@ CGauge* CGauge::Create(D3DXVECTOR3 pos, D3DXVECTOR2 size)
 
     pGauge->SetSize(size); //size設定
 
-    pGauge->SetType(OBJECT_TYPE_GAUGE); //タイプ設定
+
+
+	pGauge->m_type = type; //ゲージのタイプ設定
+
+	pGauge->m_col = col; //カラー設定
 
     //pGauge->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME)));
 
     pGauge->Init();
 }
+
+//=============================================
+//コンストラクタ
+//=============================================
+CGauge_Slash::CGauge_Slash(int nPriority)
+{
+}
+
+//=============================================
+//デストラクタ
+//=============================================
+CGauge_Slash::~CGauge_Slash()
+{
+}
+
+//=============================================
+//初期化
+//=============================================
+HRESULT CGauge_Slash::Init()
+{
+	//親クラスの初期化
+	CGauge::Init();
+
+	return S_OK;
+}
+
+//=============================================
+//終了
+//=============================================
+void CGauge_Slash::Uninit()
+{
+	//親クラスの終了
+	CGauge::Uninit();
+}
+
+//=============================================
+//更新
+//=============================================
+void CGauge_Slash::Update()
+{
+	//親クラスの更新
+	CGauge::Update();
+
+	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
+	{
+		//オブジェクト取得
+		CObject* pObj = CObject::Getobject(CPlayer::PLAYER_PRIORITY, nCnt);
+		if (pObj != nullptr)
+		{//ヌルポインタじゃなければ
+			//タイプ取得
+			CObject::OBJECT_TYPE type = pObj->GetType();
+
+			//敵との当たり判定
+			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_PLAYER)
+			{
+				CPlayer* pPlayer = (CPlayer*)pObj;
+
+				if (GetSize().x <= MAX_GAUGE_WIDE && pPlayer->m_OldPress != true)
+				{//最大値以下で左クリック押されてなかったら加算
+					AddGauge();
+				}
+			}
+		}
+	}
+}
+
+//=============================================
+//描画
+//=============================================
+void CGauge_Slash::Draw()
+{
+	//親クラスの描画
+	CGauge::Draw();
+}
+
+//=============================================
+//コンストラクタ
+//=============================================
+CGauge_Life::CGauge_Life(int nPriority)
+{
+}
+
+//=============================================
+//デストラクタ
+//=============================================
+CGauge_Life::~CGauge_Life()
+{
+}
+
+//=============================================
+//初期化
+//=============================================
+HRESULT CGauge_Life::Init()
+{
+	//親クラスの初期化
+	CGauge::Init();
+
+	return S_OK;
+}
+
+//=============================================
+//終了
+//=============================================
+void CGauge_Life::Uninit()
+{
+	//親クラスの終了
+	CGauge::Uninit();
+}
+
+//=============================================
+//更新
+//=============================================
+void CGauge_Life::Update()
+{
+	//親クラスの更新
+	CGauge::Update();
+}
+
+//=============================================
+//描画
+//=============================================
+void CGauge_Life::Draw()
+{
+	//親クラスの描画
+	CGauge::Draw();
+}
+
