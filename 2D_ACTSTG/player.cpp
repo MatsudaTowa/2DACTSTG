@@ -52,7 +52,13 @@ bool CPlayer::m_PlayerDeath = false;
 //=============================================
 CPlayer::CPlayer(int nPriority):CCharacter(nPriority),m_nJumpCnt(0),m_OldPress(false), m_nChargeCnt(0), m_nSlashDamage(0)
 {//イニシャライザーでジャンプカウント、プレス情報,チャージ段階,斬撃のダメージ初期化
+
+	//プレイヤーの攻撃を近距離のみにする
+	m_Attack = PLAYER_ATTACK_MELEE;
+
+	//死んでない状態に
 	m_PlayerDeath = false;
+
 	//斬撃の初期サイズ
 	m_SlashSize = D3DXVECTOR3(10.0f, 10.0f, 0.0f);
 }
@@ -178,8 +184,8 @@ void CPlayer::Update()
 			{
 				CGauge_Slash* pGauge = (CGauge_Slash*)pObj;
 			
-				if (pGauge->GetSize().x > 0.0f)
-				{//ゲージがあったら
+				if (pGauge->GetSize().x > 0.0f && m_Attack == PLAYER_ATTACK_PANETRARING_SLASH)
+				{//ゲージがあり攻撃方法が貫通斬撃だったら
 					if (pMouse->GetPress(0))
 					{//左クリックが押されてる間
 						//ゲージ消費(後に押された時間に応じて消費量変更)

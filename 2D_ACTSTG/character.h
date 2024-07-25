@@ -14,8 +14,6 @@
 class CCharacter : public CObjectX
 {
 public:
-	static const std::string MODEL_NAME;	//ƒ‚ƒfƒ‹‚Ì–¼‘O
-
 	static const int CHARACTER_PRIORITY = 8; //•`‰æ‡
 
 	CCharacter(int nPriority = CHARACTER_PRIORITY);

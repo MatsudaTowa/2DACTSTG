@@ -28,6 +28,7 @@ public:
 	void Unload(); //モデル破棄
 	int Regist(const std::string* pModel);
 	MODEL_INFO GetModelInfo(int nIdx); //モデル情報取得
+
 private:
 	MODEL_INFO m_ModelInfo[MAX_MODEL]; //モデル情報
 	int m_nNumAll; //モデル総数

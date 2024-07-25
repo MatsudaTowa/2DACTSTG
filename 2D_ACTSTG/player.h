@@ -15,6 +15,13 @@ class CPlayer : public CCharacter
 public:
 	static const int PLAYER_PRIORITY = 8; //描画順
 
+	typedef enum
+	{
+		PLAYER_ATTACK_MELEE = 0, //近距離攻撃のみ
+		PLAYER_ATTACK_PANETRARING_SLASH, //貫通斬撃
+		PLAYER_ATTACK_MAX,
+	}PLAYER_ATTACK;
+
 	CPlayer(int nPriority = PLAYER_PRIORITY);
 	~CPlayer()override;
 	HRESULT Init()override;
@@ -28,6 +35,8 @@ public:
 	void Damage(int nDamage); //当たり判定
 
 	bool m_OldPress; //左クリック押されてるかどうか
+
+	PLAYER_ATTACK m_Attack; //プレイヤーの攻撃方法
 
 	static bool m_PlayerDeath;
 

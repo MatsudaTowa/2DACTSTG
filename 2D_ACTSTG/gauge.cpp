@@ -251,7 +251,7 @@ void CGauge_Slash::Update()
 			{
 				CPlayer* pPlayer = (CPlayer*)pObj;
 
-				if (GetSize().x <= MAX_GAUGE_WIDE && pPlayer->m_OldPress != true)
+				if (GetSize().x <= MAX_GAUGE_WIDE && pPlayer->m_OldPress != true &&pPlayer->m_Attack != CPlayer::PLAYER_ATTACK_MELEE)
 				{//最大値以下で左クリック押されてなかったら加算
 					AddGauge();
 				}

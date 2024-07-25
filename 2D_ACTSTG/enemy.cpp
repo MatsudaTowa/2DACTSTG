@@ -10,6 +10,7 @@
 #include "player.h"
 #include "effect.h"
 #include "bullet.h"
+#include "item.h"
 
 //通常の移動速度
 const float CEnemy::DEFAULT_MOVE = 0.5f;
@@ -60,7 +61,6 @@ HRESULT CEnemy::Init()
 
 	//ムーブ値代入
 	SetMove(move);
-
 
 	return S_OK;
 }
@@ -218,6 +218,7 @@ void CEnemy::Damage(int nDamage)
 	if (nLife <= 0)
 	{//HPが0以下だったら
 		//破棄
+		CItem*pItem = CItem::Create(CItem::ITEMTYPE_PANETRARING_SLASH, D3DXVECTOR3(GetPos().x, GetPos().y, GetPos().z),D3DXVECTOR3(10.0f,10.0f,0.0f),GetRot());
 		Uninit();
 	}
 }

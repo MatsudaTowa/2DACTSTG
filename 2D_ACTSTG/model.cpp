@@ -104,3 +104,4 @@ CModel::MODEL_INFO CModel::GetModelInfo(int nIdx)
 {
 	return m_ModelInfo[nIdx];
 }
+

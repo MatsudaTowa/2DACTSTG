@@ -10,6 +10,7 @@
 #include "object3D.h"
 #include "objectX.h"
 #include "player.h"
+#include "player_test.h"
 //#include "bg.h"
 #include "bullet.h"
 //#include "explosion.h"
@@ -61,6 +62,9 @@ HRESULT CGame::Init()
 
 	//プレイヤー生成
 	CPlayer* pPlayer = CPlayer::Create(D3DXVECTOR3(-450.0f, 0.5f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),5);
+
+	//プレイヤー生成
+	//CPlayer_test* pPlayer_test = CPlayer_test::Create(D3DXVECTOR3(-450.0f, 0.5f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5);
 
 	//エネミー生成
 	CEnemy* pEnemy = CEnemy::Create(D3DXVECTOR3(-100.0f, 10.5f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),CEnemy::ENEMY_TYPE::ENEMY_TYPE_NORMAL);
