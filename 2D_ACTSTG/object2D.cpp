@@ -134,11 +134,10 @@ void CObject2D::SetVtx(float rhw, D3DCOLOR col)
 	pVtx[2].col = col;
 	pVtx[3].col = col;
 
-	pVtx[0].tex = D3DXVECTOR2(m_tex_pos.x - m_tex_pos.x, m_tex_pos.y - m_tex_pos.y);
-	pVtx[1].tex = D3DXVECTOR2(m_tex_pos.x, m_tex_pos.y - m_tex_pos.y);
-	pVtx[2].tex = D3DXVECTOR2(m_tex_pos.x - m_tex_pos.x, m_tex_pos.y);
-	pVtx[3].tex = D3DXVECTOR2(m_tex_pos.x, m_tex_pos.y);
-
+	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
+	pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);
+	pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);
+	pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);
 	//ƒAƒ“ƒƒbƒN
 	m_pVtxBuff->Unlock();
 

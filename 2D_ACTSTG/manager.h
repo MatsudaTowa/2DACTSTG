@@ -45,7 +45,7 @@ public:
 	static CModel* GetModel();
 private:
 	static CScene* m_pScene; //åªç›ÇÃÉVÅ[Éì
-	//static CFade* m_pFade;
+	static CFade* m_pFade;
 	static CRenderer* m_pRenderer;
 	static CInputKeyboard* m_pKeyboard;
 	static CInputMouse* m_pMouse;

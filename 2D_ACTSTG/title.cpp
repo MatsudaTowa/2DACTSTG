@@ -6,6 +6,7 @@
 //=============================================
 #include "title.h"
 #include "title_screen.h"
+#include "fade.h"
 #include "manager.h"
 
 //=============================================
@@ -46,6 +47,8 @@ void CTitle::Update()
 {
     CObject::UpdateAll();
     CInputKeyboard* pKeyboard = CManager::GetKeyboard();
+
+    //CFade*pFade= CFade::GetFade();
     if (pKeyboard->GetTrigger(DIK_RETURN))
     {
         CManager::SetMode(CScene::MODE::MODE_GAME);

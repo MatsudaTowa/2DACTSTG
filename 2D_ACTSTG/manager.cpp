@@ -11,8 +11,8 @@
 //シーン設定
 CScene* CManager::m_pScene = nullptr;
 
-////シーン設定
-//CFade* CManager::m_pFade = nullptr;
+//シーン設定
+CFade* CManager::m_pFade = nullptr;
 
 //レンダラー設定
 CRenderer*CManager::m_pRenderer = nullptr;
@@ -112,7 +112,10 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	//if (m_pFade == nullptr)
 	//{
 	//	m_pFade = new CFade();
+	//	m_pFade->Create(D3DXVECTOR3(0.0f, 0.0f,0.0f));
 	//}
+
+	//m_pFade->SetFade(CScene::MODE::MODE_TITLE);
 
 	SetMode(CScene::MODE::MODE_TITLE);
 
@@ -144,10 +147,10 @@ void CManager::Uninit()
 		delete m_pRenderer;
 		m_pRenderer = nullptr;
 	}
-	//if (m_pFade != nullptr)
-	//{
-	//	m_pFade->Uninit();
-	//}
+	if (m_pFade != nullptr)
+	{
+		//m_pFade->Uninit();
+	}
 
 	//キーボードの終了処理
 	m_pKeyboard->Uninit();
@@ -161,17 +164,16 @@ void CManager::Uninit()
 void CManager::Update()
 {
 	//更新処理
+	//シーンの更新
+	if (m_pFade != nullptr)
+	{
+		//m_pFade->Update();
+
+	}
 	m_pRenderer->Update();
 	m_pCamera->Update();
 	m_pKeyboard->Update();
 	m_pMouse->Update();
-
-	////シーンの更新
-	//if (m_pFade != nullptr)
-	//{
-	//	m_pFade->Update();
-
-	//}
 
 	if (m_pScene != nullptr)
 	{
@@ -204,7 +206,6 @@ void CManager::Draw()
 //=============================================
 void CManager::SetMode(CScene::MODE mode)
 {
-
 	//シーン終了
 	if (m_pScene != nullptr)
 	{
