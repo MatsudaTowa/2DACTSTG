@@ -140,7 +140,40 @@ void CModel_Parts::Draw()
 		//位置を反映
 		D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
 
-		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+		D3DXMATRIX mtxParent; //親の行列取得
+
+		if (m_pParent != nullptr)
+		{
+			//親のワールドマトリックス取得
+			mtxParent = m_pParent->GetMtxWorld();
+		}
+		else
+		{
+			//最新のワールド返還行列を取得
+			pDevice->GetTransform(D3DTS_WORLD,&mtxParent);
+		}
+
+		//if (g_Player.aParts[nCnt].nIdxModelParent == -1)
+		//{
+		//	//マトリックスの初期化
+		//	D3DXMatrixIdentity(&mtxParent);
+
+		//	//向きを反映
+		//	D3DXMatrixRotationYawPitchRoll(&mtxRot, g_Player.rot.y, g_Player.rot.x, g_Player.rot.z);
+
+		//	D3DXMatrixMultiply(&mtxParent, &mtxParent, &mtxRot);
+
+		//	//位置を反映
+		//	D3DXMatrixTranslation(&mtxTrans, g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
+
+		//	D3DXMatrixMultiply(&mtxParent, &mtxParent, &mtxTrans);
+		//}
+		//else
+		//{
+		//	mtxParent = g_Player.aParts[g_Player.aParts[nCnt].nIdxModelParent].mtxWorld; //自分の親のマトリックス
+		//}
+
+		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxParent);
 
 		//ワールドマトリックスの設定
 		pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
@@ -241,6 +274,11 @@ CModel_Parts* CModel_Parts::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, const std::
 void CModel_Parts::SetParent(CModel_Parts* pParent)
 {
 	m_pParent = pParent;
+}
+
+D3DXMATRIX& CModel_Parts::GetMtxWorld()
+{
+	return m_mtxWorld;
 }
 
 CModel_Parts::MODEL_INFO CModel_Parts::GetModelInfo(int nIdx)

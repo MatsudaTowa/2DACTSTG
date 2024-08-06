@@ -29,8 +29,21 @@ public:
 	void BindXFile(LPD3DXBUFFER pBuffMat, DWORD dwNumMat, LPD3DXMESH pMesh);
 	void Draw();
 	int Regist(const std::string* pModel);
+
+	//パーツ生成
 	static CModel_Parts*Create(D3DXVECTOR3 pos,D3DXVECTOR3 rot,const std::string* pModel);
+
+	//ワールドマトリックスの代入
+	void SetMtxWorld(D3DXMATRIX mtxWorld)
+	{
+		m_mtxWorld = mtxWorld;
+	}
+
 	void SetParent(CModel_Parts*pParent);
+
+	//ワールドマトリックス取得
+	D3DXMATRIX& GetMtxWorld();
+
 	MODEL_INFO GetModelInfo(int nIdx); //モデル情報取得
 private:
 	D3DXMATRIX m_mtxWorld; //ワールドマトリックス

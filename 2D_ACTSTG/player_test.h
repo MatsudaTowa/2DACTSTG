@@ -16,6 +16,7 @@ class CPlayer_test:public CCharacter
 public:
 	static const int PLAYER_PRIORITY = 8; //描画順
 	static const int PLAYER_PARTS = 10; //パーツ数
+	static const int PARTS_PARENT[PLAYER_PARTS]; //パーツ数
 	static const std::string PLAYERPARTS_NAME[PLAYER_PARTS]; //ファイルパス
 
 	CPlayer_test(int nPriority = PLAYER_PRIORITY);

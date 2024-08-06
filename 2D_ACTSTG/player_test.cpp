@@ -16,6 +16,21 @@
 #include "gauge.h"
 #include "game.h"
 
+//親のインデント
+const int PARTS_PARENT[CPlayer_test::PLAYER_PARTS] =
+{
+	-1,
+	0,
+	0,
+	1,
+	0,
+	3,
+	0,
+	5,
+	0,
+	7,
+};
+
 //モデルパス
 const std::string CPlayer_test:: PLAYERPARTS_NAME[CPlayer_test::PLAYER_PARTS] =
 {
@@ -88,7 +103,7 @@ HRESULT CPlayer_test::Init()
 	for (int nCnt = 0; nCnt < CPlayer_test::PLAYER_PARTS; nCnt++)
 	{
 		m_apModel[nCnt] = CModel_Parts::Create(GetPos(),GetRot(), &PLAYERPARTS_NAME[nCnt]);
-		//if(nCnt == )
+		//m_ CModel_Parts::SetParent()
 	}
 
 	//移動量初期化
@@ -266,7 +281,6 @@ void CPlayer_test::Draw()
 	for (int nCnt = 0; nCnt < CPlayer_test::PLAYER_PARTS; nCnt++)
 	{
 		m_apModel[nCnt]->Draw();
-		//if(nCnt == )
 	}
 }
 
