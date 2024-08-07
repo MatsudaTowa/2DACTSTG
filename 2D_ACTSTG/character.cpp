@@ -10,6 +10,7 @@
 #include "enemy.h"
 #include "field.h"
 #include"bullet.h"
+#include "colision.h"
 
 //重力値
 const float CCharacter::GRAVITY_MOVE = 1.5f;
@@ -52,6 +53,15 @@ void CCharacter::Uninit()
 //=============================================
 void CCharacter::Update()
 {
+	D3DXVECTOR3 CharacterPos = GetPos();
+	if (GetLaunding())
+	{//着地してるなら
+		//ジャンプ数リセット
+		CharacterPos.y = m_oldpos.y;
+		m_move.y = 0.0f;
+
+	}
+	SetPos(CharacterPos);
 }
 
 //=============================================
@@ -98,82 +108,26 @@ void CCharacter::HitBlock()
 			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_BLOCK)
 			{
 				CBlock* pBlock = (CBlock*)pObj;
-				if (m_oldpos.x + CharacterMax.x <= pBlock->GetPos().x + pBlock->GetMinPos().x
-					&& CharacterPos.x + CharacterMax.x > pBlock->GetPos().x + pBlock->GetMinPos().x)
-				{
-					if (m_oldpos.z + CharacterMin.z < pBlock->GetPos().z + pBlock->GetMaxPos().z
-						&& m_oldpos.z + CharacterMax.z > pBlock->GetPos().z + pBlock->GetMinPos().z
-						&& m_oldpos.y + CharacterMin.y < pBlock->GetPos().y + pBlock->GetMaxPos().y
-						&& m_oldpos.y + CharacterMax.y > pBlock->GetPos().y + pBlock->GetMinPos().y)
-					{//当たり判定(X)
-						CharacterPos.x = m_oldpos.x;
-						m_move.x = 0.0f;
-					}
+
+				//着地以外の判定
+				bool bCheckcolision = CColision::CheckColision(m_oldpos, CharacterPos,CharacterMin,CharacterMax,pBlock->GetPos(),pBlock->GetMinPos(),pBlock->GetMaxPos());
+				
+				if (bCheckcolision)
+				{//当たってたら
+					CharacterPos.x = m_oldpos.x;
+					CharacterPos.z = m_oldpos.z;
+					m_move.x = 0.0f;
+					m_move.z = 0.0f;
 				}
 
-				if (m_oldpos.x + CharacterMin.x >= pBlock->GetPos().x + pBlock->GetMaxPos().x
-					&& CharacterPos.x + CharacterMin.x < pBlock->GetPos().x + pBlock->GetMaxPos().x)
-				{
-					if (m_oldpos.z + CharacterMin.z < pBlock->GetPos().z + pBlock->GetMaxPos().z
-						&& m_oldpos.z + CharacterMax.z > pBlock->GetPos().z + pBlock->GetMinPos().z
-						&& m_oldpos.y + CharacterMin.y < pBlock->GetPos().y + pBlock->GetMaxPos().y
-						&& m_oldpos.y + CharacterMax.y > pBlock->GetPos().y + pBlock->GetMinPos().y)
-					{//当たり判定(X)
-						CharacterPos.x = m_oldpos.x;
-						m_move.x = 0.0f;
-					}
-				}
+				//着地の判定
+				bool bCheckLanding = CColision::CheckColisionLanding(m_oldpos, CharacterPos, CharacterMin, CharacterMax, pBlock->GetPos(), pBlock->GetMinPos(), pBlock->GetMaxPos());
 
-				if (m_oldpos.z + CharacterMax.z <= pBlock->GetPos().z + pBlock->GetMinPos().z
-					&& CharacterPos.z + CharacterMax.z > pBlock->GetPos().z + pBlock->GetMinPos().z)
+				if (bCheckLanding)
 				{
-					if (m_oldpos.x + CharacterMin.x < pBlock->GetPos().x + pBlock->GetMaxPos().x
-						&& m_oldpos.x + CharacterMax.x > pBlock->GetPos().x + pBlock->GetMinPos().x
-						&& m_oldpos.y + CharacterMin.y < pBlock->GetPos().y + pBlock->GetMaxPos().y
-						&& m_oldpos.y + CharacterMax.y > pBlock->GetPos().y + pBlock->GetMinPos().y
-						)
-					{//当たり判定(Z)
-						CharacterPos.z = m_oldpos.z;
-						m_move.z = 0.0f;
-					}
-				}
-
-				if (m_oldpos.z + CharacterMin.z >= pBlock->GetPos().z + pBlock->GetMaxPos().z
-					&& CharacterPos.z + CharacterMin.z < pBlock->GetPos().z + pBlock->GetMaxPos().z)
-				{
-					if (m_oldpos.x + CharacterMin.x < pBlock->GetPos().x + pBlock->GetMaxPos().x
-						&& m_oldpos.x + CharacterMax.x > pBlock->GetPos().x + pBlock->GetMinPos().x
-						&& m_oldpos.y + CharacterMin.y < pBlock->GetPos().y + pBlock->GetMaxPos().y
-						&& m_oldpos.y + CharacterMax.y > pBlock->GetPos().y + pBlock->GetMinPos().y
-						)
-					{//当たり判定(Z)
-						CharacterPos.z = m_oldpos.z;
-						m_move.z = 0.0f;
-					}
-				}
-				if (m_oldpos.y + CharacterMin.y >= pBlock->GetPos().y + pBlock->GetMaxPos().y
-					&& CharacterPos.y + CharacterMin.y < pBlock->GetPos().y + pBlock->GetMaxPos().y)
-				{//当たり判定(Y)上
-					if (m_oldpos.x + CharacterMin.x < pBlock->GetPos().x + pBlock->GetMaxPos().x
-						&& m_oldpos.x + CharacterMax.x > pBlock->GetPos().x + pBlock->GetMinPos().x
-						&& m_oldpos.z + CharacterMin.z < pBlock->GetPos().z + pBlock->GetMaxPos().z
-						&& m_oldpos.z + CharacterMax.z > pBlock->GetPos().z + pBlock->GetMinPos().z)
-					{
-						CharacterPos.y = m_oldpos.y;
-						m_bLanding = true; //着地
-						m_move.y = 0.0f;
-					}
-				}
-				if (m_oldpos.y + CharacterMax.y <= pBlock->GetPos().y + pBlock->GetMinPos().y
-					&& CharacterPos.y + CharacterMax.y > pBlock->GetPos().y + pBlock->GetMinPos().y)
-				{//当たり判定(Y)下
-					if (m_oldpos.x + CharacterMin.x < pBlock->GetPos().x + pBlock->GetMaxPos().x
-						&& m_oldpos.x + CharacterMax.x > pBlock->GetPos().x + pBlock->GetMinPos().x
-						&& m_oldpos.z + CharacterMin.z < pBlock->GetPos().z + pBlock->GetMaxPos().z
-						&& m_oldpos.z + CharacterMax.z > pBlock->GetPos().z + pBlock->GetMinPos().z)
-					{
-						CharacterPos.y = m_oldpos.y;
-					}
+					CharacterPos.y = m_oldpos.y;
+					m_move.y = 0.0f;
+					m_bLanding = true; //着地
 				}
 			}
 

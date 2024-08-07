@@ -212,15 +212,15 @@ void CObject2D::SetVtx(float rhw, D3DCOLOR col, float fAngle, float fLength)
 		, 0.0f);
 
 	//rhwの設定
-	pVtx[0].rhw = rhw;
-	pVtx[1].rhw = rhw;
-	pVtx[2].rhw = rhw;
+	pVtx[0].rhw =
+	pVtx[1].rhw =
+	pVtx[2].rhw =
 	pVtx[3].rhw = rhw;
 
 	//頂点カラーの設定
-	pVtx[0].col = col;
-	pVtx[1].col = col;
-	pVtx[2].col = col;
+	pVtx[0].col =
+	pVtx[1].col =
+	pVtx[2].col =
 	pVtx[3].col = col;
 
 	//アンロック

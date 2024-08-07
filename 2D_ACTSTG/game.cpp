@@ -16,6 +16,7 @@
 //#include "explosion.h"
 #include "effect.h"
 #include "gauge_fream.h"
+#include "colision.h"
 #include "timer.h"
 #include "enemy.h"
 #include "block.h"

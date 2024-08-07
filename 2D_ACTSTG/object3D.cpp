@@ -139,15 +139,15 @@ void CObject3D::SetVtx(D3DXVECTOR3 nor, D3DCOLOR col)
 
 
 	//rhwの設定
-	pVtx[0].nor = nor;
-	pVtx[1].nor = nor;
-	pVtx[2].nor = nor;
+	pVtx[0].nor =
+	pVtx[1].nor =
+	pVtx[2].nor =
 	pVtx[3].nor = nor;
 
 	//頂点カラーの設定
-	pVtx[0].col = col;
-	pVtx[1].col = col;
-	pVtx[2].col = col;
+	pVtx[0].col =
+	pVtx[1].col =
+	pVtx[2].col =
 	pVtx[3].col = col;
 
 	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
@@ -193,15 +193,15 @@ void CObject3D::SetVtx(D3DXVECTOR3 nor, float fAngle, float fLength, D3DCOLOR co
 		, -m_size.z);
 
 	//rhwの設定
-	pVtx[0].nor = nor;
-	pVtx[1].nor = nor;
-	pVtx[2].nor = nor;
+	pVtx[0].nor =
+	pVtx[1].nor =
+	pVtx[2].nor =
 	pVtx[3].nor = nor;
 
 	//頂点カラーの設定
-	pVtx[0].col = col;
-	pVtx[1].col = col;
-	pVtx[2].col = col;
+	pVtx[0].col =
+	pVtx[1].col =
+	pVtx[2].col =
 	pVtx[3].col = col;
 
 	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
