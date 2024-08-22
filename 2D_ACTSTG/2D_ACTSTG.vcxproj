@@ -162,6 +162,7 @@
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="fade.cpp" />
     <ClCompile Include="field.cpp" />
+    <ClCompile Include="flow.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="gauge.cpp" />
     <ClCompile Include="gauge_fream.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="enemy.h" />
     <ClInclude Include="fade.h" />
     <ClInclude Include="field.h" />
+    <ClInclude Include="flow.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="gauge.h" />
     <ClInclude Include="gauge_fream.h" />
