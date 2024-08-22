@@ -67,22 +67,43 @@ void CBullet::Update()
 		SetPos(pos);
 		//頂点座標
 		SetVtx(D3DXVECTOR3(0.0f, 0.0f, -1.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+
+		//当たり判定チェック変数
+		bool bHitCheck = false;
 		switch (m_type)
 		{
 		case BULLET_TYPE_PLAYER:
-			HitEnemy();
+			bHitCheck = HitEnemy();
+			if (bHitCheck == true)
+			{
+				Uninit();
+			}
 			break;
 
 		case BULLET_TYPE_ENEMY:
-			HitPlayer();
+			bHitCheck = HitPlayer();
+			if (bHitCheck == true)
+			{
+				Uninit();
+			}
 			break;
 
 		default:
 			assert(false);
 			break;
 		}
-		HitBlock();
+		bHitCheck = HitBlock();
 
+		if (bHitCheck == true)
+		{
+			Uninit();
+		}
+
+	}
+	else
+	{
+		//終了
+		Uninit();
 	}
 }
 

@@ -174,18 +174,6 @@ void CRenderer::Draw()
 //=============================================
 void CRenderer::DrawFPS(int nCntFPS)
 {
-	RECT rect = { 0,0,SCREEN_WIDTH,SCREEN_HEIGHT };
-	char aStr[256];
-
-
-	//文字列に代入
-	wsprintf
-	(&aStr[0],
-		"FPS:%d\n"
-		, nCntFPS);
-
-	//テキストの描画
-	m_pFont->DrawText(NULL, &aStr[0], -1, &rect, DT_LEFT, D3DCOLOR_RGBA(255, 255, 255, 255));
 
 }
 

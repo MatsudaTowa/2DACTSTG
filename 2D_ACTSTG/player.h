@@ -60,6 +60,7 @@ private:
 	void ReSpawn(); //リスポーン
 	void PlayerMove(); //プレイヤー移動処理
 	void PerformMelee(D3DXVECTOR3 pos, bool bWay); //近接攻撃処理
+	void DebugPlayerPos();
 
 	D3DXVECTOR3 m_SlashSize; //斬撃のサイズ
 	bool m_bSize; //サイズ変更するかどうか

@@ -25,9 +25,9 @@ public:
 	void Uninit()override;
 	void Update()override;
 	void Draw()override;
-	void HitEnemy();
-	void HitPlayer();
-	void HitBlock();
+	bool HitEnemy();
+	bool HitPlayer();
+	bool HitBlock();
 
 	//éıñΩÇÃê›íË
 	void SetLife(int nLife)

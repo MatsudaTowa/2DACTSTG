@@ -144,10 +144,6 @@ CColision::COLISION CColision::CheckColision(D3DXVECTOR3 Aoldpos, D3DXVECTOR3 Ap
 			return CColision::COLISION::COLISON_NONE;
 		}
 	}
-	else
-	{
-		return CColision::COLISION::COLISON_NONE;
-	}
 
 	if (Aoldpos.z + AMaxpos.z <= Bpos.z - Bsize.z
 		&& Apos.z + AMaxpos.z > Bpos.z - Bsize.z)
@@ -182,10 +178,6 @@ CColision::COLISION CColision::CheckColision(D3DXVECTOR3 Aoldpos, D3DXVECTOR3 Ap
 			return CColision::COLISION::COLISON_NONE;
 		}
 	}
-	else
-	{
-		return CColision::COLISION::COLISON_NONE;
-	}
 
 	if (Aoldpos.y + AMaxpos.y <= Bpos.y - Bsize.y
 		&& Apos.y + AMaxpos.y > Bpos.y - Bsize.y)
@@ -196,6 +188,21 @@ CColision::COLISION CColision::CheckColision(D3DXVECTOR3 Aoldpos, D3DXVECTOR3 Ap
 			&& Aoldpos.z + AMaxpos.z > Bpos.z - Bsize.z)
 		{
 			CColision::COLISION::COLISON_UNDER_Y;
+		}
+		else
+		{
+			return CColision::COLISION::COLISON_NONE;
+		}
+	}
+	else if (Aoldpos.y + AMinpos.y >= Bpos.y + Bsize.y
+		&& Apos.y + AMinpos.y < Bpos.y + Bsize.y)
+	{//“–‚½‚è”»’è(Y)ã
+		if (Aoldpos.x + AMinpos.x < Bpos.x + Bsize.x
+			&& Aoldpos.x + AMaxpos.x > Bpos.x - Bsize.x
+			&& Aoldpos.z + AMinpos.z < Bpos.z + Bsize.z
+			&& Aoldpos.z + AMaxpos.z > Bpos.z - Bsize.z)
+		{
+			return CColision::COLISION::COLISON_TOP_Y;
 		}
 		else
 		{
@@ -326,7 +333,7 @@ CColision::COLISION CColision::CheckColision(D3DXVECTOR3 Aoldpos, D3DXVECTOR3 Ap
 //=============================================
 CColision::COLISION CColision::CheckItemColision(D3DXVECTOR3 Apos, D3DXVECTOR3 ASize, D3DXVECTOR3 Bpos, D3DXVECTOR3 BMinpos, D3DXVECTOR3 BMaxpos)
 {
-	if (Apos.x + ASize.x > Bpos.x + Bpos.x
+	if (Apos.x + ASize.x > Bpos.x + BMinpos.x
 		&& Apos.x - ASize.x < Bpos.x + BMaxpos.x)
 	{
 		if (Apos.z - ASize.z< Bpos.z + BMaxpos.z

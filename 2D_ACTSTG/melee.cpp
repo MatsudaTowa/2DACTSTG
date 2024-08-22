@@ -92,7 +92,30 @@ void CMelee::Update()
 			}
 
 		}
-		HitEnemy();
+
+		//当たり判定チェック変数
+		bool bHitCheck = false; 
+
+		//敵との当たり判定
+		bHitCheck = HitEnemy();
+
+		if (bHitCheck == true)
+		{
+			Uninit();
+		}
+
+		//ブロックとの当たり判定
+		bHitCheck = HitBlock();
+
+		if (bHitCheck == true)
+		{
+			Uninit();
+		}
+	}
+	else
+	{
+		//終了
+		Uninit();
 	}
 }
 

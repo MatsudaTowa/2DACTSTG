@@ -59,11 +59,6 @@ void CAttack_Manager::Update()
 	{
 		m_nLife--;
 	}
-	else
-	{
-		//終了
-		Uninit();
-	}
 }
 
 //=============================================
@@ -78,7 +73,7 @@ void CAttack_Manager::Draw()
 //=============================================
 //攻撃当たり判定(エネミー)
 //=============================================
-void CAttack_Manager::HitEnemy()
+bool CAttack_Manager::HitEnemy()
 {
 	//位置取得
 	D3DXVECTOR3 Attackpos = GetPos();
@@ -104,10 +99,14 @@ void CAttack_Manager::HitEnemy()
 				if (ColisionCheck != CColision::COLISION::COLISON_NONE)
 				{//当たってたら
 					pEnemy->Damage(m_nDamage);
-					//攻撃の削除
-					Uninit();
+					return true;
 				}
 			}
+
+		}
+		else
+		{
+			return false;
 		}
 	}
 }
@@ -115,7 +114,7 @@ void CAttack_Manager::HitEnemy()
 //=============================================
 //攻撃当たり判定(プレイヤー)
 //=============================================
-void CAttack_Manager::HitPlayer()
+bool CAttack_Manager::HitPlayer()
 {
 	//位置取得
 	D3DXVECTOR3 Attackpos = GetPos();
@@ -145,8 +144,11 @@ void CAttack_Manager::HitPlayer()
 					#endif // _DEBUG
 
 					pPlayer->Damage(m_nDamage);
-					//攻撃の削除
-					Uninit();
+					return true;
+				}
+				else
+				{
+					return false;
 				}
 			}
 		}
@@ -156,7 +158,7 @@ void CAttack_Manager::HitPlayer()
 //=============================================
 //攻撃当たり判定(ブロック)
 //=============================================
-void CAttack_Manager::HitBlock()
+bool CAttack_Manager::HitBlock()
 {
 	//位置取得
 	D3DXVECTOR3 Attackpos = GetPos();
@@ -182,7 +184,11 @@ void CAttack_Manager::HitBlock()
 				if (ColisionCheck != CColision::COLISION::COLISON_NONE)
 				{//当たってたら
 					//攻撃の削除
- 					Uninit();
+					return true;
+				}
+				else
+				{
+					return false;
 				}
 			}
 		}

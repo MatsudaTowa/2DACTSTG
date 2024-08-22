@@ -15,6 +15,7 @@
 #include "melee.h"
 #include "gauge.h"
 #include "game.h"
+#include"renderer.h"
 
 //ƒ‚ƒfƒ‹ƒpƒX
 const std::string CPlayer::MODEL_NAME = "data\\MODEL\\face.x";
