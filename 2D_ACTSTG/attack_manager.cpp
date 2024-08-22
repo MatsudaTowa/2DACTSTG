@@ -6,7 +6,9 @@
 //=============================================
 #include "attack_manager.h"
 #include "enemy.h"
+#include "colision.h"
 #include "player.h"
+#include "block.h"
 
 //=============================================
 //コンストラクタ
@@ -97,34 +99,13 @@ void CAttack_Manager::HitEnemy()
 			{
 				CEnemy* pEnemy = (CEnemy*)pObj;
 
-				if (Attackpos.x + Attacksize.x > pEnemy->GetPos().x + pEnemy->GetMinPos().x
-					&& Attackpos.x - Attacksize.x < pEnemy->GetPos().x + pEnemy->GetMaxPos().x)
-				{
-					if (Attackpos.z - Attacksize.z< pEnemy->GetPos().z + pEnemy->GetMaxPos().z
-						&& Attackpos.z + Attacksize.z > pEnemy->GetPos().z + pEnemy->GetMinPos().z
-						&& Attackpos.y - Attacksize.y < pEnemy->GetPos().y + pEnemy->GetMaxPos().y
-						&& Attackpos.y + Attacksize.y > pEnemy->GetPos().y + pEnemy->GetMinPos().y)
-					{//当たり判定(X)
-						pEnemy->Damage(m_nDamage);
-						//近接攻撃の削除
-						Uninit();
-					}
-				}
+				CColision::COLISION ColisionCheck = CColision::CheckItemColision(Attackpos, Attacksize, pEnemy->GetPos(),pEnemy->GetMinPos(),pEnemy->GetMaxPos());
 
-
-				else if (Attackpos.z + Attacksize.z > pEnemy->GetPos().z + pEnemy->GetMinPos().z
-					&& Attackpos.z - Attacksize.z < pEnemy->GetPos().z + pEnemy->GetMaxPos().z)
-				{
-					if (Attackpos.x - Attacksize.x < pEnemy->GetPos().x + pEnemy->GetMaxPos().x
-						&& Attackpos.x + Attacksize.x > pEnemy->GetPos().x + pEnemy->GetMinPos().x
-						&& Attackpos.y - Attacksize.y < pEnemy->GetPos().y + pEnemy->GetMaxPos().y
-						&& Attackpos.y + Attacksize.y > pEnemy->GetPos().y + pEnemy->GetMinPos().y
-						)
-					{//当たり判定(Z)
-						pEnemy->Damage(m_nDamage);
-						//近接攻撃の削除
-						Uninit();
-					}
+				if (ColisionCheck != CColision::COLISION::COLISON_NONE)
+				{//当たってたら
+					pEnemy->Damage(m_nDamage);
+					//攻撃の削除
+					Uninit();
 				}
 			}
 		}
@@ -155,34 +136,53 @@ void CAttack_Manager::HitPlayer()
 			{
 				CPlayer* pPlayer = (CPlayer*)pObj;
 
-				if (Attackpos.x + Attacksize.x > pPlayer->GetPos().x + pPlayer->GetMinPos().x
-					&& Attackpos.x - Attacksize.x < pPlayer->GetPos().x + pPlayer->GetMaxPos().x)
-				{
-					if (Attackpos.z - Attacksize.z< pPlayer->GetPos().z + pPlayer->GetMaxPos().z
-						&& Attackpos.z + Attacksize.z > pPlayer->GetPos().z + pPlayer->GetMinPos().z
-						&& Attackpos.y - Attacksize.y < pPlayer->GetPos().y + pPlayer->GetMaxPos().y
-						&& Attackpos.y + Attacksize.y > pPlayer->GetPos().y + pPlayer->GetMinPos().y)
-					{//当たり判定(X)
-						pPlayer->Damage(m_nDamage);
-						//近接攻撃の削除
-						Uninit();
-					}
+				CColision::COLISION ColisionCheck = CColision::CheckItemColision(Attackpos, Attacksize, pPlayer->GetPos(), pPlayer->GetMinPos(), pPlayer->GetMaxPos());
+
+				if (ColisionCheck != CColision::COLISION::COLISON_NONE)
+				{//当たってたら
+					#ifdef _DEBUG
+					break;
+					#endif // _DEBUG
+
+					pPlayer->Damage(m_nDamage);
+					//攻撃の削除
+					Uninit();
 				}
+			}
+		}
+	}
+}
 
+//=============================================
+//攻撃当たり判定(ブロック)
+//=============================================
+void CAttack_Manager::HitBlock()
+{
+	//位置取得
+	D3DXVECTOR3 Attackpos = GetPos();
+	//サイズ取得
+	D3DXVECTOR3 Attacksize = GetSize();
 
-				else if (Attackpos.z + Attacksize.z > pPlayer->GetPos().z + pPlayer->GetMinPos().z
-					&& Attackpos.z - Attacksize.z < pPlayer->GetPos().z + pPlayer->GetMaxPos().z)
-				{
-					if (Attackpos.x - Attacksize.x < pPlayer->GetPos().x + pPlayer->GetMaxPos().x
-						&& Attackpos.x + Attacksize.x > pPlayer->GetPos().x + pPlayer->GetMinPos().x
-						&& Attackpos.y - Attacksize.y < pPlayer->GetPos().y + pPlayer->GetMaxPos().y
-						&& Attackpos.y + Attacksize.y > pPlayer->GetPos().y + pPlayer->GetMinPos().y
-						)
-					{//当たり判定(Z)
-						pPlayer->Damage(m_nDamage);
-						//近接攻撃の削除
-						Uninit();
-					}
+	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
+	{
+		//オブジェクト取得
+		CObject* pObj = CObject::Getobject(CBlock::BLOCK_PRIORITY, nCnt);
+		if (pObj != nullptr)
+		{//ヌルポインタじゃなければ
+			//タイプ取得
+			CObject::OBJECT_TYPE type = pObj->GetType();
+
+			//敵との当たり判定
+			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_BLOCK)
+			{
+				CBlock* pBlock = (CBlock*)pObj;
+
+				CColision::COLISION ColisionCheck = CColision::CheckItemColision(Attackpos, Attacksize, pBlock->GetPos(), pBlock->GetMinPos(), pBlock->GetMaxPos());
+
+				if (ColisionCheck != CColision::COLISION::COLISON_NONE)
+				{//当たってたら
+					//攻撃の削除
+ 					Uninit();
 				}
 			}
 		}

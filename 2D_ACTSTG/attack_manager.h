@@ -27,6 +27,7 @@ public:
 	void Draw()override;
 	void HitEnemy();
 	void HitPlayer();
+	void HitBlock();
 
 	//õ–½‚Ìİ’è
 	void SetLife(int nLife)

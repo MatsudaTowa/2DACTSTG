@@ -110,21 +110,25 @@ void CCharacter::HitBlock()
 				CBlock* pBlock = (CBlock*)pObj;
 
 				//着地以外の判定
-				bool bCheckcolision = CColision::CheckColision(m_oldpos, CharacterPos,CharacterMin,CharacterMax,pBlock->GetPos(),pBlock->GetMinPos(),pBlock->GetMaxPos());
+				CColision::COLISION Checkcolision = CColision::CheckColision(m_oldpos, CharacterPos,CharacterMin,CharacterMax,pBlock->GetPos(),pBlock->GetMinPos(),pBlock->GetMaxPos());
 				
-				if (bCheckcolision)
-				{//当たってたら
+				if (Checkcolision == CColision::COLISION::COLISON_X)
+				{//x方向に当たってたら
 					CharacterPos.x = m_oldpos.x;
-					CharacterPos.z = m_oldpos.z;
 					m_move.x = 0.0f;
+				}
+				if (Checkcolision == CColision::COLISION::COLISON_Z)
+				{//z方向に当たってたら
+					CharacterPos.z = m_oldpos.z;
 					m_move.z = 0.0f;
 				}
+				if (Checkcolision == CColision::COLISION::COLISON_UNDER_Y)
+				{//y(下)方向に当たってたら
+					CharacterPos.y = m_oldpos.y;
+				}
 
-				//着地の判定
-				bool bCheckLanding = CColision::CheckColisionLanding(m_oldpos, CharacterPos, CharacterMin, CharacterMax, pBlock->GetPos(), pBlock->GetMinPos(), pBlock->GetMaxPos());
-
-				if (bCheckLanding)
-				{
+				if (Checkcolision == CColision::COLISION::COLISON_TOP_Y)
+				{//y(上)方向に当たってたら
 					CharacterPos.y = m_oldpos.y;
 					m_move.y = 0.0f;
 					m_bLanding = true; //着地

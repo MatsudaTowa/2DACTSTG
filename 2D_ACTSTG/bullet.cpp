@@ -67,7 +67,6 @@ void CBullet::Update()
 		SetPos(pos);
 		//í∏ì_ç¿ïW
 		SetVtx(D3DXVECTOR3(0.0f, 0.0f, -1.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-
 		switch (m_type)
 		{
 		case BULLET_TYPE_PLAYER:
@@ -82,6 +81,8 @@ void CBullet::Update()
 			assert(false);
 			break;
 		}
+		HitBlock();
+
 	}
 }
 
