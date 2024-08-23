@@ -110,24 +110,28 @@ void CCharacter::HitBlock()
 				CBlock* pBlock = (CBlock*)pObj;
 
 				//当たり判定チェック
-				CColision::COLISION Checkcolision = CColision::CheckColision(m_oldpos, CharacterPos,CharacterMin,CharacterMax,pBlock->GetPos(),pBlock->GetMinPos(),pBlock->GetMaxPos());
+				CColision::COLISION Checkcolision_X = CColision::CheckColision_X(m_oldpos, CharacterPos,CharacterMin,CharacterMax,pBlock->GetPos(),pBlock->GetMinPos(),pBlock->GetMaxPos());
 				
-				if (Checkcolision == CColision::COLISION::COLISON_X)
+				CColision::COLISION Checkcolision_Y = CColision::CheckColision_Y(m_oldpos, CharacterPos, CharacterMin, CharacterMax, pBlock->GetPos(), pBlock->GetMinPos(), pBlock->GetMaxPos());
+
+				CColision::COLISION Checkcolision_Z = CColision::CheckColision_Z(m_oldpos, CharacterPos, CharacterMin, CharacterMax, pBlock->GetPos(), pBlock->GetMinPos(), pBlock->GetMaxPos());
+
+				if (Checkcolision_X == CColision::COLISION::COLISON_X)
 				{//x方向に当たってたら
 					CharacterPos.x = m_oldpos.x;
 					m_move.x = 0.0f;
 				}
-				if (Checkcolision == CColision::COLISION::COLISON_Z)
+				if (Checkcolision_Z == CColision::COLISION::COLISON_Z)
 				{//z方向に当たってたら
 					CharacterPos.z = m_oldpos.z;
 					m_move.z = 0.0f;
 				}
-				if (Checkcolision == CColision::COLISION::COLISON_UNDER_Y)
+				if (Checkcolision_Y == CColision::COLISION::COLISON_UNDER_Y)
 				{//y(下)方向に当たってたら
 					CharacterPos.y = m_oldpos.y;
 				}
 
-				if (Checkcolision == CColision::COLISION::COLISON_TOP_Y)
+				if (Checkcolision_Y == CColision::COLISION::COLISON_TOP_Y)
 				{//y(上)方向に当たってたら
 					CharacterPos.y = m_oldpos.y;
 					m_move.y = 0.0f;
@@ -167,9 +171,9 @@ void CCharacter::HitField()
 				CField* pField = (CField*)pObj;
 
 				//当たり判定チェック
-				CColision::COLISION Checkcolision = CColision::CheckColision(m_oldpos, CharacterPos, CharacterMin, CharacterMax, pField->GetPos(), pField->GetSize());
+				CColision::COLISION Checkcolision_Y = CColision::CheckColision_Y(m_oldpos, CharacterPos, CharacterMin, CharacterMax, pField->GetPos(), pField->GetSize());
 
-				if (Checkcolision == CColision::COLISION::COLISON_TOP_Y)
+				if (Checkcolision_Y == CColision::COLISION::COLISON_TOP_Y)
 				{//y(上)方向に当たってたら
 					CharacterPos.y = m_oldpos.y;
 					m_move.y = 0.0f;
@@ -206,24 +210,28 @@ void CCharacter::HitPlayer()
 			{
 				CPlayer* pPlayer = (CPlayer*)pObj;
 
-				CColision::COLISION Checkcolision = CColision::CheckColision(m_oldpos, CharacterPos, CharacterMin, CharacterMax, pPlayer->GetPos(), pPlayer->GetMinPos(), pPlayer->GetMaxPos());
+				CColision::COLISION Checkcolision_X = CColision::CheckColision_X(m_oldpos, CharacterPos, CharacterMin, CharacterMax, pPlayer->GetPos(), pPlayer->GetMinPos(), pPlayer->GetMaxPos());
 
-				if (Checkcolision == CColision::COLISION::COLISON_X)
+				CColision::COLISION Checkcolision_Y = CColision::CheckColision_Y(m_oldpos, CharacterPos, CharacterMin, CharacterMax, pPlayer->GetPos(), pPlayer->GetMinPos(), pPlayer->GetMaxPos());
+
+				CColision::COLISION Checkcolision_Z = CColision::CheckColision_Z(m_oldpos, CharacterPos, CharacterMin, CharacterMax, pPlayer->GetPos(), pPlayer->GetMinPos(), pPlayer->GetMaxPos());
+
+				if (Checkcolision_X == CColision::COLISION::COLISON_X)
 				{//x方向に当たってたら
 					CharacterPos.x = m_oldpos.x;
 					m_move.x = 0.0f;
 				}
-				if (Checkcolision == CColision::COLISION::COLISON_Z)
+				if (Checkcolision_Z == CColision::COLISION::COLISON_Z)
 				{//z方向に当たってたら
 					CharacterPos.z = m_oldpos.z;
 					m_move.z = 0.0f;
 				}
-				if (Checkcolision == CColision::COLISION::COLISON_UNDER_Y)
+				if (Checkcolision_Y == CColision::COLISION::COLISON_UNDER_Y)
 				{//y(下)方向に当たってたら
 					CharacterPos.y = m_oldpos.y;
 				}
 
-				if (Checkcolision == CColision::COLISION::COLISON_TOP_Y)
+				if (Checkcolision_Y == CColision::COLISION::COLISON_TOP_Y)
 				{//y(上)方向に当たってたら
 					CharacterPos.y = m_oldpos.y;
 					m_move.y = 0.0f;
@@ -259,23 +267,27 @@ void CCharacter::HitEnemy()
 			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_ENEMY)
 			{
 				CEnemy* pEnemy = (CEnemy*)pObj;
-				CColision::COLISION Checkcolision = CColision::CheckColision(m_oldpos, CharacterPos, CharacterMin, CharacterMax, pEnemy->GetPos(), pEnemy->GetMinPos(), pEnemy->GetMaxPos());
+				CColision::COLISION Checkcolision_X = CColision::CheckColision_X(m_oldpos, CharacterPos, CharacterMin, CharacterMax, pEnemy->GetPos(), pEnemy->GetMinPos(), pEnemy->GetMaxPos());
 
-				if (Checkcolision == CColision::COLISION::COLISON_X)
+				CColision::COLISION Checkcolision_Y = CColision::CheckColision_Y(m_oldpos, CharacterPos, CharacterMin, CharacterMax, pEnemy->GetPos(), pEnemy->GetMinPos(), pEnemy->GetMaxPos());
+
+				CColision::COLISION Checkcolision_Z = CColision::CheckColision_Z(m_oldpos, CharacterPos, CharacterMin, CharacterMax, pEnemy->GetPos(), pEnemy->GetMinPos(), pEnemy->GetMaxPos());
+
+				if (Checkcolision_X == CColision::COLISION::COLISON_X)
 				{//x方向に当たってたら
 					CharacterPos.x = m_oldpos.x;
 					m_move.x = 0.0f;
 				}
-				if (Checkcolision == CColision::COLISION::COLISON_Z)
+				if (Checkcolision_Z == CColision::COLISION::COLISON_Z)
 				{//z方向に当たってたら
 					CharacterPos.z = m_oldpos.z;
 					m_move.z = 0.0f;
 				}
-				if (Checkcolision == CColision::COLISION::COLISON_UNDER_Y)
+				if (Checkcolision_Y == CColision::COLISION::COLISON_UNDER_Y)
 				{//y(下)方向に当たってたら
 					CharacterPos.y = m_oldpos.y;
 				}
-				if (Checkcolision == CColision::COLISION::COLISON_TOP_Y)
+				if (Checkcolision_Y == CColision::COLISION::COLISON_TOP_Y)
 				{//y(上)方向に当たってたら
 					CharacterPos.y = m_oldpos.y;
 					m_move.y = 0.0f;
