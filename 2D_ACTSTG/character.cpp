@@ -134,7 +134,33 @@ void CCharacter::HitBlock()
 					m_bLanding = true; //着地
 				}
 			}
+		}
+	}
+	SetPos(CharacterPos);
+}
 
+
+//=============================================
+//床との接触判定
+//=============================================
+void CCharacter::HitField()
+{
+	D3DXVECTOR3 CharacterPos = GetPos();
+
+	//サイズ取得
+	D3DXVECTOR3 CharacterMin = GetMinPos();
+	D3DXVECTOR3 CharacterMax = GetMaxPos();
+
+	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
+	{
+		//オブジェクト取得
+		CObject* pObj = CObject::Getobject(CField::FIELD_PRIORITY, nCnt);
+		if (pObj != nullptr)
+		{//ヌルポインタじゃなければ
+			//タイプ取得
+			CObject::OBJECT_TYPE type = pObj->GetType();
+
+			//ブロックとの当たり判定
 			//床との当たり判定
 			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_FIELD)
 			{
@@ -249,7 +275,6 @@ void CCharacter::HitEnemy()
 				{//y(下)方向に当たってたら
 					CharacterPos.y = m_oldpos.y;
 				}
-
 				if (Checkcolision == CColision::COLISION::COLISON_TOP_Y)
 				{//y(上)方向に当たってたら
 					CharacterPos.y = m_oldpos.y;

@@ -143,6 +143,9 @@ void CEnemy::Update()
 	//ƒuƒƒbƒN‚Æ‚ÌÚGˆ—
 	HitBlock();
 
+	//°‚Æ‚ÌÚGˆ—
+	HitField();
+
 	if (pos.y < DEADZONE_Y)
 	{//”jŠüˆ—
 		Uninit();

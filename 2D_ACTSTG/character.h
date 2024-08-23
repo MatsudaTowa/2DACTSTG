@@ -25,6 +25,7 @@ public:
 
 	void Gravity(); //重力処理
 	void HitBlock(); //ブロック当たり判定
+	void HitField(); //床当たり判定
 	void HitPlayer(); //プレイヤーとの当たり判定
 	void HitEnemy(); //敵との当たり判定
 	void ShotBullet(D3DXVECTOR3 pos, D3DXVECTOR3 size, bool bWay, int nDamage, CBullet::BULLET_TYPE type); //弾発射処理

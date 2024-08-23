@@ -184,8 +184,6 @@ CGauge* CGauge::Create(D3DXVECTOR3 pos, D3DXVECTOR2 size, GAUGE_TYPE type, D3DXC
 
     pGauge->SetSize(size); //size設定
 
-
-
 	pGauge->m_type = type; //ゲージのタイプ設定
 
 	pGauge->m_col = col; //カラー設定

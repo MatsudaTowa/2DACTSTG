@@ -215,8 +215,6 @@ CColision::COLISION CColision::CheckColision(D3DXVECTOR3 Aoldpos, D3DXVECTOR3 Ap
 	}
 }
 
-
-
 //=============================================
 //モデル同士当たり判定チェック関数
 //=============================================
@@ -248,10 +246,6 @@ CColision::COLISION CColision::CheckColision(D3DXVECTOR3 Aoldpos, D3DXVECTOR3 Ap
 			return CColision::COLISION::COLISON_NONE;
 		}
 	}
-	//else
-	//{
-	//	return CColision::COLISION::COLISON_NONE;
-	//}
 
 	if (Aoldpos.z + AMaxpos.z <= Bpos.z + BMinpos.z
 		&& Apos.z + AMaxpos.z > Bpos.z + BMinpos.z)
@@ -287,10 +281,6 @@ CColision::COLISION CColision::CheckColision(D3DXVECTOR3 Aoldpos, D3DXVECTOR3 Ap
 			return CColision::COLISION::COLISON_NONE;
 		}
 	}
-	//else
-	//{
-	//	return CColision::COLISION::COLISON_NONE;
-	//}
 
 	if (Aoldpos.y + AMaxpos.y <= Bpos.y + BMinpos.y
 		&& Apos.y + AMaxpos.y > Bpos.y + BMinpos.y)

@@ -22,6 +22,7 @@ const std::string CPlayer::MODEL_NAME = "data\\MODEL\\face.x";
 
 //通常の移動速度
 const float CPlayer::DEFAULT_MOVE = 1.0f;
+
 //通常の移動速度
 const float CPlayer::DAMPING_COEFFICIENT = 0.3f;
 
@@ -150,6 +151,9 @@ void CPlayer::Update()
 	
 	//ブロックとの接触処理
 	HitBlock();
+
+	//床との接触処理
+	HitField();
 
 	//エネミーとの接触処理
 	HitEnemy();
