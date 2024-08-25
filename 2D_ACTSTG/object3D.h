@@ -55,6 +55,12 @@ public:
 		m_mtxWorld = mtxWorld;
 	}
 
+	//’¸“_î•ñ‚Ì‘ã“ü
+	void SetVtxBuff(LPDIRECT3DVERTEXBUFFER9 vtxBuff)
+	{
+		m_pVtxBuff = vtxBuff;
+	}
+
 	//’¸“_À•W‚Ì‘ã“ü
 	void SetVtx(D3DXVECTOR3 nor, D3DCOLOR col);
 

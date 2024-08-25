@@ -13,8 +13,8 @@
 #include "item.h"
 
 //通常の移動速度
-const float CEnemy::DEFAULT_MOVE = 0.5f;
-//通常の移動速度
+const float CEnemy::DEFAULT_MOVE = 0.3f;
+//移動抵抗
 const float CEnemy::DAMPING_COEFFICIENT = 0.3f;
 
 //エネミーを破棄される座標
@@ -22,6 +22,9 @@ const float CEnemy::DEADZONE_Y = -100.0f;
 
 //モデルパス
 const std::string CEnemy::MODEL_NAME = "data\\MODEL\\enemy_test.x";
+
+//モデルパス
+const std::string CEnemy::FLOW_MODEL_NAME = "data\\MODEL\\flowenemy_test.x";
 
 //テクスチャ初期化
 LPDIRECT3DTEXTURE9 CEnemy::m_pTextureTemp = nullptr;
@@ -38,7 +41,7 @@ int CEnemy::m_nNumEnemy = 0;
 //=============================================
 //コンストラクタ
 //=============================================
-CEnemy::CEnemy(int nPriority):CCharacter(nPriority),m_nShotCnt(0)
+CEnemy::CEnemy(int nPriority):CCharacter(nPriority)
 {
 	//総数加算
 	m_nNumEnemy++;
@@ -62,6 +65,10 @@ HRESULT CEnemy::Init()
 	//ムーブ値代入
 	SetMove(move);
 
+#ifdef _DEBUG
+	//当たり判定可視化
+	m_pColisionView = CColision_View::Create(GetPos(), GetMinPos(), GetMaxPos(), D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f));
+#endif
 	return S_OK;
 }
 
@@ -116,27 +123,10 @@ void CEnemy::Update()
 	//座標を更新
 	SetPos(pos);
 
-	//プレイヤーとの距離を測る
-	bool bDistance = PlayerDistance();
-
-	if (bDistance == true)
-	{//近かったら
-		//向きを取得
-		bool bWay = GetWay();
-
-		//ショットカウント加算
-		m_nShotCnt++;
-
-		if (m_nShotCnt >= NORMAL_SHOT_FRAME)
-		{//フレーム数に達したら
-			//弾発射
-			ShotBullet(pos, D3DXVECTOR3(20.0f, 20.0f, 0.0f), bWay, 1, CBullet::BULLET_TYPE_ENEMY);
-
-			//ショットカウントリセット
-			m_nShotCnt = 0;
-		}
-	}
-
+#ifdef _DEBUG
+	//可視化された当たり判定を動かす
+	m_pColisionView->SetPos(pos);
+#endif
 	//プレイヤーとの接触処理
 	HitPlayer();
 
@@ -172,31 +162,43 @@ CEnemy* CEnemy::Create(const D3DXVECTOR3& pos,const D3DXVECTOR3& rot, const ENEM
 	{
 	case ENEMY_TYPE_NORMAL:
 		pEnemy = new CNormalEnemy;
+		break;
+	case ENEMY_TYPE_FLOW:
+		pEnemy = new CFlowEnemy;
+		break;
 	default:
-		assert(true);
 		break;
 	}
 
 	// nullならnullを返す
 	if (pEnemy == nullptr) { return nullptr; }
 
-	//モデルを取得
-	CModel* pModel = CManager::GetModel();
-
 	pEnemy->m_Type = type; //エネミーのタイプ設定
-
-	//エネミーの体力設定
-	pEnemy->SetLife(ENEMY_DEFAULT_LIFE);
 
 	pEnemy->SetPos(pos); //pos設定
 	pEnemy->SetRot(rot); //rot設定
-
-	//Xファイル読み込み
-	pEnemy->BindXFile(pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).pBuffMat, //マテリアル取得
-	pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).dwNumMat, //マテリアル数取得
-	pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).pMesh); //メッシュ情報取得
-
 	pEnemy->SetType(OBJECT_TYPE_ENEMY); //オブジェクトのタイプ設定
+
+	//モデルを取得
+	CModel* pModel = CManager::GetModel();
+
+	switch (pEnemy->m_Type)
+	{
+	case CEnemy::ENEMY_TYPE::ENEMY_TYPE_NORMAL:
+		//Xファイル読み込み
+		pEnemy->BindXFile(pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).pBuffMat, //マテリアル取得
+			pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).dwNumMat, //マテリアル数取得
+			pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).pMesh); //メッシュ情報取得
+		break;
+	case CEnemy::ENEMY_TYPE::ENEMY_TYPE_FLOW:
+		//Xファイル読み込み
+		pEnemy->BindXFile(pModel->GetModelInfo(pModel->Regist(&FLOW_MODEL_NAME)).pBuffMat, //マテリアル取得
+			pModel->GetModelInfo(pModel->Regist(&FLOW_MODEL_NAME)).dwNumMat, //マテリアル数取得
+			pModel->GetModelInfo(pModel->Regist(&FLOW_MODEL_NAME)).pMesh); //メッシュ情報取得
+		break;
+	default:
+		break;
+	}
 
 	pEnemy->Init(); //エネミーの初期化処理
 
@@ -221,7 +223,24 @@ void CEnemy::Damage(int nDamage)
 	if (nLife <= 0)
 	{//HPが0以下だったら
 		//破棄
-		CItem*pItem = CItem::Create(CItem::ITEMTYPE_PANETRARING_SLASH, D3DXVECTOR3(GetPos().x, GetPos().y, GetPos().z),D3DXVECTOR3(10.0f,10.0f,0.0f),GetRot());
+		CItem* pItem = nullptr;
+
+		switch (m_Type)
+		{
+		case CEnemy::ENEMY_TYPE::ENEMY_TYPE_NORMAL:
+			pItem = CItem::Create(CItem::ITEMTYPE_PANETRARING_SLASH, D3DXVECTOR3(GetPos().x, GetPos().y, GetPos().z), D3DXVECTOR3(10.0f, 10.0f, 0.0f), GetRot());
+			break;
+		case CEnemy::ENEMY_TYPE::ENEMY_TYPE_FLOW:
+			break;
+		default:
+			break;
+		}
+
+#ifdef _DEBUG
+		//可視化された当たり判定破棄
+		m_pColisionView->Uninit();
+#endif // _DEBUG
+
 		Uninit();
 	}
 }
@@ -281,7 +300,7 @@ bool CEnemy::PlayerDistance()
 //=============================================
 //コンストラクタ
 //=============================================
-CNormalEnemy::CNormalEnemy(int nPriority):CEnemy(nPriority),m_nTurnFrameCnt(0), m_bOldWay(false)
+CNormalEnemy::CNormalEnemy(int nPriority):CEnemy(nPriority),m_nTurnFrameCnt(0), m_bOldWay(false), m_nShotCnt(0)
 {
 }
 
@@ -299,6 +318,7 @@ HRESULT CNormalEnemy::Init()
 {
 	//親クラスの初期化
 	CEnemy::Init();
+	SetLife(ENEMY_NORMAL_LIFE);
 	return S_OK;
 }
 
@@ -318,6 +338,27 @@ void CNormalEnemy::Update()
 {
 	//親クラスの更新
 	CEnemy::Update();
+
+	//プレイヤーとの距離を測る
+	bool bDistance = PlayerDistance();
+
+	if (bDistance == true)
+	{//近かったら
+		//向きを取得
+		bool bWay = GetWay();
+
+		//ショットカウント加算
+		m_nShotCnt++;
+
+		if (m_nShotCnt >= NORMAL_SHOT_FRAME)
+		{//フレーム数に達したら
+			//弾発射
+			ShotBullet(GetPos(), D3DXVECTOR3(20.0f, 20.0f, 0.0f), bWay, 1, CBullet::BULLET_TYPE_ENEMY);
+
+			//ショットカウントリセット
+			m_nShotCnt = 0;
+		}
+	}
 }
 
 //=============================================
@@ -346,6 +387,123 @@ void CNormalEnemy::EnemyMove()
 	}
 
 	if (m_nTurnFrameCnt >= NORMAL_ENEMY_TURNFRAME)
+	{//指定フレーム数に到達したら
+
+		//進む方向を切り替える
+		bWay = bWay ? false : true;
+		SetWay(bWay);
+
+		//過去の向きに今の向きを代入
+		m_bOldWay = bWay;
+		//カウントリセット
+		m_nTurnFrameCnt = 0;
+	}
+
+	//移動用単位ベクトル初期化
+	D3DXVECTOR3 vecDirection(0.0f, 0.0f, 0.0f);
+
+	if (bWay == true)
+	{//右向きに進むなら
+		vecDirection.x += 1.0f;
+		vecDirection.z += 0.0f;
+	}
+	else if (bWay == false)
+	{//左向きに進むなら
+		vecDirection.x -= 1.0f;
+		vecDirection.z -= 0.0f;
+	}
+
+
+	//移動量取得
+	D3DXVECTOR3 move = GetMove();
+	float rotMoveY = atan2f(vecDirection.x, vecDirection.z);
+
+	//オブジェクト2Dからrotを取得
+	D3DXVECTOR3 rot = GetRot();
+
+	//着地してるか取得
+	bool bLanding = GetLaunding();
+
+	move.x += sinf(rotMoveY) * CEnemy::DEFAULT_MOVE;
+	move.z += cosf(rotMoveY) * CEnemy::DEFAULT_MOVE;
+	rot.y = rotMoveY + D3DX_PI;
+
+	SetRot(rot); //rotを代入
+	SetMove(move);//移動量代入
+
+	//着地してるか代入
+	SetLanding(bLanding);
+}
+
+//=============================================
+//コンストラクタ
+//=============================================
+CFlowEnemy::CFlowEnemy(int nPriority) :CEnemy(nPriority), m_nTurnFrameCnt(0), m_bOldWay(false)
+{
+}
+
+//=============================================
+//デストラクタ
+//=============================================
+CFlowEnemy::~CFlowEnemy()
+{
+}
+
+//=============================================
+//初期化
+//=============================================
+HRESULT CFlowEnemy::Init()
+{
+	//親クラスの初期化
+	CEnemy::Init();
+	SetLife(ENEMY_FLOW_LIFE);
+	return S_OK;
+}
+
+//=============================================
+//終了
+//=============================================
+void CFlowEnemy::Uninit()
+{
+	//親クラスの終了
+	CEnemy::Uninit();
+}
+
+//=============================================
+//更新
+//=============================================
+void CFlowEnemy::Update()
+{
+	//親クラスの更新
+	CEnemy::Update();
+}
+
+//=============================================
+//描画
+//=============================================
+void CFlowEnemy::Draw()
+{
+	//親クラスの描画
+	CEnemy::Draw();
+}
+
+//=============================================
+//移動処理
+//=============================================
+void CFlowEnemy::EnemyMove()
+{
+	//カウント加算
+	m_nTurnFrameCnt++;
+
+	//向きを取得
+	bool bWay = GetWay();
+
+	if (m_bOldWay != bWay)
+	{//過去の向きと違ったらフレームリセット
+		m_nTurnFrameCnt = 0;
+	}
+
+	if (m_nTurnFrameCnt >= FLOW_ENEMY_TURNFRAME)
 	{//指定フレーム数に到達したら
 
 		//進む方向を切り替える

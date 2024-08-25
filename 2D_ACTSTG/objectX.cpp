@@ -7,7 +7,7 @@
 #include "objectX.h"
 #include "renderer.h"
 #include "manager.h"
-
+#include "colision_view.h"
 //=============================================
 //コンストラクタ
 //=============================================
@@ -34,6 +34,7 @@ CObjectX::~CObjectX()
 //=============================================
 HRESULT CObjectX::Init()
 {
+
 	return S_OK;
 }
 
