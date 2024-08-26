@@ -10,7 +10,7 @@
 
 //テクスチャ初期化
 LPDIRECT3DTEXTURE9 CFlow::m_pTextureTemp = nullptr;
-const std::string CFlow::TEXTURE_NAME = "data\\TEXTURE\\flow_test.png";
+const std::string CFlow::TEXTURE_NAME = "data\\TEXTURE\\flow_anim.png";
 
 //=============================================
 //コンストラクタ
@@ -33,6 +33,28 @@ HRESULT CFlow::Init()
 {
 	//親クラスの初期化
 	CAttack_Manager::Init();
+
+	m_nDamageCnt = DAMAGE_FRAME; //最初にヒットさせるためにダメージのフレーム数を代入
+
+		//テクスチャ移動量取得
+	D3DXVECTOR2 tex_move = GetTexMove();
+	tex_move.x = 1.0f / (float)TEX_SPLIT_X;
+	tex_move.y = 1.0f / (float)TEX_SPLIT_Y;
+	//テクスチャ移動量代入
+	SetTexMove(tex_move);
+
+	//テクスチャ座標取得
+	D3DXVECTOR2 tex_pos = GetTexPos();
+	tex_pos.x = 0.0f;
+	tex_pos.y = 0.0f;
+	//テクスチャ座標代入
+	SetTexPos(tex_pos);
+
+	//アニメーションフレーム代入
+	SetAnimFrame(ANIMATION_FRAME);
+
+	//頂点座標
+	SetVtxAnim(D3DXVECTOR3(0.0f, 0.0f, -1.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), tex_pos, tex_move);
 
 	return S_OK;
 }
@@ -59,12 +81,21 @@ void CFlow::Update()
 
 	if (nLife > 0)
 	{//ライフがあれば処理実行
-		D3DXVECTOR3 pos = GetPos();
-		pos += m_move;
-		//座標を更新
-		SetPos(pos);
+
+		//テクスチャ情報取得
+		D3DXVECTOR2 tex_pos = GetTexPos();
+		D3DXVECTOR2 tex_move = GetTexMove();
+
 		//頂点座標
-		SetVtx(D3DXVECTOR3(0.0f, 0.0f, -1.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		SetVtxAnim(D3DXVECTOR3(0.0f, 0.0f, -1.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), tex_pos, tex_move);
+		//アニメーション後のテクスチャ座標取得
+		tex_pos = GetTexPos();
+		//アニメーションを繰り返す
+		if (tex_pos.x >= 1.0f)
+		{
+			tex_pos.x = 0.0f;
+		}
+		SetTexPos(tex_pos);
 
 		//当たり判定チェック変数
 		bool bHitCheck = false;
@@ -72,18 +103,19 @@ void CFlow::Update()
 		{
 		case FLOW_TYPE_PLAYER:
 			bHitCheck = HitEnemy();
-			if (bHitCheck == true)
-			{
-				Uninit();
-			}
+
 			break;
 
 		case FLOW_TYPE_ENEMY:
-			bHitCheck = HitPlayer();
-			if (bHitCheck == true)
-			{
-				Uninit();
+			
+			m_nDamageCnt++;//ヒットカウント計測
+
+			if(m_nDamageCnt>=DAMAGE_FRAME)
+			{//フレーム数に到達したら
+				bHitCheck = HitPlayer();
+				m_nDamageCnt = 0;
 			}
+
 			break;
 
 		default:
@@ -110,7 +142,7 @@ void CFlow::Draw()
 //=============================================
 //生成
 //=============================================
-CFlow* CFlow::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 size, int nLife,FLOW_TYPE type)
+CFlow* CFlow::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, int nLife, int nDamage , FLOW_TYPE type)
 {
 	CFlow* pFlow = new CFlow;
 
@@ -119,8 +151,8 @@ CFlow* CFlow::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 size, int nLi
 
 	pFlow->SetPos(pos); //pos設定
 	pFlow->SetSize(size); //サイズ設定
-	pFlow->SetRot(rot);
 	pFlow->SetLife(nLife); //寿命代入
+	pFlow->SetDamage(nDamage); //ダメージ代入
 	pFlow->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME)));
 	pFlow->m_type = type; //弾の設定
 	pFlow->SetType(OBJECT_TYPE_FLOW); //タイプ設定

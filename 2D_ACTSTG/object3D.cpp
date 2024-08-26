@@ -215,6 +215,76 @@ void CObject3D::SetVtx(D3DXVECTOR3 nor, float fAngle, float fLength, D3DCOLOR co
 }
 
 //=============================================
+//アニメーション専用頂点の設定
+//=============================================
+void CObject3D::SetVtxAnim(D3DXVECTOR3 nor, D3DCOLOR col,D3DXVECTOR2 tex_pos, D3DXVECTOR2 tex_move)
+{
+	CRenderer* pRender = CManager::GetRenderer();
+
+	LPDIRECT3DDEVICE9 pDevice = pRender->GetDevice();
+	if (m_pVtxBuff == nullptr)
+	{
+		pDevice->CreateVertexBuffer(sizeof(VERTEX_3D) * 4, D3DUSAGE_WRITEONLY, FVF_VERTEX_3D, D3DPOOL_MANAGED, &m_pVtxBuff, NULL);
+	}
+	VERTEX_3D* pVtx;
+	//頂点バッファをロックし頂点情報へのポインタを取得
+	m_pVtxBuff->Lock(0, 0, reinterpret_cast<void**>(&pVtx), 0);
+
+	//頂点座標の設定
+ 	pVtx[0].pos = D3DXVECTOR3(-m_size.x
+		, m_size.y
+		, m_size.z);
+	pVtx[1].pos = D3DXVECTOR3(m_size.x
+		, m_size.y
+		, m_size.z);
+	pVtx[2].pos = D3DXVECTOR3(-m_size.x
+		, -m_size.y
+		, -m_size.z);
+	pVtx[3].pos = D3DXVECTOR3(m_size.x
+		, -m_size.y
+		, -m_size.z);
+
+
+	//rhwの設定
+	pVtx[0].nor =
+		pVtx[1].nor =
+		pVtx[2].nor =
+		pVtx[3].nor = nor;
+
+	//頂点カラーの設定
+	pVtx[0].col =
+		pVtx[1].col =
+		pVtx[2].col =
+		pVtx[3].col = col;
+
+	m_nAnimCnt++;
+
+	if (m_nAnimCnt >= m_nAnimFrame)
+	{//フレーム数が達したら
+		//テクスチャをずらす
+ 		tex_pos.x += tex_move.x;
+		m_tex_move = tex_move;
+
+		m_nAnimCnt = 0;
+	}
+
+	//テクスチャの座標指定
+	pVtx[0].tex = D3DXVECTOR2(tex_pos.x
+		, tex_pos.y);
+	pVtx[1].tex = D3DXVECTOR2(tex_pos.x + tex_move.x
+		, tex_pos.y);
+	pVtx[2].tex = D3DXVECTOR2(tex_pos.x
+		, tex_pos.y + tex_move.y);
+	pVtx[3].tex = D3DXVECTOR2(tex_pos.x + tex_move.x
+		, tex_pos.y + tex_move.y);
+
+	SetTexPos(tex_pos);
+	//アンロック
+	m_pVtxBuff->Unlock();
+
+}
+
+//=============================================
 //座標取得
 //=============================================
 D3DXVECTOR3& CObject3D::GetPos()
@@ -268,4 +338,20 @@ LPDIRECT3DTEXTURE9& CObject3D::GetTexture()
 D3DXMATRIX& CObject3D::GetMtxWorld()
 {
 	return m_mtxWorld;
+}
+
+//=============================================
+//アニメーションフレーム数取得
+//=============================================
+int CObject3D::GetAnimFrame()
+{
+	return m_nAnimFrame;
+}
+
+//=============================================
+//テクスチャのムーブ量取得
+//=============================================
+D3DXVECTOR2& CObject3D::GetTexMove()
+{
+	return m_tex_move;
 }

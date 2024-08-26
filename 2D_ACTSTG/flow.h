@@ -16,6 +16,10 @@ class CFlow : public CAttack_Manager
 public:
 	static const std::string TEXTURE_NAME;	//テクスチャの名前
 	static const int FLOW_PRIORITY = 4; //描画順
+	static const int DAMAGE_FRAME = 30; //ダメージを与えるフレーム間隔
+	static const int TEX_SPLIT_X = 4; //テクスチャの分割数
+	static const int TEX_SPLIT_Y = 1; //テクスチャの分割数
+	static const int ANIMATION_FRAME = 10; //アニメーションフレーム数
 
 	typedef enum
 	{
@@ -31,10 +35,10 @@ public:
 	void Update()override;
 	void Draw()override;
 	//弾作成
-	static CFlow* Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 size, int nLife,  FLOW_TYPE type);
+	static CFlow* Create(D3DXVECTOR3 pos,D3DXVECTOR3 size, int nLife,int nDamage,  FLOW_TYPE type);
 private:
+	int m_nDamageCnt; //ダメージを与えるまでを計測するカウント
 	FLOW_TYPE m_type;
-	D3DXVECTOR3 m_move;
 	static LPDIRECT3DTEXTURE9 m_pTextureTemp;
 };
 #endif

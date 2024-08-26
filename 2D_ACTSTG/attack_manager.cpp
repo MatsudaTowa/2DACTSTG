@@ -33,7 +33,7 @@ HRESULT CAttack_Manager::Init()
 	CObject3D::Init();
 
 	//’¸“_İ’è
-	SetVtx(D3DXVECTOR3(0.0f, 0.0f, -1.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	//SetVtx(D3DXVECTOR3(0.0f, 0.0f, -1.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
 	return S_OK;
 }
@@ -141,10 +141,7 @@ bool CAttack_Manager::HitPlayer()
 					pPlayer->Damage(m_nDamage);
 					return true;
 				}
-				else
-				{
-					return false;
-				}
+
 			}
 		}
 	}

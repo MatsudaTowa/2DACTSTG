@@ -17,7 +17,7 @@ const std::string CBullet::TEXTURE_NAME ="data\\TEXTURE\\slash_test.png";
 //コンストラクタ
 //=============================================
 CBullet::CBullet(int nPriority):CAttack_Manager(nPriority)
-{//イニシャライザーでライフとダメージ初期化
+{
 	
 }
 

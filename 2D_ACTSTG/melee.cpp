@@ -31,6 +31,9 @@ HRESULT CMelee::Init()
 	//親クラスの初期化
 	CAttack_Manager::Init();
 
+	//頂点設定
+	SetVtx(D3DXVECTOR3(0.0f, 0.0f, -1.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+
 	return S_OK;
 }
 

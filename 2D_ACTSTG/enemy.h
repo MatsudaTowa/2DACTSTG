@@ -104,6 +104,7 @@ public:
 	void Draw()override;
 	void EnemyMove() override;
 private:
+	int m_nShotCnt; //弾を発射するカウント
 	int m_nTurnFrameCnt; //折り返しフレームをカウントする変数
 	bool m_bOldWay; //過去の方向
 };

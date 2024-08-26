@@ -11,6 +11,7 @@
 #include "effect.h"
 #include "bullet.h"
 #include "item.h"
+#include "flow.h"
 
 //通常の移動速度
 const float CEnemy::DEFAULT_MOVE = 0.3f;
@@ -476,6 +477,44 @@ void CFlowEnemy::Update()
 {
 	//親クラスの更新
 	CEnemy::Update();
+
+	//プレイヤーとの距離を測る
+	bool bDistance = PlayerDistance();
+
+	if (bDistance == true)
+	{//近かったら
+		//向きを取得
+		bool bWay = GetWay();
+
+		//ショットカウント加算
+		m_nShotCnt++;
+
+		if (m_nShotCnt >= NORMAL_SHOT_FRAME)
+		{//フレーム数に達したら
+			//弾発射
+			for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
+			{
+				//オブジェクト取得
+				CObject* pObj = CObject::Getobject(CPlayer::PLAYER_PRIORITY, nCnt);
+				if (pObj != nullptr)
+				{//ヌルポインタじゃなければ
+					//タイプ取得
+					CObject::OBJECT_TYPE type = pObj->GetType();
+
+					//敵との当たり判定
+					if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_PLAYER)
+					{
+						CPlayer* pPlayer = (CPlayer*)pObj;
+						CFlow* pFlow = CFlow::Create(D3DXVECTOR3(pPlayer->GetPos().x,pPlayer->GetPos().y + 5.0f,0.0f),
+						D3DXVECTOR3(15.0f, 15.0f,0.0f), 90, 1, CFlow::FLOW_TYPE::FLOW_TYPE_ENEMY);
+					}
+				}
+			}
+
+			//ショットカウントリセット
+			m_nShotCnt = 0;
+		}
+	}
 }
 
 //=============================================
