@@ -232,6 +232,7 @@ void CEnemy::Damage(int nDamage)
 			pItem = CItem::Create(CItem::ITEMTYPE_PANETRARING_SLASH, D3DXVECTOR3(GetPos().x, GetPos().y, GetPos().z), D3DXVECTOR3(10.0f, 10.0f, 0.0f), GetRot());
 			break;
 		case CEnemy::ENEMY_TYPE::ENEMY_TYPE_FLOW:
+			pItem = CItem::Create(CItem::ITEMTYPE_FLOW, D3DXVECTOR3(GetPos().x, GetPos().y + 10.0f, GetPos().z), D3DXVECTOR3(10.0f, 10.0f, 0.0f), GetRot());
 			break;
 		default:
 			break;
@@ -505,8 +506,8 @@ void CFlowEnemy::Update()
 					if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_PLAYER)
 					{
 						CPlayer* pPlayer = (CPlayer*)pObj;
-						CFlow* pFlow = CFlow::Create(D3DXVECTOR3(pPlayer->GetPos().x,pPlayer->GetPos().y + 5.0f,0.0f),
-						D3DXVECTOR3(15.0f, 15.0f,0.0f), 90, 1, CFlow::FLOW_TYPE::FLOW_TYPE_ENEMY);
+						CFlow* pFlow = CFlow::Create(D3DXVECTOR3(pPlayer->GetPos().x,pPlayer->GetPos().y + 5.0f,-13.0f),
+						D3DXVECTOR3(20.0f, 20.0f,0.0f), 90, 1, CFlow::FLOW_TYPE::FLOW_TYPE_ENEMY);
 					}
 				}
 			}

@@ -12,13 +12,15 @@
 class CItem : public CBillboard
 {
 public:
-	static const std::string TEXTURE_NAME;	//テクスチャの名前
+	static const std::string SLASH_TEXTURE_NAME;	//テクスチャの名前
+	static const std::string FLOW_TEXTURE_NAME;	//テクスチャの名前
 
 	static const int ITEM_PRIORITY = 3; //描画順
 	typedef enum
 	{
 		ITEMTYPE_NONE = 0,
-		ITEMTYPE_PANETRARING_SLASH, //貫通斬撃の剣
+		ITEMTYPE_PANETRARING_SLASH, //斬撃の剣
+		ITEMTYPE_FLOW, //集中斬撃の剣
 		BLOCKTYPE_MAX,
 	}ITEMTYPE;
 

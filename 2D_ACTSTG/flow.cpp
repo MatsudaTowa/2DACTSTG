@@ -87,7 +87,7 @@ void CFlow::Update()
 		D3DXVECTOR2 tex_move = GetTexMove();
 
 		//頂点座標
-		SetVtxAnim(D3DXVECTOR3(0.0f, 0.0f, -1.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), tex_pos, tex_move);
+		SetVtxAnim(D3DXVECTOR3(0.0f, 0.0f, -1.0f), D3DXCOLOR(0.2f, 0.8f, 0.9f, 1.0f), tex_pos, tex_move);
 		//アニメーション後のテクスチャ座標取得
 		tex_pos = GetTexPos();
 		//アニメーションを繰り返す

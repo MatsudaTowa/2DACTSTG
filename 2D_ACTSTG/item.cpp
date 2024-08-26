@@ -11,7 +11,8 @@
 
 //テクスチャ初期化
 LPDIRECT3DTEXTURE9 CItem::m_pTextureTemp = nullptr;
-const std::string CItem::TEXTURE_NAME = "data\\TEXTURE\\item_book000.png";
+const std::string CItem::SLASH_TEXTURE_NAME = "data\\TEXTURE\\item_book000.png";
+const std::string CItem::FLOW_TEXTURE_NAME = "data\\TEXTURE\\item_book001.png";
 
 //=============================================
 //コンストラクタ
@@ -79,15 +80,24 @@ CItem* CItem::Create(ITEMTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTO
 	if (pItem == nullptr) { return nullptr; }
 	CTexture* pTexture = CManager::GetTexture();
 
+	pItem->m_ItemType = type; //アイテムタイプ設定
+
 	pItem->SetPos(pos); //pos設定
 	pItem->SetSize(size); //size設定
 	pItem->SetRot(rot); //rot設定
-
-	pItem->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME)));	//テクスチャの設定
+	switch (pItem->m_ItemType)
+	{
+	case CItem::ITEMTYPE::ITEMTYPE_PANETRARING_SLASH:
+		pItem->BindTexture(pTexture->GetAddress(pTexture->Regist(&SLASH_TEXTURE_NAME))); //テクスチャの設定
+		break;
+	case CItem::ITEMTYPE::ITEMTYPE_FLOW:
+		pItem->BindTexture(pTexture->GetAddress(pTexture->Regist(&FLOW_TEXTURE_NAME)));	//テクスチャの設定
+		break;
+	default:
+		break;
+	}
 
 	pItem->SetType(OBJECT_TYPE_ITEM); //タイプ設定
-
-	pItem->m_ItemType = type; //アイテムタイプ設定
 
 	pItem->Init();
 }
@@ -101,6 +111,22 @@ void CItem::HitItem()
 	D3DXVECTOR3 Itempos = GetPos();
 	//サイズ取得
 	D3DXVECTOR3 Itemsize = GetSize();
+
+	//プレイヤーアタックタイプのポインタ初期化
+	CPlayer::PLAYER_ATTACK pPlayerAttack = CPlayer::PLAYER_ATTACK::PLAYER_ATTACK_MELEE; 
+
+	switch (m_ItemType)
+	{//タイプに応じてプレイヤーのアタックタイプ変更
+	case CItem::ITEMTYPE::ITEMTYPE_PANETRARING_SLASH:
+		pPlayerAttack = CPlayer::PLAYER_ATTACK::PLAYER_ATTACK_PANETRARING_SLASH;
+		break;
+
+	case CItem::ITEMTYPE::ITEMTYPE_FLOW:
+		pPlayerAttack = CPlayer::PLAYER_ATTACK::PLAYER_ATTACK_FLOW;
+		break;
+	default:
+		break;
+	}
 
 	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
 	{
@@ -124,7 +150,7 @@ void CItem::HitItem()
 						&& Itempos.y - Itemsize.y < pPlayer->GetPos().y + pPlayer->GetMaxPos().y
 						&& Itempos.y + Itemsize.y > pPlayer->GetPos().y + pPlayer->GetMinPos().y)
 					{//当たり判定(X)
-						pPlayer->m_Attack = CPlayer::PLAYER_ATTACK_PANETRARING_SLASH;
+						pPlayer->m_Attack = pPlayerAttack;
 						//アイテムの削除
 						Uninit();
 					}
@@ -140,7 +166,7 @@ void CItem::HitItem()
 						&& Itempos.y + Itemsize.y > pPlayer->GetPos().y + pPlayer->GetMinPos().y
 						)
 					{//当たり判定(Z)
-						pPlayer->m_Attack = CPlayer::PLAYER_ATTACK_PANETRARING_SLASH;
+						pPlayer->m_Attack = pPlayerAttack;
 						//アイテムの削除
 						Uninit();
 					}
