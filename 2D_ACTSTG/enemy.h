@@ -10,6 +10,7 @@
 #include "main.h"
 #include "character.h"
 #include "colision_view.h"
+#include "lockon.h"
 
 //=============================================
 //エネミークラス
@@ -45,6 +46,10 @@ public:
 
 	bool PlayerDistance(); //プレイヤーとの距離を測る関数
 
+	void LockOn();
+
+	void LockOn_Flow();	//集中斬撃を照準に合わせて出す
+
 	ENEMY_TYPE m_Type; //エネミーの種類
 
 	static int m_nNumEnemy; //エネミーの総数
@@ -62,7 +67,11 @@ private:
 	static 	LPD3DXBUFFER m_pBuffMat; //マテリアル情報
 	static	DWORD m_dwNumMat; //マテリアル数
 
+	bool m_bLockOn; //ロックオン状態かどうか
+
 	CColision_View*m_pColisionView; //エネミーの当たり判定
+
+	CLockOn*m_pLockOn; //ロックオンの情報
 };
 
 //=============================================

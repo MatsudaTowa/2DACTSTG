@@ -171,6 +171,7 @@
     <ClCompile Include="input.cpp" />
     <ClCompile Include="item.cpp" />
     <ClCompile Include="light.cpp" />
+    <ClCompile Include="lockon.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="manager.cpp" />
     <ClCompile Include="melee.cpp" />
@@ -217,6 +218,7 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="item.h" />
     <ClInclude Include="light.h" />
+    <ClInclude Include="lockon.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="manager.h" />
     <ClInclude Include="melee.h" />

@@ -6,6 +6,10 @@
 //=============================================
 #include "flow_range.h"
 #include "manager.h"
+#include "colision.h"
+#include "enemy.h"
+#include "flow.h"
+#include "lockon.h"
 
 //=============================================
 //コンストラクタ
@@ -57,11 +61,40 @@ void CFlow_Range::Update()
 	//頂点設定
 	SetVtxFlow_Range(D3DXVECTOR3(0.0f, 0.0f, -1.0f), D3DXCOLOR(0.5f, 0.0f, 0.0f, 0.7f));
 
+	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
+	{
+		//オブジェクト取得
+		CObject* pObj = CObject::Getobject(CEnemy::ENEMY_PRIORITY, nCnt);
+		if (pObj != nullptr)
+		{//ヌルポインタじゃなければ
+			//タイプ取得
+			CObject::OBJECT_TYPE type = pObj->GetType();
+
+			//敵との当たり判定
+			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_ENEMY)
+			{
+				CEnemy* pEnemy = (CEnemy*)pObj;
+
+				CColision::COLISION colision = CColision::CheckFlow_RangeColision(GetPos(),m_Minpos,m_Maxpos,pEnemy->GetPos(),pEnemy->GetMinPos(),pEnemy->GetMaxPos());
+
+				if (colision != CColision::COLISION::COLISON_NONE)
+				{
+					pEnemy->LockOn();
+
+					if (pMouse->GetRelease(0))
+					{
+						pEnemy->LockOn_Flow();
+					}
+				}
+			}
+		}
+	}
 	if (pMouse->GetRelease(0))
 	{
+		//CFlow* pFlow = CFlow::Create(D3DXVECTOR3(pEnemy->GetPos().x, pEnemy->GetPos().y + 5.0f, -10.0f),
+		//	D3DXVECTOR3(20.0f, 20.0f, 0.0f), 90, 1, CFlow::FLOW_TYPE::FLOW_TYPE_PLAYER);
 		Uninit();
 	}
-
 }
 
 //=============================================

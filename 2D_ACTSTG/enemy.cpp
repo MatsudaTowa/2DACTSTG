@@ -13,6 +13,7 @@
 #include "item.h"
 #include "flow.h"
 
+
 //通常の移動速度
 const float CEnemy::DEFAULT_MOVE = 0.3f;
 //移動抵抗
@@ -42,7 +43,7 @@ int CEnemy::m_nNumEnemy = 0;
 //=============================================
 //コンストラクタ
 //=============================================
-CEnemy::CEnemy(int nPriority):CCharacter(nPriority)
+CEnemy::CEnemy(int nPriority):CCharacter(nPriority), m_bLockOn(false)
 {
 	//総数加算
 	m_nNumEnemy++;
@@ -70,6 +71,7 @@ HRESULT CEnemy::Init()
 	//当たり判定可視化
 	m_pColisionView = CColision_View::Create(GetPos(), GetMinPos(), GetMaxPos(), D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f));
 #endif
+	m_pLockOn = nullptr;
 	return S_OK;
 }
 
@@ -128,6 +130,11 @@ void CEnemy::Update()
 	//可視化された当たり判定を動かす
 	m_pColisionView->SetPos(pos);
 #endif
+	
+	if(m_pLockOn != nullptr)
+	{//照準をエネミーに合わせて動かす
+		m_pLockOn->SetPos(D3DXVECTOR3(GetPos().x, GetPos().y + 5.0f, -10.0f));
+	}
 	//プレイヤーとの接触処理
 	HitPlayer();
 
@@ -242,6 +249,13 @@ void CEnemy::Damage(int nDamage)
 		//可視化された当たり判定破棄
 		m_pColisionView->Uninit();
 #endif // _DEBUG
+		
+		if (m_pLockOn != nullptr)
+		{//照準破棄
+			m_pLockOn->Uninit();
+			m_pLockOn = nullptr;
+			m_bLockOn = false;
+		}
 
 		Uninit();
 	}
@@ -297,6 +311,35 @@ bool CEnemy::PlayerDistance()
 	//向きを代入
 	SetWay(bWay);
 	return bNear;
+}
+
+//=============================================
+//lock-on処理
+//=============================================
+void CEnemy::LockOn()
+{
+	if (m_bLockOn != true)
+	{
+		m_pLockOn = CLockOn::Create(D3DXVECTOR3(GetPos().x, GetPos().y + 5.0f, -10.0f),
+			D3DXVECTOR3(10.0f, 10.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	}
+	m_bLockOn = true;
+}
+
+//=============================================
+//集中斬撃を照準に合わせて出す
+//=============================================
+void CEnemy::LockOn_Flow()
+{
+	if (m_pLockOn != nullptr)
+	{
+		CFlow*pFlow = CFlow::Create(D3DXVECTOR3(m_pLockOn->GetPos().x, m_pLockOn->GetPos().y + 5.0f, -10.0f),
+			D3DXVECTOR3(20.0f, 20.0f, 0.0f),90,1,CFlow::FLOW_TYPE::FLOW_TYPE_PLAYER);
+
+		m_pLockOn->Uninit();
+		m_pLockOn = nullptr;
+		m_bLockOn = false;
+	}
 }
 
 //=============================================
