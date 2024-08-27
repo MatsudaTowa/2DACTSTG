@@ -18,7 +18,6 @@ const std::string CBullet::TEXTURE_NAME ="data\\TEXTURE\\slash_test.png";
 //=============================================
 CBullet::CBullet(int nPriority):CAttack_Manager(nPriority)
 {
-	
 }
 
 //=============================================
@@ -92,13 +91,14 @@ void CBullet::Update()
 			assert(false);
 			break;
 		}
+
+		//当たり判定チェック
 		bHitCheck = HitBlock();
 
 		if (bHitCheck == true)
-		{
+		{//当たってたら
 			Uninit();
 		}
-
 	}
 	else
 	{

@@ -40,7 +40,6 @@ CColision::COLISION CColision::CheckColision_X(D3DXVECTOR3 Aoldpos, D3DXVECTOR3 
 			return CColision::COLISION::COLISON_NONE;
 		}
 	}
-
 	else if (Aoldpos.x - Asize.x >= Bpos.x + Bsize.x
 		&& Apos.x - Asize.x < Bpos.x + Bsize.x)
 	{

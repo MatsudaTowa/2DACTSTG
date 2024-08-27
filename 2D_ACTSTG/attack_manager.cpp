@@ -32,9 +32,6 @@ HRESULT CAttack_Manager::Init()
 	//親クラスの初期化
 	CObject3D::Init();
 
-	//頂点設定
-	//SetVtx(D3DXVECTOR3(0.0f, 0.0f, -1.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-
 	return S_OK;
 }
 
@@ -56,7 +53,7 @@ void CAttack_Manager::Update()
 	CObject3D::Update();
 
 	if (m_nLife > 0)
-	{
+	{//寿命があるなら減らす
 		m_nLife--;
 	}
 }
@@ -141,7 +138,6 @@ bool CAttack_Manager::HitPlayer()
 					pPlayer->Damage(m_nDamage);
 					return true;
 				}
-
 			}
 		}
 	}

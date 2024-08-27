@@ -103,7 +103,6 @@ void CCamera::Update()
 		m_type = TYPE_DEBUG;
 	}
 
-
 	switch (m_type)
 	{
 	case TYPE_BIRDVIEW:
@@ -122,7 +121,6 @@ void CCamera::Update()
 	default:
 		break;
 	}
-
 
 	if (m_rot.y > D3DX_PI)
 	{
@@ -190,8 +188,6 @@ void CCamera::SetCamera()
 		break;
 	}
 
-
-
 	//プロジェクションマトリックスの設定
 	pDevice->SetTransform(D3DTS_PROJECTION, &m_mtxProjection);
 
@@ -250,7 +246,6 @@ void CCamera::CameraMove()
 		m_moveR.z += cosf(D3DX_PI / 2 + m_rot.y) * DEFAULT_MOVE;
 
 	}
-
 
 	if (pKeyboard->GetPress(DIK_I) == true)
 	{
@@ -338,7 +333,6 @@ void CCamera::BirdViewCamera()
 				m_posV.z = m_posR.z - cosf(m_rot.y);
 			}
 		}
-
 	}
 }
 
@@ -374,6 +368,5 @@ void CCamera::SideViewCamera()
 				m_posV.z = m_posR.z - cosf(m_rot.y) * SIDEVIEW_LENGTH_Z;
 			}
 		}
-
 	}
 }

@@ -129,5 +129,4 @@ void CColision_View::SetVtxColision_View(D3DXVECTOR3 nor, D3DCOLOR col)
 	pBuff->Unlock();
 
 	SetVtxBuff(pBuff);
-
 }

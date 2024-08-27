@@ -76,7 +76,6 @@ void CBlock::Draw()
 //=============================================
 CBlock* CBlock::Create(BLOCKTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nLife, bool bBreak)
 {
-
 	CBlock* pBlock = new CBlock;
 
 	//nullならnullを返す
@@ -101,48 +100,3 @@ CBlock* CBlock::Create(BLOCKTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nLi
 	
 	return pBlock;
 }
-
-//=============================================
-//当たり判定
-//=============================================
-void CBlock::HitBlock()
-{
-	//D3DXVECTOR3 pos = GetPos();
-
-	////サイズ取得
-	//D3DXVECTOR3 minpos = GetMinPos();
-	//D3DXVECTOR3 maxpos = GetMaxPos();
-
-	//for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
-	//{
-	//	//オブジェクト取得
-	//	CObject* pObj = CObject::Getobject(4, nCnt);
-	//	if (pObj != nullptr)
-	//	{//ヌルポインタじゃなければ
-	//		//タイプ取得
-	//		CObject::OBJECT_TYPE type = pObj->GetType();
-	//		if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_PLAYER)
-	//		{
-	//			CPlayer* pPlayer = (CPlayer*)pObj;
-	//			pPlayer->GetPos(); //位置取得
-
-	//			//サイズ取得
-	//			pPlayer->GetMinPos();
-	//			pPlayer->GetMaxPos();
-	//			if (Bulletpos.x - Bulletsize.x >= pPlayer->GetPos().x - pPlayer->GetMinPos().x
-	//				&& Bulletpos.x + Bulletsize.x <= pPlayer->GetPos().x + pPlayer->GetMaxPos().x
-	//				&& Bulletpos.y - Bulletsize.y >= pPlayer->GetPos().z - pEnemy->GetSize().y
-	//				&& Bulletpos.y + Bulletsize.y <= pPlayer->GetPos().z + pEnemy->GetSize().y)
-	//			{//敵と弾が当たった時
-	//				pEnemy->HitBullet();
-	//				//弾の削除
-	//				Release();
-	//				CExplosion* pExplosion = CExplosion::Create(Bulletpos, D3DXVECTOR2(20.0f, 20.0f));
-	//			}
-	//		}
-	//	}
-	//}
-}
-
-
-

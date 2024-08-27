@@ -37,6 +37,7 @@ CCharacter::~CCharacter()
 //=============================================
 HRESULT CCharacter::Init()
 {
+	CObjectX::Init();
     return S_OK;
 }
 
@@ -59,7 +60,6 @@ void CCharacter::Update()
 		//ジャンプ数リセット
 		CharacterPos.y = m_oldpos.y;
 		m_move.y = 0.0f;
-
 	}
 	SetPos(CharacterPos);
 }
