@@ -61,10 +61,11 @@ private:
 	void ReSpawn(); //リスポーン
 	void PlayerMove(); //プレイヤー移動処理
 	void PerformMelee(D3DXVECTOR3 pos, bool bWay); //近接攻撃処理
-	void DebugPlayerPos();
+	void PerformFlow_Range(D3DXVECTOR3 pos, bool bWay); //集中斬撃範囲生成
 
 	D3DXVECTOR3 m_SlashSize; //斬撃のサイズ
 	bool m_bSize; //サイズ変更するかどうか
+	bool m_bFlow; //集中状態かどうか
 	int m_PressCnt; //何秒間押されたか
 	int m_nJumpCnt; //ジャンプカウント
 	int m_nChargeCnt; //何段階目かカウント

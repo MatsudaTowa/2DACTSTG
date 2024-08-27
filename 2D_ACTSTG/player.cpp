@@ -16,6 +16,7 @@
 #include "gauge.h"
 #include "game.h"
 #include"renderer.h"
+#include "flow_range.h"
 
 //モデルパス
 const std::string CPlayer::MODEL_NAME = "data\\MODEL\\face.x";
@@ -52,7 +53,7 @@ bool CPlayer::m_PlayerDeath = false;
 //=============================================
 //コンストラクタ
 //=============================================
-CPlayer::CPlayer(int nPriority):CCharacter(nPriority),m_nJumpCnt(0),m_OldPress(false), m_nChargeCnt(0), m_nSlashDamage(0)
+CPlayer::CPlayer(int nPriority):CCharacter(nPriority),m_nJumpCnt(0),m_OldPress(false), m_nChargeCnt(0), m_nSlashDamage(0), m_bFlow(false)
 {//イニシャライザーでジャンプカウント、プレス情報,チャージ段階,斬撃のダメージ初期化
 
 	//プレイヤーの攻撃を近距離のみにする
@@ -112,9 +113,11 @@ void CPlayer::Update()
 	//重力処理
 	Gravity();
 
-	//移動処理
-	PlayerMove();
-
+	if(m_bFlow == false)
+	{ 
+		//移動処理
+		PlayerMove();
+	}
 	//位置取得
 	D3DXVECTOR3 pos = GetPos();
 
@@ -213,7 +216,7 @@ void CPlayer::Update()
 
 					}
 				}
-				if (pMouse->GetRelease(0) && m_OldPress)
+				if (pMouse->GetRelease(0) && m_OldPress && m_Attack == PLAYER_ATTACK_PANETRARING_SLASH)
 				{//左クリックが離されたら
 					if (m_nChargeCnt >= MAX_CHARGE)
 					{//マックスチャージ量だったら
@@ -244,8 +247,56 @@ void CPlayer::Update()
 		}
 	}
 
+	if (pMouse->GetTrigger(0) && m_Attack == PLAYER_ATTACK_FLOW)
+	{
+		//集中状態の範囲のポインタ初期化
+		CFlow_Range* pFlow_Range = nullptr;
+		if (bWay == true)
+		{//右向き
+			pFlow_Range = CFlow_Range::Create(D3DXVECTOR3(pos.x + GetMaxPos().x, pos.y , pos.z),
+				D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(10.0f, 70.0f, 0.0f));
+		}
+		else if (bWay == false)
+		{//左向き
+			pFlow_Range = CFlow_Range::Create(D3DXVECTOR3(pos.x + GetMinPos().x, pos.y, pos.z),
+				D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-10.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 70.0f, 0.0f));
+		}
+	}
+
+	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
+	{
+		//オブジェクト取得
+		CObject* pObj = CObject::Getobject(CFlow_Range::FLOW_RANGE_PRIORITY, nCnt);
+		if (pObj != nullptr)
+		{//ヌルポインタじゃなければ
+			//タイプ取得
+			CObject::OBJECT_TYPE type = pObj->GetType();
+
+			//敵との当たり判定
+			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_FLOW_RANGE)
+			{
+				CFlow_Range* pFlow_Range = (CFlow_Range*)pObj;
+
+				if (pMouse->GetPress(0) && (pFlow_Range->GetMaxPos().x < 300.0f || pFlow_Range->GetMinPos().x > -300.0f) && m_Attack == PLAYER_ATTACK_FLOW)
+				{//左クリックが押されてる間
+					pFlow_Range->SizeUp(GetWay());
+
+					m_bFlow = true;
+
+				}
+
+			}
+		}
+	}
+
+	if (pMouse->GetRelease(0) && m_Attack == PLAYER_ATTACK_FLOW)
+	{
+		m_bFlow = false;
+	}
+
+
 	if (pMouse->GetTrigger(1))
-	{//左クリックが入力されたら
+	{//右クリックが入力されたら
 		//近接攻撃処理
 		PerformMelee(pos, bWay);
 	}
@@ -470,3 +521,4 @@ void CPlayer::PerformMelee(D3DXVECTOR3 pos, bool bWay)
 			D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 4.0f), D3DXVECTOR3(10.0f, 10.0f, 0.0f), 30, MELEE_DAMAGE);
 	}
 }
+
