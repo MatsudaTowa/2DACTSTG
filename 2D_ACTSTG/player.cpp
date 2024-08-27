@@ -22,7 +22,7 @@ const std::string CPlayer::MODEL_NAME = "data\\MODEL\\face.x";
 //通常の移動速度
 const float CPlayer::DEFAULT_MOVE = 1.0f;
 
-//通常の移動速度
+//移動抵抗
 const float CPlayer::DAMPING_COEFFICIENT = 0.3f;
 
 //通常のジャンプ力
@@ -30,6 +30,9 @@ const float CPlayer::DEFAULT_JUMP = 25.0f;
 
 //ジャンプ回数
 const int CPlayer::MAX_JUMPCNT = 2;
+
+//ステート切り替えフレーム
+const int CPlayer::STATE_FRAME = 30;
 
 //プレイヤーをリスポーンされる座標
 const float CPlayer::DEADZONE_Y = -100.0f;
@@ -51,11 +54,14 @@ bool CPlayer::m_PlayerDeath = false;
 //=============================================
 //コンストラクタ
 //=============================================
-CPlayer::CPlayer(int nPriority):CCharacter(nPriority),m_nJumpCnt(0),m_OldPress(false), m_nChargeCnt(0), m_nSlashDamage(0), m_bFlow(false)
+CPlayer::CPlayer(int nPriority):CCharacter(nPriority),m_nJumpCnt(0),m_OldPress(false), m_nChargeCnt(0), m_nStateCnt(0), m_nSlashDamage(0), m_bFlow(false)
 {//イニシャライザーでジャンプカウント、プレス情報,チャージ段階,斬撃のダメージ初期化
 
 	//プレイヤーの攻撃を近距離のみにする
 	m_Attack = PLAYER_ATTACK_MELEE;
+
+	//ステートを通常に
+	m_State = PLAYER_NORMAL;
 
 	//死んでない状態に
 	m_PlayerDeath = false;
@@ -108,6 +114,21 @@ void CPlayer::Uninit()
 //=============================================
 void CPlayer::Update()
 {
+
+	if (m_State == PLAYER_DAMAGE)
+	{
+		//ステート変更カウント進める
+		m_nStateCnt++;
+
+		if (m_nStateCnt >= STATE_FRAME)
+		{
+			//通常に戻す
+			m_State = PLAYER_NORMAL;
+			//ステートカウントリセット
+			m_nStateCnt = 0;
+		}
+	}
+
 	//重力処理
 	Gravity();
 
@@ -253,6 +274,8 @@ void CPlayer::Damage(int nDamage)
 	if (nLife > 0)
 	{//HPが残ってたら
 		nLife -= nDamage;
+
+		m_State = CPlayer::PLAYER_STATE::PLAYER_DAMAGE;
 
 		for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
 		{
@@ -504,8 +527,18 @@ void CPlayer::PlayerMove()
 		//オブジェクト2Dからrotを取得
 		D3DXVECTOR3 rot = GetRot();
 
-		move.x += sinf(rotMoveY) * DEFAULT_MOVE;
-		move.z += cosf(rotMoveY) * DEFAULT_MOVE;
+
+		if (m_State == PLAYER_DAMAGE)
+		{
+			move.x += sinf(rotMoveY) * DEFAULT_MOVE * 0.5f;
+			move.z += cosf(rotMoveY) * DEFAULT_MOVE * 0.5f;
+		}
+		else
+		{
+			move.x += sinf(rotMoveY) * DEFAULT_MOVE;
+			move.z += cosf(rotMoveY) * DEFAULT_MOVE;
+		}
+
 		rot.y = rotMoveY + D3DX_PI;
 		//rotを代入
 		SetRot(rot);
