@@ -210,6 +210,28 @@ void CCamera::SetCamera()
 	pDevice->SetTransform(D3DTS_VIEW, &m_mtxView);
 }
 
+void CCamera::ResetCamera()
+{
+	m_posV = D3DXVECTOR3(0.0f, 30.0f, -180.0f); //視点
+	m_posR = D3DXVECTOR3(0.0f, 0.0f, 0.0f); //注視
+
+	m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f); //上方向ベクトル
+
+	m_moveV = D3DXVECTOR3(0.0f, 0.0f, 0.0f); //視点移動量
+	m_moveR = D3DXVECTOR3(0.0f, 0.0f, 0.0f); //注視点移動量
+
+	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f); //角度
+	m_rotmove = D3DXVECTOR3(0.0f, 0.0f, 0.0f); //回転量
+
+	D3DXVECTOR3 vecCamera = m_posR - m_posV;
+	m_fLength = sqrtf(vecCamera.y * vecCamera.y + vecCamera.z * vecCamera.z);
+
+	//対角線の角度を算出する
+	m_fAngle = atan2f(vecCamera.y, vecCamera.z);
+
+	m_type = TYPE_DEBUG;
+}
+
 //=============================================
 //カメラタイプ取得
 //=============================================

@@ -59,7 +59,6 @@ CColision::COLISION CColision::CheckColision_X(D3DXVECTOR3 Aoldpos, D3DXVECTOR3 
 	{
 		return CColision::COLISION::COLISON_NONE;
 	}
-
 }
 
 //=============================================

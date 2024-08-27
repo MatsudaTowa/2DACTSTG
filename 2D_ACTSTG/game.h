@@ -9,6 +9,7 @@
 #define _GAME_H_
 #include "main.h"
 #include "scene.h"
+#include "edit.h"
 class CGame:public CScene
 {
 public:
@@ -21,5 +22,7 @@ public:
 	void Draw() override;
 private:
 	int m_nResultDelay; //リザルトへのディレイ
+	bool m_bEdit; //エディットしてるかどうか
+	static CEdit*m_pEdit;
 };
 #endif

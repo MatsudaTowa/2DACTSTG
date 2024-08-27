@@ -30,6 +30,7 @@ public:
 	void Uninit();
 	void Update();
 	void SetCamera();
+	void ResetCamera();
 	static CANERA_TYPE GetType();
 private:
 	static const float DEFAULT_MOVE; //’Êí‚ÌˆÚ“®

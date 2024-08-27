@@ -23,12 +23,14 @@
 #include "field.h"
 #include "manager.h"
 
+//エディット設定
+CEdit* CGame::m_pEdit = nullptr;
 
 //=============================================
 //コンストラクタ
 //=============================================
-CGame::CGame():m_nResultDelay(0)
-{
+CGame::CGame():m_nResultDelay(0),m_bEdit(false)
+{//イニシャライザーでプライオリティ設定、エディットしてない状態に変更
 }
 
 //=============================================
@@ -43,6 +45,11 @@ CGame::~CGame()
 //=============================================
 HRESULT CGame::Init()
 {
+
+	if (m_pEdit == nullptr)
+	{
+		m_pEdit = new CEdit;
+	}
 	//ブロック生成
 	CBlock* pBlock = CBlock::Create(CBlock::BLOCKTYPE_DEFAULT, D3DXVECTOR3(0.0, 0.0f, 0.0f),
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f), 3, false);
@@ -88,9 +95,27 @@ void CGame::Uninit()
 //=============================================
 void CGame::Update()
 {
-	CObject::UpdateAll();
-
 	CInputKeyboard* pKeyboard = CManager::GetKeyboard();
+	
+	if (pKeyboard->GetTrigger(DIK_F5))
+	{
+		m_bEdit = m_bEdit ? false : true;
+
+		CCamera*pCamera = CManager::GetCamera();
+
+		pCamera->ResetCamera();
+	}
+
+	if (m_bEdit)
+	{
+		m_pEdit->Update();
+	}
+	
+	//if (m_bEdit == false)
+	//{
+		CObject::UpdateAll();
+	//}
+
 	if (CPlayer::m_PlayerDeath || CEnemy::m_nNumEnemy <= 0)
 	{//プレイヤーが死ぬかエネミーを全部殺したら
 		//カウント加算

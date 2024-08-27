@@ -159,6 +159,7 @@
     <ClCompile Include="character.cpp" />
     <ClCompile Include="colision.cpp" />
     <ClCompile Include="colision_view.cpp" />
+    <ClCompile Include="edit.cpp" />
     <ClCompile Include="effect.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="fade.cpp" />
@@ -206,6 +207,7 @@
     <ClInclude Include="character.h" />
     <ClInclude Include="colision.h" />
     <ClInclude Include="colision_view.h" />
+    <ClInclude Include="edit.h" />
     <ClInclude Include="effect.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="fade.h" />
