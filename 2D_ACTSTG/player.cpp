@@ -5,7 +5,6 @@
 //
 //=============================================
 #include "player.h"
-#include "manager.h"
 #include "input.h"
 #include "bullet.h"
 #include "block.h"
@@ -13,7 +12,6 @@
 #include "field.h"
 #include "camera.h"
 #include "melee.h"
-#include "gauge.h"
 #include "game.h"
 #include"renderer.h"
 #include "flow_range.h"
@@ -191,107 +189,11 @@ void CPlayer::Update()
 			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_GAUGE_SLASH)
 			{
 				CGauge_Slash* pGauge = (CGauge_Slash*)pObj;
-			
-				if (pGauge->GetSize().x > 0.0f && m_Attack == PLAYER_ATTACK_PANETRARING_SLASH)
-				{//ゲージがあり攻撃方法が貫通斬撃だったら
-					if (pMouse->GetPress(0))
-					{//左クリックが押されてる間
-						//ゲージ消費(後に押された時間に応じて消費量変更)
-						m_PressCnt++;
-						if (m_PressCnt >= CHARGE_INTERVAL)
-						{//押されたらサイズ増加
-							m_SlashSize.x += 3.0f; 
-							m_SlashSize.y += 3.0f;
-							m_SlashSize.z += 0.0f;
-
-							//カウントリセット
-							m_PressCnt = 0;
-
-							m_nChargeCnt++;
-						}
-
-						//ゲージ減少
-						pGauge->SubGauge(SLASH_COST);
-						m_OldPress = true;
-
-					}
-				}
-				if (pMouse->GetRelease(0) && m_OldPress && m_Attack == PLAYER_ATTACK_PANETRARING_SLASH)
-				{//左クリックが離されたら
-					if (m_nChargeCnt >= MAX_CHARGE)
-					{//マックスチャージ量だったら
-						m_nSlashDamage = 5;
-					}
-					else if (m_nChargeCnt >= MAX_CHARGE * 0.5f && m_nChargeCnt < MAX_CHARGE)
-					{//半分より上だったら
-						m_nSlashDamage = 3;
-					}
-					else
-					{//それ以下だったら
-						m_nSlashDamage = 1;
-					}
-					//弾発射
-					ShotBullet(pos, m_SlashSize, bWay,m_nSlashDamage, CBullet::BULLET_TYPE_PLAYER);
-
-					//斬撃のサイズリセット
-					m_SlashSize = D3DXVECTOR3(10.0f, 10.0f, 0.0f);
-
-					//何も押されてない状態に
-					m_OldPress = false;
-
-					//カウントリセット
-					m_PressCnt = 0;
-					
-				}
+				
+				//ゲージ処理
+				Gauge(pGauge);
 			}
 		}
-	}
-
-	if (pMouse->GetTrigger(0) && m_Attack == PLAYER_ATTACK_FLOW)
-	{
-		//集中状態の範囲のポインタ初期化
-		CFlow_Range* pFlow_Range = nullptr;
-		if (bWay == true)
-		{//右向き
-			pFlow_Range = CFlow_Range::Create(D3DXVECTOR3(pos.x + GetMaxPos().x, pos.y , pos.z),
-				D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(10.0f, 70.0f, 0.0f));
-		}
-		else if (bWay == false)
-		{//左向き
-			pFlow_Range = CFlow_Range::Create(D3DXVECTOR3(pos.x + GetMinPos().x, pos.y, pos.z),
-				D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-10.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 70.0f, 0.0f));
-		}
-	}
-
-	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
-	{
-		//オブジェクト取得
-		CObject* pObj = CObject::Getobject(CFlow_Range::FLOW_RANGE_PRIORITY, nCnt);
-		if (pObj != nullptr)
-		{//ヌルポインタじゃなければ
-			//タイプ取得
-			CObject::OBJECT_TYPE type = pObj->GetType();
-
-			//敵との当たり判定
-			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_FLOW_RANGE)
-			{
-				CFlow_Range* pFlow_Range = (CFlow_Range*)pObj;
-
-				if (pMouse->GetPress(0) && (pFlow_Range->GetMaxPos().x < 300.0f || pFlow_Range->GetMinPos().x > -300.0f) && m_Attack == PLAYER_ATTACK_FLOW)
-				{//左クリックが押されてる間
-					pFlow_Range->SizeUp(GetWay());
-
-					m_bFlow = true;
-
-				}
-
-			}
-		}
-	}
-
-	if (pMouse->GetRelease(0) && m_Attack == PLAYER_ATTACK_FLOW)
-	{
-		m_bFlow = false;
 	}
 
 
@@ -381,6 +283,127 @@ void CPlayer::Damage(int nDamage)
 		Uninit();
 		//死んだ状態に
 		m_PlayerDeath = true;
+	}
+}
+
+//=============================================
+//ゲージ処理
+//=============================================
+void CPlayer::Gauge(CGauge* pGauge)
+{
+	//どっち向いてるか取得
+	bool bWay = GetWay();
+
+	//マウスの情報取得
+	CInputMouse* pMouse = CManager::GetMouse();
+
+	//位置取得
+	D3DXVECTOR3 pos = GetPos();
+
+	//貫通斬撃
+	if (pGauge->GetSize().x > 0.0f && m_Attack == PLAYER_ATTACK_PANETRARING_SLASH)
+	{//ゲージがあり攻撃方法が貫通斬撃だったら
+		if (pMouse->GetPress(0))
+		{//左クリックが押されてる間
+			//ゲージ消費(後に押された時間に応じて消費量変更)
+			m_PressCnt++;
+			if (m_PressCnt >= CHARGE_INTERVAL)
+			{//押されたらサイズ増加
+				m_SlashSize.x += 3.0f;
+				m_SlashSize.y += 3.0f;
+				m_SlashSize.z += 0.0f;
+
+				//カウントリセット
+				m_PressCnt = 0;
+
+				m_nChargeCnt++;
+			}
+
+			//ゲージ減少
+			pGauge->SubGauge(SLASH_COST);
+			m_OldPress = true;
+
+		}
+	}
+	if (pMouse->GetRelease(0) && m_OldPress && m_Attack == PLAYER_ATTACK_PANETRARING_SLASH)
+	{//左クリックが離されたら
+		if (m_nChargeCnt >= MAX_CHARGE)
+		{//マックスチャージ量だったら
+			m_nSlashDamage = 5;
+		}
+		else if (m_nChargeCnt >= MAX_CHARGE * 0.5f && m_nChargeCnt < MAX_CHARGE)
+		{//半分より上だったら
+			m_nSlashDamage = 3;
+		}
+		else
+		{//それ以下だったら
+			m_nSlashDamage = 1;
+		}
+		//弾発射
+		ShotBullet(pos, m_SlashSize, bWay, m_nSlashDamage, CBullet::BULLET_TYPE_PLAYER);
+
+		//斬撃のサイズリセット
+		m_SlashSize = D3DXVECTOR3(10.0f, 10.0f, 0.0f);
+
+		//何も押されてない状態に
+		m_OldPress = false;
+
+		//カウントリセット
+		m_PressCnt = 0;
+
+	}
+
+	//集中斬撃
+	if (pGauge->GetSize().x > 0.0f && pMouse->GetTrigger(0) && m_Attack == PLAYER_ATTACK_FLOW)
+	{
+		//集中状態の範囲のポインタ初期化
+		CFlow_Range* pFlow_Range = nullptr;
+		if (bWay == true)
+		{//右向き
+			pFlow_Range = CFlow_Range::Create(D3DXVECTOR3(pos.x + GetMaxPos().x, pos.y, pos.z),
+				D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(10.0f, 70.0f, 0.0f));
+		}
+		else if (bWay == false)
+		{//左向き
+			pFlow_Range = CFlow_Range::Create(D3DXVECTOR3(pos.x + GetMinPos().x, pos.y, pos.z),
+				D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-10.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 70.0f, 0.0f));
+		}
+	}
+
+	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
+	{
+		//オブジェクト取得
+		CObject* pObj = CObject::Getobject(CFlow_Range::FLOW_RANGE_PRIORITY, nCnt);
+		if (pObj != nullptr)
+		{//ヌルポインタじゃなければ
+			//タイプ取得
+			CObject::OBJECT_TYPE type = pObj->GetType();
+
+			//敵との当たり判定
+			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_FLOW_RANGE)
+			{
+				CFlow_Range* pFlow_Range = (CFlow_Range*)pObj;
+
+				if (pGauge->GetSize().x > 0.0f && pMouse->GetPress(0) && (pFlow_Range->GetMaxPos().x < 300.0f || pFlow_Range->GetMinPos().x > -300.0f) && m_Attack == PLAYER_ATTACK_FLOW)
+				{//左クリックが押されてる間
+					pFlow_Range->SizeUp(GetWay());
+
+					m_bFlow = true;
+
+					//ゲージ減少
+					pGauge->SubGauge(SLASH_COST);
+
+					m_OldPress = true;
+				}
+
+			}
+		}
+	}
+
+	if (pMouse->GetRelease(0) && m_Attack == PLAYER_ATTACK_FLOW)
+	{
+		m_bFlow = false;
+		m_OldPress = false;
 	}
 }
 

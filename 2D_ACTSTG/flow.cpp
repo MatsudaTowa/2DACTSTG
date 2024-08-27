@@ -34,7 +34,7 @@ HRESULT CFlow::Init()
 	//親クラスの初期化
 	CAttack_Manager::Init();
 
-	m_nDamageCnt = DAMAGE_FRAME; //最初にヒットさせるためにダメージのフレーム数を代入
+	m_nDamageCnt = PLAYER_DAMAGE_FRAME; //最初にヒットさせるためにダメージのフレーム数を代入
 
 		//テクスチャ移動量取得
 	D3DXVECTOR2 tex_move = GetTexMove();
@@ -102,15 +102,20 @@ void CFlow::Update()
 		switch (m_type)
 		{
 		case FLOW_TYPE_PLAYER:
-			bHitCheck = HitEnemy();
+			m_nDamageCnt++;//ヒットカウント計測
 
+			if (m_nDamageCnt >= ENEMY_DAMAGE_FRAME)
+			{//フレーム数に到達したら
+				bHitCheck = HitEnemy();
+				m_nDamageCnt = 0;
+			}
 			break;
 
 		case FLOW_TYPE_ENEMY:
 			
 			m_nDamageCnt++;//ヒットカウント計測
 
-			if(m_nDamageCnt>=DAMAGE_FRAME)
+			if(m_nDamageCnt>= PLAYER_DAMAGE_FRAME)
 			{//フレーム数に到達したら
 				bHitCheck = HitPlayer();
 				m_nDamageCnt = 0;

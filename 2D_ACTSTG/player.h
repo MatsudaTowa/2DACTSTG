@@ -9,6 +9,8 @@
 #define _PLAYER_H_
 #include "main.h"
 #include "character.h"
+#include "manager.h"
+#include "gauge.h"
 //プレイヤークラス
 class CPlayer : public CCharacter
 {
@@ -58,10 +60,11 @@ private:
 
 	static const int MELEE_DAMAGE = 1; //近接ダメージ
 
+	void Gauge(CGauge*pGauge);
+
 	void ReSpawn(); //リスポーン
 	void PlayerMove(); //プレイヤー移動処理
 	void PerformMelee(D3DXVECTOR3 pos, bool bWay); //近接攻撃処理
-	void PerformFlow_Range(D3DXVECTOR3 pos, bool bWay); //集中斬撃範囲生成
 
 	D3DXVECTOR3 m_SlashSize; //斬撃のサイズ
 	bool m_bSize; //サイズ変更するかどうか
