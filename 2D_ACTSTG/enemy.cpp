@@ -187,7 +187,7 @@ void CEnemy::Update()
 void CEnemy::Draw()
 {
 	//eƒNƒ‰ƒX‚Ì•`‰æ
-	CObjectX::Draw();
+	CCharacter::Draw();
 }
 
 //=============================================

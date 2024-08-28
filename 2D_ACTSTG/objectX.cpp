@@ -136,7 +136,7 @@ void CObjectX::Draw()
 //=============================================
 //描画(カラー変更)
 //=============================================
-void CObjectX::Draw(D3DMATERIAL9 mat)
+void CObjectX::Draw(D3DXCOLOR col)
 {
 	if (m_pMesh != nullptr && m_pBuffMat != nullptr)
 	{
@@ -173,8 +173,12 @@ void CObjectX::Draw(D3DMATERIAL9 mat)
 
 		for (int nCntMat = 0; nCntMat < (int)m_dwNumMat; nCntMat++)
 		{
+			D3DMATERIAL9 DrawMat = pMat[nCntMat].MatD3D;
+
+			DrawMat.Diffuse = col;
+
 			//マテリアルの設定
-			pDevice->SetMaterial(&mat);
+			pDevice->SetMaterial(&DrawMat);
 
 			//テクスチャの設定
 			pDevice->SetTexture(0, m_pTexture[nCntMat]);

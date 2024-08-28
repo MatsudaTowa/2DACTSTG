@@ -22,7 +22,7 @@ public:
 	void Uninit()override;
 	void Update()override;
 	void Draw()override;
-	void Draw(D3DMATERIAL9 mat);
+	void Draw(D3DXCOLOR col);
 
 	void BindTexture(LPDIRECT3DTEXTURE9 pTex);
 

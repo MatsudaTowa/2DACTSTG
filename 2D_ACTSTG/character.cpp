@@ -75,14 +75,8 @@ void CCharacter::Draw()
 		CObjectX::Draw();
 		break;
 	case CCharacter::CHARACTER_STATE::CHARACTER_DAMAGE:
-
-		//ダメージ用のマテリアル情報
-		D3DMATERIAL9 mat;
-
-		//色変更
-		mat.Diffuse = (D3DXCOLOR(255.0f, 0.0f, 0.0f, 1.0f));
-
-		CObjectX::Draw(mat);
+		
+		CObjectX::Draw(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
 		break;
 	default:
 		break;
