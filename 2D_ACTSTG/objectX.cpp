@@ -173,6 +173,7 @@ void CObjectX::Draw(D3DXCOLOR col)
 
 		for (int nCntMat = 0; nCntMat < (int)m_dwNumMat; nCntMat++)
 		{
+			//¡•`‰æ‚·‚éƒ}ƒeƒŠƒAƒ‹î•ñŠi”[
 			D3DMATERIAL9 DrawMat = pMat[nCntMat].MatD3D;
 
 			DrawMat.Diffuse = col;
