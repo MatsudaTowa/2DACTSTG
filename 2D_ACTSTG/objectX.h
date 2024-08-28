@@ -22,6 +22,7 @@ public:
 	void Uninit()override;
 	void Update()override;
 	void Draw()override;
+	void Draw(D3DMATERIAL9 mat);
 
 	void BindTexture(LPDIRECT3DTEXTURE9 pTex);
 
@@ -57,6 +58,12 @@ public:
 		m_mtxWorld = mtxWorld;
 	}
 
+	//カラーの代入
+	void SetColor(D3DXCOLOR col)
+	{
+		m_col = col;
+	}
+
 	//posの取得
 	D3DXVECTOR3& GetPos();
 
@@ -81,6 +88,9 @@ public:
 	//ワールドマトリックス取得
 	D3DXMATRIX& GetMtxWorld();
 
+	//カラー取得
+	D3DXCOLOR& GetCol();
+
 private:
 
 	LPDIRECT3DTEXTURE9 m_pTexture[MAX_TEX]; //テクスチャへのポインタ
@@ -95,5 +105,7 @@ private:
 	LPD3DXMESH m_pMesh; //メッシュ情報
 	LPD3DXBUFFER m_pBuffMat; //マテリアル情報
 	DWORD m_dwNumMat; //マテリアル数
+
+	D3DXCOLOR m_col; //カラーの値
 };
 #endif

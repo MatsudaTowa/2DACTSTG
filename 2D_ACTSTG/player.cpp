@@ -32,7 +32,7 @@ const float CPlayer::DEFAULT_JUMP = 25.0f;
 const int CPlayer::MAX_JUMPCNT = 2;
 
 //ステート切り替えフレーム
-const int CPlayer::STATE_FRAME = 30;
+const int CPlayer::STATE_FRAME = 60;
 
 //プレイヤーをリスポーンされる座標
 const float CPlayer::DEADZONE_Y = -100.0f;
@@ -54,14 +54,14 @@ bool CPlayer::m_PlayerDeath = false;
 //=============================================
 //コンストラクタ
 //=============================================
-CPlayer::CPlayer(int nPriority):CCharacter(nPriority),m_nJumpCnt(0),m_OldPress(false), m_nChargeCnt(0), m_nStateCnt(0), m_nSlashDamage(0), m_bFlow(false)
+CPlayer::CPlayer(int nPriority):CCharacter(nPriority),m_nJumpCnt(0),m_OldPress(false), m_nChargeCnt(0),m_nSlashDamage(0), m_bFlow(false)
 {//イニシャライザーでジャンプカウント、プレス情報,チャージ段階,斬撃のダメージ初期化
 
 	//プレイヤーの攻撃を近距離のみにする
 	m_Attack = PLAYER_ATTACK_MELEE;
 
 	//ステートを通常に
-	m_State = PLAYER_NORMAL;
+	SetState(CCharacter::CHARACTER_STATE::CHARACTER_NORMAL);
 
 	//死んでない状態に
 	m_PlayerDeath = false;
@@ -114,19 +114,32 @@ void CPlayer::Uninit()
 //=============================================
 void CPlayer::Update()
 {
+	//SetColor(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
 
-	if (m_State == PLAYER_DAMAGE)
+	//状態を取得
+	CCharacter::CHARACTER_STATE state = GetState();
+
+	if (state == CCharacter::CHARACTER_STATE::CHARACTER_DAMAGE)
 	{
-		//ステート変更カウント進める
-		m_nStateCnt++;
+		//状態のカウント数取得
+		int nStateCnt = GetStateCnt();
 
-		if (m_nStateCnt >= STATE_FRAME)
+		//ステート変更カウント進める
+		nStateCnt++;
+
+		if (nStateCnt >= STATE_FRAME)
 		{
 			//通常に戻す
-			m_State = PLAYER_NORMAL;
+			state = CCharacter::CHARACTER_STATE::CHARACTER_NORMAL;
 			//ステートカウントリセット
-			m_nStateCnt = 0;
+			nStateCnt = 0;
+
+			//状態代入
+			SetState(state);
 		}
+
+		//ステートカウント代入
+		SetStateCnt(nStateCnt);
 	}
 
 	//重力処理
@@ -217,7 +230,6 @@ void CPlayer::Update()
 		}
 	}
 
-
 	if (pMouse->GetTrigger(1))
 	{//右クリックが入力されたら
 		//近接攻撃処理
@@ -232,7 +244,7 @@ void CPlayer::Update()
 void CPlayer::Draw()
 {
 	//親クラスの描画を呼ぶ
-	CObjectX::Draw();
+	CCharacter::Draw();
 }
 
 //=============================================
@@ -271,11 +283,18 @@ void CPlayer::Damage(int nDamage)
 	//体力取得
 	int nLife = GetLife();
 
+	//状態を取得
+	CCharacter::CHARACTER_STATE state = GetState();
+
 	if (nLife > 0)
 	{//HPが残ってたら
 		nLife -= nDamage;
 
-		m_State = CPlayer::PLAYER_STATE::PLAYER_DAMAGE;
+		//ダメージ状態に変更
+		state = CCharacter::CHARACTER_STATE::CHARACTER_DAMAGE;
+
+		//現在の状態を代入
+		SetState(state);
 
 		for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
 		{
@@ -527,8 +546,10 @@ void CPlayer::PlayerMove()
 		//オブジェクト2Dからrotを取得
 		D3DXVECTOR3 rot = GetRot();
 
+		//状態を取得
+		CCharacter::CHARACTER_STATE state = GetState();
 
-		if (m_State == PLAYER_DAMAGE)
+		if (state == CCharacter::CHARACTER_STATE::CHARACTER_DAMAGE)
 		{
 			move.x += sinf(rotMoveY) * DEFAULT_MOVE * 0.5f;
 			move.z += cosf(rotMoveY) * DEFAULT_MOVE * 0.5f;

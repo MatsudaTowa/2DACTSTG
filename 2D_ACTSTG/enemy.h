@@ -57,6 +57,7 @@ public:
 private:
 	static const std::string MODEL_NAME;	//モデルの名前  
 	static const std::string FLOW_MODEL_NAME;	//モデルの名前  
+	static const int STATE_FRAME; //ステート変更フレーム数
 	static const float DAMPING_COEFFICIENT; //移動抵抗
 	static const float DEADZONE_Y; //これを過ぎたら破棄
 	static const int EFFECT_LIFE = 3; //エフェクトの体力

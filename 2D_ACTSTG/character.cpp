@@ -20,9 +20,9 @@ const float CCharacter::GRAVITY_MAX = 32.0f;
 //=============================================
 //コンストラクタ
 //=============================================
-CCharacter::CCharacter(int nPriority):CObjectX(nPriority)
-{
-    m_bLanding = false; //着地
+CCharacter::CCharacter(int nPriority):CObjectX(nPriority),m_bLanding(false),m_bWay(false),m_move(D3DXVECTOR3(0.0f,0.0f,0.0f)),m_nLife(0)
+,m_nStateCnt(0),m_oldpos(D3DXVECTOR3(0.0f,0.0f,0.0f)),m_State(CCharacter::CHARACTER_STATE::CHARACTER_NORMAL)
+{//イニシャライザーでプライオリティ設定、各メンバ変数初期化
 }
 
 //=============================================
@@ -69,7 +69,24 @@ void CCharacter::Update()
 //=============================================
 void CCharacter::Draw()
 {
-    CObjectX::Draw();
+	switch (m_State)
+	{
+	case CCharacter::CHARACTER_STATE::CHARACTER_NORMAL:
+		CObjectX::Draw();
+		break;
+	case CCharacter::CHARACTER_STATE::CHARACTER_DAMAGE:
+
+		//ダメージ用のマテリアル情報
+		D3DMATERIAL9 mat;
+
+		//色変更
+		mat.Diffuse = (D3DXCOLOR(255.0f, 0.0f, 0.0f, 1.0f));
+
+		CObjectX::Draw(mat);
+		break;
+	default:
+		break;
+	}
 }
 
 
@@ -354,4 +371,21 @@ bool& CCharacter::GetWay()
 int& CCharacter::GetLife()
 {
 	return m_nLife;
+}
+
+
+//=============================================
+//状態取得
+//=============================================
+CCharacter::CHARACTER_STATE& CCharacter::GetState()
+{
+	return m_State;
+}
+
+//=============================================
+//ステートカウント取得
+//=============================================
+int& CCharacter::GetStateCnt()
+{
+	return m_nStateCnt;
 }

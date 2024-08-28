@@ -25,13 +25,6 @@ public:
 		PLAYER_ATTACK_MAX,
 	}PLAYER_ATTACK;
 
-	typedef enum
-	{
-		PLAYER_NORMAL = 0, //通常状態
-		PLAYER_DAMAGE, //ダメージ状態
-		PLAYER_STATE_MAX,
-	}PLAYER_STATE;
-
 	CPlayer(int nPriority = PLAYER_PRIORITY);
 	~CPlayer()override;
 	HRESULT Init()override;
@@ -75,10 +68,8 @@ private:
 	void PerformMelee(D3DXVECTOR3 pos, bool bWay); //近接攻撃処理
 
 	D3DXVECTOR3 m_SlashSize; //斬撃のサイズ
-	PLAYER_STATE m_State; //プレイヤー状態
 	bool m_bSize; //サイズ変更するかどうか
 	bool m_bFlow; //集中状態かどうか
-	int m_nStateCnt; //ステート切り替え計測カウント
 	int m_PressCnt; //何秒間押されたか
 	int m_nJumpCnt; //ジャンプカウント
 	int m_nChargeCnt; //何段階目かカウント

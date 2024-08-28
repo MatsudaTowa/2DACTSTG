@@ -16,6 +16,13 @@ class CCharacter : public CObjectX
 public:
 	static const int CHARACTER_PRIORITY = 8; //描画順
 
+	typedef enum
+	{
+		CHARACTER_NORMAL = 0, //通常状態
+		CHARACTER_DAMAGE, //ダメージ状態
+		CHARACTER_STATE_MAX,
+	}CHARACTER_STATE;
+
 	CCharacter(int nPriority = CHARACTER_PRIORITY);
 	~CCharacter()override;
 	HRESULT Init()override;
@@ -60,6 +67,18 @@ public:
 		m_nLife = nLife;
 	}
 
+	//状態代入
+	void SetState(CHARACTER_STATE state)
+	{
+		m_State = state;
+	}
+
+	//ステートカウント代入
+	void SetStateCnt(int nStateCnt)
+	{
+		m_nStateCnt = nStateCnt;
+	}
+
 	//移動量取得
 	D3DXVECTOR3& GetMove();
 
@@ -75,6 +94,12 @@ public:
 	//体力取得
 	int& GetLife();
 
+	//状態取得
+	CHARACTER_STATE& GetState();
+
+	//ステートカウント取得
+	int& GetStateCnt();
+
 private:
 	static const float GRAVITY_MOVE; //重力値
 	static const float GRAVITY_MAX; //重力最大値
@@ -84,5 +109,8 @@ private:
 	bool m_bLanding; //着地してるかどうか
 	bool m_bWay; //どっち向いてるか(true:右false:左)
 	int m_nLife; //体力
+	int m_nStateCnt; //ステート切り替え計測カウント
+	CHARACTER_STATE m_State; //プレイヤー状態
+	D3DXCOLOR m_col; //カラー
 };
 #endif

@@ -28,6 +28,9 @@ const std::string CEnemy::MODEL_NAME = "data\\MODEL\\enemy_test.x";
 //モデルパス
 const std::string CEnemy::FLOW_MODEL_NAME = "data\\MODEL\\flowenemy_test.x";
 
+//ステート切り替えフレーム
+const int CEnemy::STATE_FRAME = 40;
+
 //テクスチャ初期化
 LPDIRECT3DTEXTURE9 CEnemy::m_pTextureTemp = nullptr;
 
@@ -107,6 +110,34 @@ void CEnemy::Update()
 
 	//移動量取得
 	D3DXVECTOR3 move = GetMove();
+
+	//状態取得
+	CCharacter::CHARACTER_STATE state = GetState();
+
+	
+	if (state == CCharacter::CHARACTER_STATE::CHARACTER_DAMAGE)
+	{
+		//状態のカウント数取得
+		int nStateCnt = GetStateCnt();
+
+		//ステート変更カウント進める
+		nStateCnt++;
+
+		if (nStateCnt >= STATE_FRAME)
+		{
+			//通常に戻す
+			state = CCharacter::CHARACTER_STATE::CHARACTER_NORMAL;
+
+			//ステートカウントリセット
+			nStateCnt = 0;
+
+			//状態代入
+			SetState(state);
+		}
+
+		//ステートカウント代入
+		SetStateCnt(nStateCnt);
+	}
 
 	//移動量を更新(減速）
 	move *= 1.0f - DAMPING_COEFFICIENT;
@@ -221,9 +252,18 @@ void CEnemy::Damage(int nDamage)
 	//体力取得
 	int nLife = GetLife();
 
-	if (nLife > 0)
-	{//HPが残ってたら
+	//状態を取得
+	CCharacter::CHARACTER_STATE state = GetState();
+
+	if (nLife > 0 && state != CCharacter::CHARACTER_STATE::CHARACTER_DAMAGE)
+	{//ダメージ状態以外でHPが残ってたら
 		nLife -= nDamage;
+
+		//ダメージ状態に変更
+		state = CCharacter::CHARACTER_STATE::CHARACTER_DAMAGE;
+
+		//状態代入
+		SetState(state);
 
 		//体力代入
 		SetLife(nLife);
@@ -411,8 +451,8 @@ void CNormalEnemy::Update()
 //=============================================
 void CNormalEnemy::Draw()
 {
-	//親クラスの描画
-	CEnemy::Draw();
+	//親クラスの描画を呼ぶ
+	CCharacter::Draw();
 }
 
 //=============================================

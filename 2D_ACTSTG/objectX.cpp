@@ -11,7 +11,7 @@
 //=============================================
 //コンストラクタ
 //=============================================
-CObjectX::CObjectX(int nPriority):CObject(nPriority)
+CObjectX::CObjectX(int nPriority):CObject(nPriority),m_col(D3DXCOLOR(1.0f,1.0f,1.0f,1.0f))
 {
 	m_pBuffMat = nullptr;
 	m_pMesh = nullptr;
@@ -117,6 +117,10 @@ void CObjectX::Draw()
 			//パーツの設定
 			m_pMesh->DrawSubset(nCntMat);
 		}
+
+		//// ディフューズカラーを変更
+		//pMat->MatD3D.Diffuse = D3DXCOLOR(pMat->MatD3D.Diffuse.r, pMat->MatD3D.Diffuse.g, pMat->MatD3D.Diffuse.b, pMat->MatD3D.Diffuse.a);
+
 		//αテストを無効に
 		pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
@@ -130,6 +134,69 @@ void CObjectX::Draw()
 }
 
 //=============================================
+//描画(カラー変更)
+//=============================================
+void CObjectX::Draw(D3DMATERIAL9 mat)
+{
+	if (m_pMesh != nullptr && m_pBuffMat != nullptr)
+	{
+		//デバイスの取得
+		CRenderer* pRender = CManager::GetRenderer();
+		LPDIRECT3DDEVICE9 pDevice = pRender->GetDevice();
+		D3DMATERIAL9 matDef; //現在のマテリアルの保存
+		D3DXMATRIX mtxRot, mtxTrans; //計算用マトリックス
+
+		//マトリックスの初期化
+		D3DXMatrixIdentity(&m_mtxWorld);
+
+		//αテストを有効
+		pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+		pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
+		pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+
+		//向きを反映
+		D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
+
+		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
+
+		//位置を反映
+		D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
+
+		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+		//ワールドマトリックスの設定
+		pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+
+		D3DXMATERIAL* pMat; //マテリアル
+
+		pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
+
+		for (int nCntMat = 0; nCntMat < (int)m_dwNumMat; nCntMat++)
+		{
+			//マテリアルの設定
+			pDevice->SetMaterial(&mat);
+
+			//テクスチャの設定
+			pDevice->SetTexture(0, m_pTexture[nCntMat]);
+
+			//パーツの設定
+			m_pMesh->DrawSubset(nCntMat);
+
+		}
+
+		//αテストを無効に
+		pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+
+		//現在を取得
+		pDevice->GetMaterial(&matDef);
+
+		//保存してたマテリアルを戻す
+		pDevice->SetMaterial(&matDef);
+	}
+
+}
+
+//=============================================
 //テクスチャ設定
 //=============================================
 void CObjectX::BindTexture(LPDIRECT3DTEXTURE9 pTex)
@@ -137,7 +204,6 @@ void CObjectX::BindTexture(LPDIRECT3DTEXTURE9 pTex)
 	for (int nCnt = 0; nCnt < MAX_TEX; nCnt++)
 	{
 		m_pTexture[nCnt] = pTex;
-
 	}
 }
 
@@ -362,4 +428,12 @@ DWORD& CObjectX::GetNumMat()
 D3DXMATRIX& CObjectX::GetMtxWorld()
 {
 	return m_mtxWorld;
+}
+
+//=============================================
+//カラー取得
+//=============================================
+D3DXCOLOR& CObjectX::GetCol()
+{
+	return m_col;
 }
