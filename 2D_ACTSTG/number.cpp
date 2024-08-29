@@ -8,7 +8,7 @@
 #include "manager.h"
 
 //texパス
-const std::string CNumber::TEXTURE_NAME = "data\\TEXTURE\\number_test.png";
+const std::string CNumber::TEXTURE_NAME = "data\\TEXTURE\\number_000.png";
 
 //=============================================
 //コンストラクタ

@@ -8,7 +8,7 @@
 #include "manager.h"
 
 //桁ごとにずらす
-const float CTimer::DIGIT_SHIFT = 40.0f;
+const float CTimer::DIGIT_SHIFT = 50.0f;
 
 //=============================================
 //コンストラクタ
@@ -27,7 +27,6 @@ CTimer::CTimer():m_nFrameCnt(0), m_nCurrentTime(0),m_pos(D3DXVECTOR3(0.0f, 0.0f,
 	for (int nCnt = 0; nCnt < NUM_DIGIT; nCnt++)
 	{
 		m_pNumber[nCnt] = nullptr;
-
 	}
 }
 
@@ -84,15 +83,21 @@ void CTimer::Uninit()
 //=============================================
 void CTimer::Update()
 {
+	SetTimer();
+
 	m_nFrameCnt++;
 
 	if (m_nFrameCnt >= 60)
 	{
 		m_nCurrentTime--;
 		m_nFrameCnt = 0;
-
 	}
-	SetTimer();
+
+	if (m_nCurrentTime <= 0)
+	{
+		m_nCurrentTime = 0;
+		CManager::SetMode(CScene::MODE::MODE_RESULT);
+	}
 	////頂点設定
 	//SetTimerVtx();
 }

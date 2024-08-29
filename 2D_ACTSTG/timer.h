@@ -16,7 +16,7 @@
 class CTimer
 {
 public:
-	static const int LIMIT_TIME = 180;  //§ŒÀŠÔ
+	static const int LIMIT_TIME = 3;  //§ŒÀŠÔ
 	static const int NUM_DIGIT = 3;  //Œ…”
 	static const float DIGIT_SHIFT;  //Œ…‚²‚Æ‚ÉÀ•W‚ğ‚¸‚ç‚·
 
