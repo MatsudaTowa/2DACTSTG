@@ -29,7 +29,7 @@ const std::string CEnemy::MODEL_NAME = "data\\MODEL\\enemy_test.x";
 const std::string CEnemy::FLOW_MODEL_NAME = "data\\MODEL\\flowenemy_test.x";
 
 //ステート切り替えフレーム
-const int CEnemy::STATE_FRAME = 40;
+const int CEnemy::STATE_FRAME = 20;
 
 //テクスチャ初期化
 LPDIRECT3DTEXTURE9 CEnemy::m_pTextureTemp = nullptr;
@@ -361,7 +361,7 @@ void CEnemy::LockOn()
 	if (m_bLockOn != true)
 	{
 		m_pLockOn = CLockOn::Create(D3DXVECTOR3(GetPos().x, GetPos().y + 5.0f, -10.0f),
-			D3DXVECTOR3(10.0f, 10.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+			D3DXVECTOR3(70.0f, 70.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 	m_bLockOn = true;
 }
@@ -373,8 +373,23 @@ void CEnemy::LockOn_Flow()
 {
 	if (m_pLockOn != nullptr)
 	{
+		int nFlowLife = 0;
+		if (m_pLockOn->GetSize().x <= m_pLockOn->MIN_DAMAGE_LOCKON_SIZE
+			&& m_pLockOn->GetSize().x > m_pLockOn->MEDIUM_DAMAGE_LOCKON_SIZE)
+		{//最小ダメージのとき
+			nFlowLife = 30;
+		}
+		else if (m_pLockOn->GetSize().x <= m_pLockOn->MEDIUM_DAMAGE_LOCKON_SIZE
+			&& m_pLockOn->GetSize().x > m_pLockOn->MAX_DAMAGE_LOCKON_SIZE)
+		{//中ダメージのとき
+			nFlowLife = 60;
+		}
+		else if (m_pLockOn->GetSize().x <= m_pLockOn->MAX_DAMAGE_LOCKON_SIZE)
+		{//中ダメージのとき
+			nFlowLife = 90;
+		}
 		CFlow*pFlow = CFlow::Create(D3DXVECTOR3(m_pLockOn->GetPos().x, m_pLockOn->GetPos().y + 5.0f, -10.0f),
-			D3DXVECTOR3(20.0f, 20.0f, 0.0f),90,1,CFlow::FLOW_TYPE::FLOW_TYPE_PLAYER);
+			D3DXVECTOR3(20.0f, 20.0f, 0.0f), nFlowLife,1,CFlow::FLOW_TYPE::FLOW_TYPE_PLAYER);
 
 		m_pLockOn->Uninit();
 		m_pLockOn = nullptr;

@@ -1,17 +1,34 @@
+//=============================================
+//
+//タイマー処理「timer.cpp」
+// Author松田永久
+//
+//=============================================
 #include "timer.h"
 #include "manager.h"
 
-//テクスチャパス
-const std::string CTimer::TEXTURE_NAME = "data\\TEXTURE\\number_test.png";
-
-//モデル設定
-CNumber* CTimer::m_pNumber[NUM_DIGIT] = {};
+//桁ごとにずらす
+const float CTimer::DIGIT_SHIFT = 40.0f;
 
 //=============================================
 //コンストラクタ
 //=============================================
-CTimer::CTimer(int nPriority):CObject2D(nPriority), m_nFrameCnt(0),m_nCurrentTime(0)
-{//イニシャライザーでプライオリティ設定、フレームカウントと今の時間を初期化
+CTimer::CTimer():m_nFrameCnt(0), m_nCurrentTime(0),m_pos(D3DXVECTOR3(0.0f, 0.0f, 0.0f))
+{//イニシャライザーでカウンターと,今の時間pos初期化
+
+	//タイマー
+	m_nCurrentTime = CTimer::LIMIT_TIME;
+	//初期位置代入
+	m_pos = D3DXVECTOR3(600.0f, 40.0f, 0.0f);
+
+	//最初からセットするため
+	m_nFrameCnt = 60;
+
+	for (int nCnt = 0; nCnt < NUM_DIGIT; nCnt++)
+	{
+		m_pNumber[nCnt] = nullptr;
+
+	}
 }
 
 //=============================================
@@ -26,19 +43,21 @@ CTimer::~CTimer()
 //=============================================
 HRESULT CTimer::Init()
 {
-	//親クラスの初期化
-	CObject2D::Init();
-
 	for (int nCnt = 0; nCnt < NUM_DIGIT; nCnt++)
 	{
 		//ナンバー生成
 		if (m_pNumber[nCnt] == nullptr)
 		{
 			m_pNumber[nCnt] = new CNumber();
-			m_pNumber[nCnt]->Init();
 		}
-		//頂点設定
-		SetTimerVtx();
+
+		if (m_pNumber[nCnt] != nullptr)
+		{
+			m_pNumber[nCnt]->Create(m_pos,D3DXVECTOR2(30.0f,50.0f));
+		}
+		
+		//座標をずらす
+		m_pos.x += DIGIT_SHIFT;
 	}
 
 	return S_OK;
@@ -53,13 +72,11 @@ void CTimer::Uninit()
 	{
 		if (m_pNumber[nCnt] != nullptr)
 		{
-			delete m_pNumber[nCnt];
-			m_pNumber[nCnt] = nullptr;
+			m_pNumber[nCnt]->Uninit();
+			//delete m_pNumber[nCnt];
+			//m_pNumber[nCnt] = nullptr;
 		}
 	}
-
-	//親クラスの終了
-	CObject2D::Uninit();
 }
 
 //=============================================
@@ -67,60 +84,25 @@ void CTimer::Uninit()
 //=============================================
 void CTimer::Update()
 {
-	//親クラスの更新
-	CObject2D::Update();
-
 	m_nFrameCnt++;
 
 	if (m_nFrameCnt >= 60)
 	{
-		m_nCurrentTime++;
+		m_nCurrentTime--;
 		m_nFrameCnt = 0;
+		SetTimer();
 	}
-
-	CNumber::SetNumVtx(GetVtxBuff(),1.0f,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),D3DXVECTOR3(SCREEN_WIDTH * 0.5f,SCREEN_HEIGHT*0.5f,0.0f),D3DXVECTOR2(30.0f,50.0f),0.1f,0.2f);
 
 	////頂点設定
 	//SetTimerVtx();
 }
 
-//=============================================
-//描画
-//=============================================
-void CTimer::Draw()
-{
-	CObject2D::Draw();
-}
-
-//=============================================
-//生成
-//=============================================
-CTimer* CTimer::Create(D3DXVECTOR3 pos, D3DXVECTOR2 size)
-{
-	CTimer*pTimer = new CTimer();
-
-	//nullならnullを返す
-	if(pTimer == nullptr) {return nullptr;}
-
-	CTexture* pTexture = CManager::GetTexture();
-
-	pTimer->SetPos(pos); //pos代入
-	pTimer->SetSize(size); //size代入
-	pTimer->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME)));
-	pTimer->SetType(OBJECT_TYPE_TIMER); //タイプ設定
-	pTimer->m_nCurrentTime = LIMIT_TIME;
-	pTimer->Init();
-
-	return pTimer;
-}
 
 //=============================================
 //タイマー用の頂点生成
 //=============================================
-void CTimer::SetTimerVtx()
+void CTimer::SetTimer()
 {
-
-	D3DXVECTOR3 pos = GetPos();
 	//テクスチャ座標設定
 	int a_PosTexU[NUM_DIGIT];
 
@@ -143,9 +125,8 @@ void CTimer::SetTimerVtx()
 
 		fMinTexU = a_PosTexU[nCnt] * 0.1f;
 		fMaxTexU = fMinTexU + 0.1f;
-		m_pNumber[nCnt]->SetNumVtx(GetVtxBuff(),1.0f, D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f), pos ,GetSize(),fMinTexU, fMaxTexU);
 
-		//x座標をずらす
-		pos.x += GetSize().x;
+		m_pNumber[nCnt]->SetNumber(fMinTexU, fMaxTexU,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f));
+
 	}
 }

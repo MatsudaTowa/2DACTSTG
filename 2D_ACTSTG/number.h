@@ -7,45 +7,32 @@
 #ifndef _NUMBER_H_ //これが定義されてないとき
 #define _NUMBER_H_
 #include "main.h"
+#include "object2D.h"
 
 //=============================================
 //ナンバークラス
 //=============================================
-class CNumber
+class CNumber:public CObject2D
 {
 public:
 	static const std::string TEXTURE_NAME;	//テクスチャの名前
-	CNumber();
-	~CNumber();
-	HRESULT Init();
-	void Uninit();
-	void Update();
-	void Draw(LPDIRECT3DTEXTURE9 pTex, LPDIRECT3DVERTEXBUFFER9 pBuff);
+	static const int NUMBER_PRIORITY = 85;  //描画順
+	CNumber(int nPriority = NUMBER_PRIORITY);
+	~CNumber()override;
+	HRESULT Init()override;
+	void Uninit()override;
+	void Update()override;
+	void Draw()override;
 
 	//数字のポリゴン生成処理
-	static void SetNumVtx(LPDIRECT3DVERTEXBUFFER9 pBuff,float rhw, D3DCOLOR col, D3DXVECTOR3 pos ,D3DXVECTOR2 size,float fMinTexU,float fMaxTexU);
+	static CNumber* Create(D3DXVECTOR3 pos ,D3DXVECTOR2 size);
 
-	//桁数の設定処理
-	void SetDigit(int nDigit)
-	{
-		m_nDigit = nDigit;
-	}
-
-	//最初の番号の設定処理
-	void SetStartNumber(int nStartNum)
-	{
-		m_nStaretNum = nStartNum;
-	}
-
-	//桁数の取得処理
-	int GetDigit();
-
-	//最初の数字取得
-	int GetStartNum();
+	void SetNumber(float fNumPos1,float fNumPos2,D3DXCOLOR col);
 
 private:
-	int m_nStaretNum; //始まりの数字
-	int m_nDigit; //桁数
+	D3DXVECTOR2 m_mintex; //テクスチャの最小座標
+	D3DXVECTOR2 m_maxtex; //テクスチャの最大座標
+	D3DXCOLOR m_col; //カラー
 };
 
 #endif // DEBUG

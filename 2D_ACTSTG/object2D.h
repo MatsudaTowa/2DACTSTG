@@ -47,6 +47,13 @@ public:
 		m_tex_pos = tex;
 	}
 
+	//テクスチャ座標の代入
+	void SetVtxBuff(LPDIRECT3DVERTEXBUFFER9 Buff)
+	{
+		m_pVtxBuff = Buff;
+	}
+
+
 	//頂点座標の代入
 	void SetVtx(float rhw, D3DCOLOR col);
 

@@ -10,6 +10,8 @@
 #include "main.h"
 #include "scene.h"
 #include "edit.h"
+#include "timer.h"
+
 class CGame:public CScene
 {
 public:
@@ -24,5 +26,6 @@ private:
 	int m_nResultDelay; //リザルトへのディレイ
 	bool m_bEdit; //エディットしてるかどうか
 	static CEdit*m_pEdit;
+	static CTimer*m_pTimer;
 };
 #endif

@@ -10,6 +10,13 @@
 //texパス
 const std::string CLockOn::TEXTURE_NAME = "data\\TEXTURE\\lockon.png";
 
+//最大ダメージを与えるロックオンサイズ
+const float CLockOn::MAX_DAMAGE_LOCKON_SIZE = 10.0f;
+//威力が一番低いロックオンするサイズ
+const float CLockOn::MIN_DAMAGE_LOCKON_SIZE = 70.0f;
+//中くらいのダメージロックオンするサイズ
+const float CLockOn::MEDIUM_DAMAGE_LOCKON_SIZE = 40.0f;
+
 //=============================================
 //コンストラクタ
 //=============================================
@@ -52,6 +59,11 @@ void CLockOn::Update()
 {
 	//親クラスの更新
 	CObject3D::Update();
+
+	ChangeSize();
+
+	//頂点設定
+	SetVtx(D3DXVECTOR3(0.0f, 0.0f, -1.0f), m_col);
 }
 
 //=============================================
@@ -61,6 +73,24 @@ void CLockOn::Draw()
 {
 	//親クラスの描画
 	CObject3D::Draw();
+}
+
+//=============================================
+//サイズ変更
+//=============================================
+void CLockOn::ChangeSize()
+{
+	//サイズ取得
+	D3DXVECTOR3 size = GetSize();
+
+	if (size.x > CLockOn::MAX_DAMAGE_LOCKON_SIZE && size.y > CLockOn::MAX_DAMAGE_LOCKON_SIZE)
+	{
+		size.x--;
+		size.y--;
+	}
+
+	SetSize(size);
+
 }
 
 //=============================================

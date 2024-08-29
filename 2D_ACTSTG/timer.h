@@ -13,27 +13,25 @@
 //=============================================
 //タイマークラス
 //=============================================
-class CTimer :public CObject2D
+class CTimer
 {
 public:
-	static const std::string TEXTURE_NAME;	//テクスチャの名前
-	static const int TIMER_PRIORITY = 81;  //描画順
 	static const int LIMIT_TIME = 180;  //制限時間
 	static const int NUM_DIGIT = 3;  //桁数
+	static const float DIGIT_SHIFT;  //桁ごとに座標をずらす
 
-	CTimer(int nPriority = TIMER_PRIORITY);
-	~CTimer()override;
-	HRESULT Init()override;
-	void Uninit()override;
-	void Update()override;
-	void Draw()override;
+	CTimer();
+	~CTimer();
+	HRESULT Init();
+	void Uninit();
+	void Update();
 
-	static CTimer*Create(D3DXVECTOR3 pos,D3DXVECTOR2 size);
 private:
-	void SetTimerVtx();
+	void SetTimer();
 	int m_nFrameCnt; //何フレーム経ったかカウントする変数
 	int m_nCurrentTime; //今の時間
-	static CNumber* m_pNumber[NUM_DIGIT];
+	D3DXVECTOR3 m_pos;
+	CNumber* m_pNumber[NUM_DIGIT];
 };
 
 #endif // DEBUG

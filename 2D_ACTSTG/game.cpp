@@ -17,7 +17,6 @@
 #include "effect.h"
 #include "gauge_fream.h"
 #include "colision.h"
-#include "timer.h"
 #include "enemy.h"
 #include "block.h"
 #include "field.h"
@@ -25,6 +24,9 @@
 
 //エディット設定
 CEdit* CGame::m_pEdit = nullptr;
+
+//タイム設定
+CTimer* CGame::m_pTimer = nullptr;
 
 //=============================================
 //コンストラクタ
@@ -50,6 +52,14 @@ HRESULT CGame::Init()
 	{
 		m_pEdit = new CEdit;
 	}
+
+	if (m_pTimer == nullptr)
+	{
+		m_pTimer = new CTimer;
+
+		m_pTimer->Init();
+	}
+
 	//ブロック生成
 	CBlock* pBlock = CBlock::Create(CBlock::BLOCKTYPE_DEFAULT, D3DXVECTOR3(0.0, 0.0f, 0.0f),
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f), 3, false);
@@ -59,8 +69,6 @@ HRESULT CGame::Init()
 
 	pBlock = CBlock::Create(CBlock::BLOCKTYPE_DEFAULT, D3DXVECTOR3(5.0f, 50.0f, 0.0f),
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f), 3, false);
-
-	//CTimer*pTimer =CTimer::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.2f,100.0f,0.0f),D3DXVECTOR2(30.0f,50.0f));
 
 	//ゲージのフレームUI生成
 	CGauge_Fream* pGauge_Fream = CGauge_Fream::Create(D3DXVECTOR3(980.0f,80.0f,0.0f),D3DXVECTOR2(280.0f,120.0f));
@@ -87,6 +95,13 @@ HRESULT CGame::Init()
 //=============================================
 void CGame::Uninit()
 {
+	if (m_pTimer != nullptr)
+	{
+		m_pTimer->Uninit();
+		delete m_pTimer;
+		m_pTimer = nullptr;
+	}
+
 	CObject::ReleaseAll();
 }
 
@@ -114,6 +129,12 @@ void CGame::Update()
 	//if (m_bEdit == false)
 	//{
 		CObject::UpdateAll();
+
+		if (m_pTimer != nullptr)
+		{
+			m_pTimer->Update();
+		}
+
 	//}
 
 	if (CPlayer::m_PlayerDeath || CEnemy::m_nNumEnemy <= 0)
@@ -145,5 +166,4 @@ void CGame::Update()
 //=============================================
 void CGame::Draw()
 {
-
 }
