@@ -8,6 +8,7 @@
 #include "effect.h"
 #include "manager.h"
 #include "player.h"
+#include "colision.h"
 
 //テクスチャ初期化
 LPDIRECT3DTEXTURE9 CItem::m_pTextureTemp = nullptr;
@@ -37,6 +38,8 @@ HRESULT CItem::Init()
 
 	//頂点座標
 	SetVtx(D3DXVECTOR3(0.0f, 0.0f, -1.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+
+	m_pButton_UI = nullptr;
 	return S_OK;
 }
 
@@ -112,6 +115,9 @@ void CItem::HitItem()
 	//サイズ取得
 	D3DXVECTOR3 Itemsize = GetSize();
 
+	//キーボード情報取得
+	CInputKeyboard* pKeyboard = CManager::GetKeyboard();
+
 	//プレイヤーアタックタイプのポインタ初期化
 	CPlayer::PLAYER_ATTACK pPlayerAttack = CPlayer::PLAYER_ATTACK::PLAYER_ATTACK_MELEE; 
 
@@ -142,33 +148,30 @@ void CItem::HitItem()
 			{
 				CPlayer* pPlayer = (CPlayer*)pObj;
 
-				if (Itempos.x + Itemsize.x > pPlayer->GetPos().x + pPlayer->GetMinPos().x
-					&& Itempos.x - Itemsize.x < pPlayer->GetPos().x + pPlayer->GetMaxPos().x)
-				{
-					if (Itempos.z - Itemsize.z< pPlayer->GetPos().z + pPlayer->GetMaxPos().z
-						&& Itempos.z + Itemsize.z > pPlayer->GetPos().z + pPlayer->GetMinPos().z
-						&& Itempos.y - Itemsize.y < pPlayer->GetPos().y + pPlayer->GetMaxPos().y
-						&& Itempos.y + Itemsize.y > pPlayer->GetPos().y + pPlayer->GetMinPos().y)
-					{//当たり判定(X)
+				CColision::COLISION colision = CColision::CheckItemColision(Itempos, Itemsize,pPlayer->GetPos(),pPlayer->GetMinPos(),pPlayer->GetMaxPos());
+
+				if (colision != CColision::COLISION::COLISON_NONE)
+				{//当たってたら
+					//攻撃の削除
+					if (m_pButton_UI == nullptr)
+					{
+						m_pButton_UI = CButton_UI::Create(D3DXVECTOR3(Itempos.x, Itempos.y + 20.0f, Itempos.z), D3DXVECTOR3(50.0f, 20.0f, 0.0f), CButton_UI::BUTTON_TYPE::BUTTON_TYPE_KEYBOARD_F);
+					}
+					if (pKeyboard->GetTrigger(DIK_F))
+					{
 						pPlayer->m_Attack = pPlayerAttack;
 						//アイテムの削除
+						m_pButton_UI->Uninit();
+						m_pButton_UI = nullptr;
 						Uninit();
 					}
 				}
-
-
-				else if (Itempos.z + Itemsize.z > pPlayer->GetPos().z + pPlayer->GetMinPos().z
-					&& Itempos.z - Itemsize.z < pPlayer->GetPos().z + pPlayer->GetMaxPos().z)
+				else
 				{
-					if (Itempos.x - Itemsize.x < pPlayer->GetPos().x + pPlayer->GetMaxPos().x
-						&& Itempos.x + Itemsize.x > pPlayer->GetPos().x + pPlayer->GetMinPos().x
-						&& Itempos.y - Itemsize.y < pPlayer->GetPos().y + pPlayer->GetMaxPos().y
-						&& Itempos.y + Itemsize.y > pPlayer->GetPos().y + pPlayer->GetMinPos().y
-						)
-					{//当たり判定(Z)
-						pPlayer->m_Attack = pPlayerAttack;
-						//アイテムの削除
-						Uninit();
+					if (m_pButton_UI != nullptr)
+					{
+						m_pButton_UI->Uninit();
+						m_pButton_UI = nullptr;
 					}
 				}
 			}

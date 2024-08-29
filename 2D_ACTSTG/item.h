@@ -9,6 +9,7 @@
 #define _ITEM_H_
 #include "main.h"
 #include "billboard.h"
+#include "button_UI.h"
 class CItem : public CBillboard
 {
 public:
@@ -41,5 +42,7 @@ private:
 	static LPD3DXMESH m_pMesh; //メッシュ情報
 	static 	LPD3DXBUFFER m_pBuffMat; //マテリアル情報
 	static	DWORD m_dwNumMat; //マテリアル数;
+
+	CButton_UI*m_pButton_UI;
 };
 #endif
