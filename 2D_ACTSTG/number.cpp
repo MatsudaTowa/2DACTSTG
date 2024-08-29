@@ -85,9 +85,11 @@ CNumber* CNumber::Create(D3DXVECTOR3 pos, D3DXVECTOR2 size)
 
 	pNumber->SetType(OBJECT_TYPE_NUMBER); //タイプ設定
 
-	//pNumber->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME))); //テクスチャ設定
+	pNumber->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME))); //テクスチャ設定
 
 	pNumber->Init(); //初期化処理
+
+	return pNumber;
 }
 
 //=============================================
@@ -121,17 +123,17 @@ void CNumber::NumberVtx()
 	pBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	//頂点座標の設定
-	pVtx[0].pos = D3DXVECTOR3(-GetSize().x
-		, -GetSize().y
+	pVtx[0].pos = D3DXVECTOR3(GetPos().x-GetSize().x
+		, GetPos().y -GetSize().y
 		, 0.0f);
-	pVtx[1].pos = D3DXVECTOR3(GetSize().x
-		, -GetSize().y
+	pVtx[1].pos = D3DXVECTOR3(GetPos().x + GetSize().x
+		, GetPos().y -GetSize().y
 		, 0.0f);
-	pVtx[2].pos = D3DXVECTOR3(-GetSize().x
-		, GetSize().y
+	pVtx[2].pos = D3DXVECTOR3(GetPos().x -GetSize().x
+		, GetPos().y + GetSize().y
 		, 0.0f);
-	pVtx[3].pos = D3DXVECTOR3(GetSize().x
-		, GetSize().y
+	pVtx[3].pos = D3DXVECTOR3(GetPos().x+GetSize().x
+		, GetPos().y + GetSize().y
 		, 0.0f);
 
 	//rhwの設定

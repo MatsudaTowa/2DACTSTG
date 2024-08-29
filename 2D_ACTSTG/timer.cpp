@@ -19,10 +19,10 @@ CTimer::CTimer():m_nFrameCnt(0), m_nCurrentTime(0),m_pos(D3DXVECTOR3(0.0f, 0.0f,
 	//タイマー
 	m_nCurrentTime = CTimer::LIMIT_TIME;
 	//初期位置代入
-	m_pos = D3DXVECTOR3(600.0f, 40.0f, 0.0f);
+	m_pos = D3DXVECTOR3(650.0f, 40.0f, 0.0f);
 
 	//最初からセットするため
-	m_nFrameCnt = 60;
+	//m_nFrameCnt = 60;
 
 	for (int nCnt = 0; nCnt < NUM_DIGIT; nCnt++)
 	{
@@ -46,18 +46,18 @@ HRESULT CTimer::Init()
 	for (int nCnt = 0; nCnt < NUM_DIGIT; nCnt++)
 	{
 		//ナンバー生成
-		if (m_pNumber[nCnt] == nullptr)
+		/*if (m_pNumber[nCnt] == nullptr)
 		{
 			m_pNumber[nCnt] = new CNumber();
-		}
+		}*/
 
-		if (m_pNumber[nCnt] != nullptr)
+		if (m_pNumber[nCnt] == nullptr)
 		{
-			m_pNumber[nCnt]->Create(m_pos,D3DXVECTOR2(30.0f,50.0f));
+			m_pNumber[nCnt] = CNumber::Create(m_pos,D3DXVECTOR2(30.0f,50.0f));
 		}
 		
 		//座標をずらす
-		m_pos.x += DIGIT_SHIFT;
+		m_pos.x -= DIGIT_SHIFT;
 	}
 
 	return S_OK;
@@ -90,9 +90,9 @@ void CTimer::Update()
 	{
 		m_nCurrentTime--;
 		m_nFrameCnt = 0;
-		SetTimer();
-	}
 
+	}
+	SetTimer();
 	////頂点設定
 	//SetTimerVtx();
 }
