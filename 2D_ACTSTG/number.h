@@ -29,6 +29,8 @@ public:
 
 	void SetNumber(float fNumPos1,float fNumPos2,D3DXCOLOR col);
 
+	void NumberVtx();
+
 private:
 	D3DXVECTOR2 m_mintex; //テクスチャの最小座標
 	D3DXVECTOR2 m_maxtex; //テクスチャの最大座標

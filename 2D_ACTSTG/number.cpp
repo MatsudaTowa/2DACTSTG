@@ -31,6 +31,10 @@ HRESULT CNumber::Init()
 {
 	//親クラスの初期化
 	CObject2D::Init();
+
+	//頂点生成
+	NumberVtx();
+
 	return S_OK;
 }
 
@@ -51,6 +55,56 @@ void CNumber::Update()
 	//親クラスの更新
 	CObject2D::Update();
 
+	//頂点生成
+	NumberVtx();
+}
+
+//=============================================
+//描画
+//=============================================
+void CNumber::Draw()
+{
+	//親クラスの描画
+	CObject2D::Draw();
+}
+
+//=============================================
+//生成
+//=============================================
+CNumber* CNumber::Create(D3DXVECTOR3 pos, D3DXVECTOR2 size)
+{
+	CTexture* pTexture = CManager::GetTexture();
+	CNumber* pNumber = new CNumber;
+
+	// nullならnullを返す
+	if (pNumber == nullptr) { return nullptr; }
+
+	pNumber->SetPos(pos); //pos設定
+
+	pNumber->SetSize(size); //size設定
+
+	pNumber->SetType(OBJECT_TYPE_NUMBER); //タイプ設定
+
+	//pNumber->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME))); //テクスチャ設定
+
+	pNumber->Init(); //初期化処理
+}
+
+//=============================================
+//数字の設定
+//=============================================
+void CNumber::SetNumber(float fNumPos1, float fNumPos2, D3DXCOLOR col)
+{
+	m_mintex.x = fNumPos1;
+	m_maxtex.x = fNumPos2;
+	m_col =col;
+}
+
+//=============================================
+//数字専用の頂点生成
+//=============================================
+void CNumber::NumberVtx()
+{
 	CRenderer* pRender = CManager::GetRenderer();
 
 	LPDIRECT3DDEVICE9 pDevice = pRender->GetDevice();
@@ -101,45 +155,4 @@ void CNumber::Update()
 	pBuff->Unlock();
 
 	SetVtxBuff(pBuff);
-}
-
-//=============================================
-//描画
-//=============================================
-void CNumber::Draw()
-{
-	//親クラスの描画
-	CObject2D::Draw();
-}
-
-//=============================================
-//生成
-//=============================================
-CNumber* CNumber::Create(D3DXVECTOR3 pos, D3DXVECTOR2 size)
-{
-	CTexture* pTexture = CManager::GetTexture();
-	CNumber* pNumber = new CNumber;
-
-	// nullならnullを返す
-	if (pNumber == nullptr) { return nullptr; }
-
-	pNumber->SetPos(pos); //pos設定
-
-	pNumber->SetSize(size); //size設定
-
-	pNumber->SetType(OBJECT_TYPE_NUMBER); //タイプ設定
-
-	//pNumber->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME))); //テクスチャ設定
-
-	pNumber->Init(); //初期化処理
-}
-
-//=============================================
-//数字の設定
-//=============================================
-void CNumber::SetNumber(float fNumPos1, float fNumPos2, D3DXCOLOR col)
-{
-	m_mintex.x = fNumPos1;
-	m_maxtex.x = fNumPos2;
-	m_col =col;
 }
