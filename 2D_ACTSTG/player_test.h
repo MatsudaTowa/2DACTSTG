@@ -26,6 +26,7 @@ public:
 	void Update();
 	void Draw();
 
+
 	//ƒvƒŒƒCƒ„[ì¬
 	static CPlayer_test* Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nLife);
 

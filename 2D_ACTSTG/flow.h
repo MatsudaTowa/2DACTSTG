@@ -20,7 +20,7 @@ public:
 	static const int ENEMY_DAMAGE_FRAME = 10; //ダメージを与えるフレーム間隔
 	static const int TEX_SPLIT_X = 4; //テクスチャの分割数
 	static const int TEX_SPLIT_Y = 1; //テクスチャの分割数
-	static const int ANIMATION_FRAME = 10; //アニメーションフレーム数
+	static const int ANIMATION_FRAME = 7; //アニメーションフレーム数
 
 	typedef enum
 	{

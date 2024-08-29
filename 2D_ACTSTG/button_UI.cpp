@@ -57,7 +57,7 @@ void CButton_UI::Update()
 	ChangeSize();
 
 	//頂点設定
-	SetVtx(D3DXVECTOR3(0.0f, 0.0f, -1.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f));
+	SetVtx(D3DXVECTOR3(0.0f, 0.0f, -1.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.9f));
 }
 
 //=============================================
@@ -86,12 +86,12 @@ CButton_UI* CButton_UI::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, BUTTON_TYPE ty
 	// nullならnullを返す
 	if (pButton_UI == nullptr) { return nullptr; }
 
-	//テクスチャ取得
-	CTexture* pTexture = CManager::GetTexture();
-
 	pButton_UI->SetPos(pos); //pos設定
 
 	pButton_UI->SetSize(size); //サイズ設定
+
+	//テクスチャ取得
+	CTexture* pTexture = CManager::GetTexture();
 
 	switch (type)
 	{
@@ -99,7 +99,7 @@ CButton_UI* CButton_UI::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, BUTTON_TYPE ty
 		pButton_UI->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_PAD_Y))); //テクスチャの設定	
 		break;
 	case CButton_UI::BUTTON_TYPE::BUTTON_TYPE_KEYBOARD_F:
-		pButton_UI->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_KEYBOARD_F))); //テクスチャの設定	
+		pButton_UI->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_KEYBOARD_F))); //テクスチャの設定
 		break;
 	default:
 		break;
@@ -107,7 +107,7 @@ CButton_UI* CButton_UI::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, BUTTON_TYPE ty
 
 	pButton_UI->SetType(OBJECT_TYPE_BUTTON_UI); //オブジェクトのタイプ設定
 
-	pButton_UI->Init(); //エフェクトの初期化処理
+	pButton_UI->Init();
 
 	return pButton_UI;
 }

@@ -7,6 +7,23 @@
 #include "texture.h"
 #include "manager.h"
 
+//texパス
+const std::string CTexture::TEXTURE_NAME[CTexture::TEXTURE::TEXTURE_MAX] =
+{
+	"data\\TEXTURE\\slash_test.png",
+	"data\\TEXTURE\\acquisition_y.png",
+	"data\\TEXTURE\\acquisition_F.png",
+	"data\\TEXTURE\\effect000.jpg",
+	"data\\TEXTURE\\bg_test.jpg",
+	"data\\TEXTURE\\flow_anim.png",
+	"data\\TEXTURE\\item_book000.png",
+	"data\\TEXTURE\\item_book001.png",
+	"data\\TEXTURE\\lockon.png",
+	"data\\TEXTURE\\number_test.png",
+	"data\\TEXTURE\\result_test.png",
+	"data\\TEXTURE\\title_test.png",
+};
+
 //=============================================
 //コンストラクタ
 //=============================================

@@ -12,6 +12,23 @@
 class CTexture
 {
 public:
+	typedef enum
+	{
+		BULLET = 0,
+		UI_PAD_Y,
+		UI_KEYBOARD_F,
+		EFFECT,
+		FIELD,
+		FLOW,
+		ITEM_00,
+		ITEM_01,
+		LOCKON,
+		NUMBER,
+		RESULT,
+		TITLE,
+		TEXTURE_MAX,
+	}TEXTURE;
+	static const std::string TEXTURE_NAME[TEXTURE_MAX];
 	static const int MAX_TEX = 256; //テクスチャの数
 	CTexture();
 	~CTexture();
