@@ -351,8 +351,8 @@ void CPlayer::Gauge(CGauge* pGauge)
 			m_PressCnt++;
 			if (m_PressCnt >= CHARGE_INTERVAL)
 			{//押されたらサイズ増加
-				m_SlashSize.x += 3.0f;
-				m_SlashSize.y += 3.0f;
+				m_SlashSize.x += 1.0f;
+				m_SlashSize.y += 4.0f;
 				m_SlashSize.z += 0.0f;
 
 				//カウントリセット

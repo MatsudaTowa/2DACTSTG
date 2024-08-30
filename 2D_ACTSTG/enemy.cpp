@@ -524,8 +524,20 @@ void CNormalEnemy::EnemyMove()
 	//’…’n‚µ‚Ä‚é‚©æ“¾
 	bool bLanding = GetLaunding();
 
-	move.x += sinf(rotMoveY) * CEnemy::DEFAULT_MOVE;
-	move.z += cosf(rotMoveY) * CEnemy::DEFAULT_MOVE;
+	//ó‘Ô‚ğæ“¾
+	CCharacter::CHARACTER_STATE state = GetState();
+
+	if (state == CCharacter::CHARACTER_STATE::CHARACTER_DAMAGE)
+	{
+		move.x += sinf(rotMoveY) * DEFAULT_MOVE * 0.5f;
+		move.z += cosf(rotMoveY) * DEFAULT_MOVE * 0.5f;
+	}
+	else
+	{
+		move.x += sinf(rotMoveY) * DEFAULT_MOVE;
+		move.z += cosf(rotMoveY) * DEFAULT_MOVE;
+	}
+
 	rot.y = rotMoveY + D3DX_PI;
 
 	SetRot(rot); //rot‚ğ‘ã“ü
@@ -679,8 +691,19 @@ void CFlowEnemy::EnemyMove()
 	//’…’n‚µ‚Ä‚é‚©æ“¾
 	bool bLanding = GetLaunding();
 
-	move.x += sinf(rotMoveY) * CEnemy::DEFAULT_MOVE;
-	move.z += cosf(rotMoveY) * CEnemy::DEFAULT_MOVE;
+	//ó‘Ô‚ğæ“¾
+	CCharacter::CHARACTER_STATE state = GetState();
+
+	if (state == CCharacter::CHARACTER_STATE::CHARACTER_DAMAGE)
+	{
+		move.x += sinf(rotMoveY) * DEFAULT_MOVE * 0.5f;
+		move.z += cosf(rotMoveY) * DEFAULT_MOVE * 0.5f;
+	}
+	else
+	{
+		move.x += sinf(rotMoveY) * DEFAULT_MOVE;
+		move.z += cosf(rotMoveY) * DEFAULT_MOVE;
+	}
 	rot.y = rotMoveY + D3DX_PI;
 
 	SetRot(rot); //rot‚ğ‘ã“ü
