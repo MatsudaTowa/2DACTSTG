@@ -17,10 +17,12 @@
 #include "effect.h"
 #include "gauge_fream.h"
 #include "colision.h"
-#include "enemy.h"
 #include "block.h"
 #include "field.h"
 #include "manager.h"
+
+//エネミーのファイル
+const std::string CGame::ENEMY_FILE = "data\\FILE\\enemy.txt";
 
 //エディット設定
 CEdit* CGame::m_pEdit = nullptr;
@@ -33,6 +35,11 @@ CTimer* CGame::m_pTimer = nullptr;
 //=============================================
 CGame::CGame():m_nResultDelay(0),m_bEdit(false)
 {//イニシャライザーでプライオリティ設定、エディットしてない状態に変更
+
+	//読み込むエネミーの情報初期化
+	m_LoadEnemy.pos = D3DXVECTOR3(0.0f,0.0f,0.0f);
+	m_LoadEnemy.rot = D3DXVECTOR3(0.0f,0.0f,0.0f);
+	m_LoadEnemy.type = CEnemy::ENEMY_TYPE::ENEMY_TYPE_NORMAL;
 }
 
 //=============================================
@@ -83,9 +90,10 @@ HRESULT CGame::Init()
 	//CPlayer_test* pPlayer_test = CPlayer_test::Create(D3DXVECTOR3(-450.0f, 0.5f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5);
 
 	//エネミー生成
-	CEnemy* pEnemy = CEnemy::Create(D3DXVECTOR3(-100.0f, 10.5f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),CEnemy::ENEMY_TYPE::ENEMY_TYPE_NORMAL);
-	pEnemy = CEnemy::Create(D3DXVECTOR3(100.0f, 10.5f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::ENEMY_TYPE::ENEMY_TYPE_NORMAL);
-	pEnemy = CEnemy::Create(D3DXVECTOR3(300.0f, 10.5f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::ENEMY_TYPE::ENEMY_TYPE_FLOW);
+	LoadEnemy(&CGame::ENEMY_FILE);
+	//CEnemy* pEnemy = CEnemy::Create(D3DXVECTOR3(-100.0f, 10.5f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),CEnemy::ENEMY_TYPE::ENEMY_TYPE_NORMAL);
+	//pEnemy = CEnemy::Create(D3DXVECTOR3(100.0f, 10.5f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::ENEMY_TYPE::ENEMY_TYPE_NORMAL);
+	//pEnemy = CEnemy::Create(D3DXVECTOR3(300.0f, 10.5f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CEnemy::ENEMY_TYPE::ENEMY_TYPE_FLOW);
 
 	return S_OK;
 }
@@ -166,4 +174,80 @@ void CGame::Update()
 //=============================================
 void CGame::Draw()
 {
+}
+
+//=============================================
+//敵の読み込み
+//=============================================
+void CGame::LoadEnemy(const std::string* pFileName)
+{
+	char aDataSearch[ENEMY_TXT_MAX];
+	char aEqual[ENEMY_TXT_MAX]; //[＝]読み込み用
+	int nNumEnemy; //エネミーの数
+
+	//ファイルの読み込み
+	FILE* pFile = fopen(pFileName->c_str(), "r");
+
+	if (pFile == NULL)
+	{//種類の情報のデータファイルが開けなかった場合
+		//処理を終了する
+		return;
+	}
+	//ENDが見つかるまで読み込みを繰り返す
+	while (1)
+	{
+		fscanf(pFile, "%s", aDataSearch); //検索
+
+		if (!strcmp(aDataSearch, "END"))
+		{//読み込みを終了
+			fclose(pFile);
+			break;
+		}
+		if (aDataSearch[0] == '#')
+		{
+			continue;
+		}
+
+		if (!strcmp(aDataSearch, "NUM_ENEMY"))
+		{//モデル数読み込み
+			fscanf(pFile, "%s", &aEqual[0]);
+			fscanf(pFile, "%d", &nNumEnemy);
+		}
+		if (!strcmp(aDataSearch, "ENEMYSET"))
+		{
+			//項目ごとのデータを代入
+			while (1)
+			{
+				fscanf(pFile, "%s", aDataSearch); //検索
+
+				if (!strcmp(aDataSearch, "END_ENEMYSET"))
+				{
+					//エネミー生成
+					CEnemy* pEnemy = CEnemy::Create(m_LoadEnemy.pos, m_LoadEnemy.rot, m_LoadEnemy.type);
+					break;
+				}
+				else if (!strcmp(aDataSearch, "POS"))
+				{
+					fscanf(pFile, "%s", &aEqual[0]);
+					fscanf(pFile, "%f %f %f",
+						&m_LoadEnemy.pos.x,
+						&m_LoadEnemy.pos.y,
+						&m_LoadEnemy.pos.z);
+				}
+				else if (!strcmp(aDataSearch, "ROT"))
+				{
+					fscanf(pFile, "%s", &aEqual[0]);
+					fscanf(pFile, "%f %f %f",
+						&m_LoadEnemy.rot.x,
+						&m_LoadEnemy.rot.y,
+						&m_LoadEnemy.rot.z);
+				}
+				else if (!strcmp(aDataSearch, "TYPE"))
+				{
+					fscanf(pFile, "%s", &aEqual[0]);
+					fscanf(pFile, "%d", &m_LoadEnemy.type);
+				}
+			}
+		}
+	}
 }
