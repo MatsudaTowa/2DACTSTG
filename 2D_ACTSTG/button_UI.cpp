@@ -8,8 +8,8 @@
 #include "manager.h"
 
 //texパス
-const std::string CButton_UI::TEXTURE_NAME_PAD_Y = "data\\TEXTURE\\acquisition_y.png";
-const std::string CButton_UI::TEXTURE_NAME_KEYBOARD_F = "data\\TEXTURE\\acquisition_F.png";
+const std::string CButton_UI::TEXTURE_NAME_PAD_Y = "data\\TEXTURE\\acquisition_pad_Y.png";
+const std::string CButton_UI::TEXTURE_NAME_KEYBOARD_F = "data\\TEXTURE\\acquisition_keyboard_F.png";
 
 //=============================================
 //コンストラクタ
@@ -96,10 +96,10 @@ CButton_UI* CButton_UI::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, BUTTON_TYPE ty
 	switch (type)
 	{
 	case CButton_UI::BUTTON_TYPE::BUTTON_TYPE_PAD_Y:
-		pButton_UI->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_PAD_Y))); //テクスチャの設定	
+		pButton_UI->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_PAD_Y))); //テクスチャの設定
 		break;
 	case CButton_UI::BUTTON_TYPE::BUTTON_TYPE_KEYBOARD_F:
-		pButton_UI->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_KEYBOARD_F))); //テクスチャの設定
+		pButton_UI->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_PAD_Y))); //テクスチャの設定
 		break;
 	default:
 		break;

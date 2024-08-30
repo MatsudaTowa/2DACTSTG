@@ -155,7 +155,7 @@ void CItem::HitItem()
 					//UŒ‚‚Ìíœ
 					if (m_pButton_UI == nullptr)
 					{
-						m_pButton_UI = CButton_UI::Create(D3DXVECTOR3(Itempos.x, Itempos.y + 20.0f, Itempos.z), D3DXVECTOR3(50.0f, 30.0f, 0.0f), CButton_UI::BUTTON_TYPE::BUTTON_TYPE_KEYBOARD_F);
+						m_pButton_UI = CButton_UI::Create(D3DXVECTOR3(Itempos.x, Itempos.y + 20.0f, Itempos.z), D3DXVECTOR3(40.0f, 10.0f, 0.0f), CButton_UI::BUTTON_TYPE::BUTTON_TYPE_KEYBOARD_F);
 					}
 					if (pKeyboard->GetTrigger(DIK_F))
 					{

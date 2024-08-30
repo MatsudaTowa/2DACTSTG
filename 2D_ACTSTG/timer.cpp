@@ -19,7 +19,7 @@ CTimer::CTimer():m_nFrameCnt(0), m_nCurrentTime(0),m_pos(D3DXVECTOR3(0.0f, 0.0f,
 	//タイマー
 	m_nCurrentTime = CTimer::LIMIT_TIME;
 	//初期位置代入
-	m_pos = D3DXVECTOR3(650.0f, 40.0f, 0.0f);
+	m_pos = D3DXVECTOR3(660.0f, 50.0f, 0.0f);
 
 	//最初からセットするため
 	//m_nFrameCnt = 60;
