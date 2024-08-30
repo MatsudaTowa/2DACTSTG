@@ -99,7 +99,7 @@ CButton_UI* CButton_UI::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, BUTTON_TYPE ty
 		pButton_UI->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_PAD_Y))); //テクスチャの設定
 		break;
 	case CButton_UI::BUTTON_TYPE::BUTTON_TYPE_KEYBOARD_F:
-		pButton_UI->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_PAD_Y))); //テクスチャの設定
+		pButton_UI->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_KEYBOARD_F))); //テクスチャの設定
 		break;
 	default:
 		break;
