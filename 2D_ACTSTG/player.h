@@ -39,6 +39,8 @@ public:
 
 	bool m_OldPress; //左クリック押されてるかどうか
 
+	bool m_OldRelease; //左クリック離されたどうか
+
 	PLAYER_ATTACK m_Attack; //プレイヤーの攻撃方法
 
 	static bool m_PlayerDeath;
@@ -55,6 +57,7 @@ private:
 	static const float DEADZONE_Y; //これを過ぎたらプレイヤー破棄
 
 	//斬撃関連
+	static const int SLASH_COOLTIME = 30; //クールタイム
 	static const int SLASH_COST = 5; //斬撃コスト
 	static const int CHARGE_INTERVAL = 5; //段階が上がる間隔
 	static const int MAX_CHARGE; //最終段階
@@ -71,6 +74,7 @@ private:
 	bool m_bSize; //サイズ変更するかどうか
 	bool m_bFlow; //集中状態かどうか
 	int m_PressCnt; //何秒間押されたか
+	int m_ReleaseCnt; //離してからのカウント
 	int m_nJumpCnt; //ジャンプカウント
 	int m_nChargeCnt; //何段階目かカウント
 	int m_nSlashDamage; //斬撃のダメージ(引き渡し用)

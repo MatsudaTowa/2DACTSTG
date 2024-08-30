@@ -115,7 +115,7 @@ void CFlow::Update()
 			
 			m_nDamageCnt++;//ヒットカウント計測
 
-			if(m_nDamageCnt>= PLAYER_DAMAGE_FRAME)
+			if(m_nDamageCnt >= PLAYER_DAMAGE_FRAME)
 			{//フレーム数に到達したら
 				bHitCheck = HitPlayer();
 				m_nDamageCnt = 0;

@@ -54,8 +54,8 @@ bool CPlayer::m_PlayerDeath = false;
 //=============================================
 //コンストラクタ
 //=============================================
-CPlayer::CPlayer(int nPriority):CCharacter(nPriority),m_nJumpCnt(0),m_OldPress(false), m_nChargeCnt(0),m_nSlashDamage(0), m_bFlow(false)
-{//イニシャライザーでジャンプカウント、プレス情報,チャージ段階,斬撃のダメージ初期化
+CPlayer::CPlayer(int nPriority):CCharacter(nPriority),m_nJumpCnt(0),m_OldPress(false), m_OldRelease(true), m_PressCnt(0),m_ReleaseCnt(0),m_nChargeCnt(0),m_nSlashDamage(0), m_bFlow(false)
+{//イニシャライザーで各メンバ変数初期化
 
 	//プレイヤーの攻撃を近距離のみにする
 	m_Attack = PLAYER_ATTACK_MELEE;
@@ -343,7 +343,7 @@ void CPlayer::Gauge(CGauge* pGauge)
 	D3DXVECTOR3 pos = GetPos();
 
 	//貫通斬撃
-	if (pGauge->GetSize().x > 0.0f && m_Attack == PLAYER_ATTACK_PANETRARING_SLASH)
+	if (m_ReleaseCnt > SLASH_COOLTIME &&pGauge->GetSize().x > (float)SLASH_COST && m_Attack == PLAYER_ATTACK_PANETRARING_SLASH)
 	{//ゲージがあり攻撃方法が貫通斬撃だったら
 		if (pMouse->GetPress(0))
 		{//左クリックが押されてる間
@@ -362,8 +362,11 @@ void CPlayer::Gauge(CGauge* pGauge)
 			}
 
 			//ゲージ減少
-			pGauge->SubGauge(SLASH_COST);
+			pGauge->SubGauge((float)SLASH_COST);
+
+			//キー入力情報変更
 			m_OldPress = true;
+			m_OldRelease = false;
 
 		}
 	}
@@ -390,13 +393,18 @@ void CPlayer::Gauge(CGauge* pGauge)
 		//何も押されてない状態に
 		m_OldPress = false;
 
+		//離した状態に
+		m_OldRelease = true;
+
 		//カウントリセット
 		m_PressCnt = 0;
-
+		m_nChargeCnt= 0;
+		//離されてからのカウントリセット
+		m_ReleaseCnt = 0;
 	}
 
 	//集中斬撃
-	if (pGauge->GetSize().x > 0.0f && pMouse->GetTrigger(0) && m_Attack == PLAYER_ATTACK_FLOW)
+	if (m_ReleaseCnt > SLASH_COOLTIME && pGauge->GetSize().x > SLASH_COST && pMouse->GetTrigger(0) && m_Attack == PLAYER_ATTACK_FLOW)
 	{
 		//集中状態の範囲のポインタ初期化
 		CFlow_Range* pFlow_Range = nullptr;
@@ -410,6 +418,7 @@ void CPlayer::Gauge(CGauge* pGauge)
 			pFlow_Range = CFlow_Range::Create(D3DXVECTOR3(pos.x + GetMinPos().x, pos.y, pos.z),
 				D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-10.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 70.0f, 0.0f));
 		}
+
 	}
 
 	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
@@ -435,17 +444,28 @@ void CPlayer::Gauge(CGauge* pGauge)
 					//ゲージ減少
 					pGauge->SubGauge(SLASH_COST);
 
+					//キー入力情報変更
 					m_OldPress = true;
+					m_OldRelease = false;
 				}
 
 			}
 		}
 	}
 
-	if (pMouse->GetRelease(0) && m_Attack == PLAYER_ATTACK_FLOW)
+	if (m_OldPress &&pMouse->GetRelease(0) && m_Attack == PLAYER_ATTACK_FLOW)
 	{
 		m_bFlow = false;
 		m_OldPress = false;
+		//離した状態に
+		m_OldRelease = true;
+		//離されてからのカウントリセット
+		m_ReleaseCnt = 0;
+	}
+
+	if (m_OldRelease)
+	{//離された状態の時
+		m_ReleaseCnt++;
 	}
 }
 
