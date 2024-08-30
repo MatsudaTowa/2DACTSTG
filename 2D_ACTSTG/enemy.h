@@ -27,6 +27,7 @@ public:
 	{
 		ENEMY_TYPE_NORMAL = 0,
 		ENEMY_TYPE_FLOW,
+		ENEMY_TYPE_FLY,
 		ENEMY_TYPE_MAX,
 	}ENEMY_TYPE;
 
@@ -57,6 +58,7 @@ public:
 private:
 	static const std::string MODEL_NAME;	//モデルの名前  
 	static const std::string FLOW_MODEL_NAME;	//モデルの名前  
+	static const std::string FLY_MODEL_NAME;	//モデルの名前  
 	static const int STATE_FRAME; //ステート変更フレーム数
 	static const float DAMPING_COEFFICIENT; //移動抵抗
 	static const float DEADZONE_Y; //これを過ぎたら破棄
@@ -108,6 +110,29 @@ public:
 
 	CFlowEnemy(int nPriority = ENEMY_PRIORITY);
 	~CFlowEnemy()override;
+	HRESULT Init()override;
+	void Uninit()override;
+	void Update()override;
+	void Draw()override;
+	void EnemyMove() override;
+private:
+	int m_nShotCnt; //弾を発射するカウント
+	int m_nTurnFrameCnt; //折り返しフレームをカウントする変数
+	bool m_bOldWay; //過去の方向
+};
+
+//=============================================
+//飛行斬撃の敵クラス
+//=============================================
+class CFlyEnemy : public CEnemy
+{
+public:
+	static const int FLOW_ENEMY_TURNFRAME = 120; //飛んでるエネミーの移動折り返しフレーム
+	static const int ENEMY_FLY_LIFE = 5; //エネミーの体力
+	static const float DEFAULT_MOVE_Y; //通常時の移動	 
+
+	CFlyEnemy(int nPriority = ENEMY_PRIORITY);
+	~CFlyEnemy()override;
 	HRESULT Init()override;
 	void Uninit()override;
 	void Update()override;

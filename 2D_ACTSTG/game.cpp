@@ -139,7 +139,6 @@ void CGame::Update()
 		{
 			m_pTimer->Update();
 		}
-
 	//}
 
 	if (CPlayer::m_PlayerDeath || CEnemy::m_nNumEnemy <= 0)
