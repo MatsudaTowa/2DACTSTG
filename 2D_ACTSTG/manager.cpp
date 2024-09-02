@@ -35,6 +35,9 @@ CTexture* CManager::m_pTexture = nullptr;
 //モデル設定
 CModel* CManager::m_pModel = nullptr;
 
+//サウンド設定
+CSound* CManager::m_pSound = nullptr;
+
 //=============================================
 //コンストラクタ
 //=============================================
@@ -108,6 +111,14 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		m_pModel = new CModel();
 	}
 
+	//サウンド生成
+	if (m_pSound == nullptr)
+	{
+		m_pSound = new CSound();
+		m_pSound->InitSound(hWnd);
+
+	}
+
 	////最初のシーン設定
 	//if (m_pFade == nullptr)
 	//{
@@ -139,6 +150,13 @@ void CManager::Uninit()
 		m_pModel->Unload();
 		delete m_pModel;
 		m_pModel = nullptr;
+	}
+
+	if (m_pSound != nullptr)
+	{
+		m_pSound->UninitSound();
+		delete m_pSound;
+		m_pSound = nullptr;
 	}
 
 	if (m_pRenderer != nullptr)
@@ -275,4 +293,12 @@ CTexture* CManager::GetTexture()
 CModel* CManager::GetModel()
 {
 	return m_pModel;
+}
+
+//=============================================
+//サウンド取得
+//=============================================
+CSound* CManager::GetSound()
+{
+	return m_pSound;
 }

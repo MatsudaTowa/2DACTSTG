@@ -8,6 +8,7 @@
 #include "title_screen.h"
 #include "fade.h"
 #include "manager.h"
+#include "sound.h"
 
 //=============================================
 //コンストラクタ
@@ -29,6 +30,9 @@ CTitle::~CTitle()
 HRESULT CTitle::Init()
 {
     CTitle_Screen*pTitle_Screen = CTitle_Screen::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f,SCREEN_HEIGHT * 0.5f,0.0f));
+    CSound*pSound = CManager::GetSound();
+
+    pSound->PlaySound(CSound::SOUND_LABEL::SOUND_LABEL_BGM_TITLE);
     return S_OK;
 }
 
@@ -37,6 +41,9 @@ HRESULT CTitle::Init()
 //=============================================
 void CTitle::Uninit()
 {
+    CSound* pSound = CManager::GetSound();
+    //サウンドの停止
+    pSound->StopSound();
     CObject::ReleaseAll();
 }
 

@@ -15,6 +15,7 @@
 #include "model.h"
 #include "scene.h"
 #include "fade.h"
+#include "sound.h"
 
 class CManager
 {
@@ -43,6 +44,8 @@ public:
 	static CTexture* GetTexture();
 	//モデル取得
 	static CModel* GetModel();
+	//サウンド取得
+	static CSound* GetSound();
 private:
 	static CScene* m_pScene; //現在のシーン
 	static CFade* m_pFade;
@@ -53,6 +56,7 @@ private:
 	static CLight* m_pLight;
 	static CTexture* m_pTexture;
 	static CModel* m_pModel;
+	static CSound* m_pSound;
 
 };
 
