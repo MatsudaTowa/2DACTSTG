@@ -374,11 +374,11 @@ void CPlayer::Gauge(CGauge* pGauge)
 	{//左クリックが離されたら
 		if (m_nChargeCnt >= MAX_CHARGE)
 		{//マックスチャージ量だったら
-			m_nSlashDamage = 5;
+			m_nSlashDamage = 10;
 		}
 		else if (m_nChargeCnt >= MAX_CHARGE * 0.5f && m_nChargeCnt < MAX_CHARGE)
 		{//半分より上だったら
-			m_nSlashDamage = 3;
+			m_nSlashDamage = 5;
 		}
 		else
 		{//それ以下だったら

@@ -32,7 +32,7 @@ const std::string CEnemy::FLOW_MODEL_NAME = "data\\MODEL\\flowenemy_test.x";
 const std::string CEnemy::FLY_MODEL_NAME = "data\\MODEL\\flyingenemy_test.x";
 
 //ステート切り替えフレーム
-const int CEnemy::STATE_FRAME = 20;
+const int CEnemy::STATE_FRAME = 30;
 
 //テクスチャ初期化
 LPDIRECT3DTEXTURE9 CEnemy::m_pTextureTemp = nullptr;
