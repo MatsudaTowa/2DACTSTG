@@ -474,10 +474,18 @@ void CNormalEnemy::Update()
 		if (m_nShotCnt >= NORMAL_SHOT_FRAME)
 		{//フレーム数に達したら
 			//弾発射
-			ShotBullet(GetPos(), D3DXVECTOR3(20.0f, 20.0f, 0.0f), bWay, 1, CBullet::BULLET_TYPE_ENEMY);
+			ShotBullet(GetPos(), D3DXVECTOR3(10.0f, 20.0f, 0.0f), bWay, 1, CBullet::BULLET_TYPE_ENEMY);
 
 			//ショットカウントリセット
 			m_nShotCnt = 0;
+		}
+	}
+	else if (bDistance == false)
+	{
+		//ショットカウントダウン
+		if (m_nShotCnt >= 0)
+		{
+			m_nShotCnt--;
 		}
 	}
 }
@@ -645,6 +653,14 @@ void CFlowEnemy::Update()
 
 			//ショットカウントリセット
 			m_nShotCnt = 0;
+		}
+	}
+	else if(bDistance == false)
+	{
+		//ショットカウントダウン
+		if (m_nShotCnt >= 0)
+		{
+			m_nShotCnt--;
 		}
 	}
 }

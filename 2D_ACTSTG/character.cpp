@@ -318,7 +318,7 @@ void CCharacter::ShotBullet(D3DXVECTOR3 pos, D3DXVECTOR3 size, bool bWay,int nDa
 {
 	if (bWay == true)
 	{//‰EŒü‚«
-		CBullet* pBullet = CBullet::Create(D3DXVECTOR3(pos.x, pos.y + 10.0f, pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 7.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 7.0f),
+		CBullet* pBullet = CBullet::Create(D3DXVECTOR3(pos.x, pos.y + 10.0f, pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * 5.0f, 0.0f, cosf(GetRot().y + D3DX_PI) * 5.0f),
 			D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 2.0f), D3DXVECTOR3(size.x, size.y, 0.0f), 30, nDamage, type);
 	}
 	else if (bWay == false)
