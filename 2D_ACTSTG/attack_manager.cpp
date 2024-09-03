@@ -208,11 +208,17 @@ bool CAttack_Manager::HitGround()
 			{
 				CField* pField = (CField*)pObj;
 
-				CColision::COLISION ColisionCheck = CColision::CheckColision_Y(Attackpos, Attacksize, pField->GetPos(),pField->GetSize());
+				CColision::COLISION ColisionCheck = CColision::CheckItemFillColision(Attackpos, Attacksize, pField->GetPos(),
+				D3DXVECTOR3(-pField->GetSize().x, -pField->GetSize().y, -pField->GetSize().z), 
+				D3DXVECTOR3(pField->GetSize().x, pField->GetSize().y, pField->GetSize().z));
 
 				if (ColisionCheck == CColision::COLISION::COLISON_TOP_Y)
 				{//“–‚½‚Á‚Ä‚½‚ç
+					Attackpos.y += pField->GetPos().y - (Attackpos.y - Attacksize.y);
+
+					SetPos(Attackpos);
 					return true;
+
 				}
 				else
 				{

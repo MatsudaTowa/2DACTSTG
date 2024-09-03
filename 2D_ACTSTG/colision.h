@@ -40,6 +40,8 @@ public:
 		D3DXVECTOR3 Bpos, D3DXVECTOR3 BMinpos, D3DXVECTOR3 BMaxpos); //モデル同士当たり判定チェック関数
 
 	static COLISION CheckItemColision(D3DXVECTOR3 Apos, D3DXVECTOR3 ASize, D3DXVECTOR3 Bpos, D3DXVECTOR3 BMinpos, D3DXVECTOR3 BMaxpos); //アイテムとモデル当たり判定チェック関数
+	static COLISION CheckItemFillColision(D3DXVECTOR3 Apos, D3DXVECTOR3 ASize, D3DXVECTOR3 Bpos, D3DXVECTOR3 BMinpos, D3DXVECTOR3 BMaxpos); //アイテムとモデル当たり判定(埋まってるか)チェック関数
+	
 	static COLISION CheckFlow_RangeColision(D3DXVECTOR3 Apos, D3DXVECTOR3 AMinpos, D3DXVECTOR3 AMaxpos, D3DXVECTOR3 Bpos, D3DXVECTOR3 BMinpos, D3DXVECTOR3 BMaxpos); //アイテムとモデル当たり判定チェック関数
 
 };

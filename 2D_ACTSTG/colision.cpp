@@ -411,7 +411,7 @@ CColision::COLISION CColision::CheckItemColision(D3DXVECTOR3 Apos, D3DXVECTOR3 A
 			return CColision::COLISION::COLISON_NONE;
 		}
 	}
-	else if (Apos.z + ASize.z > Bpos.z + BMinpos.z
+	if (Apos.z + ASize.z > Bpos.z + BMinpos.z
 		&& Apos.z - ASize.z < Bpos.z + BMaxpos.z)
 	{
 		if (Apos.x - ASize.x < Bpos.x + BMaxpos.x
@@ -432,6 +432,25 @@ CColision::COLISION CColision::CheckItemColision(D3DXVECTOR3 Apos, D3DXVECTOR3 A
 		return CColision::COLISION::COLISON_NONE;
 	}
 }
+
+CColision::COLISION CColision::CheckItemFillColision(D3DXVECTOR3 Apos, D3DXVECTOR3 ASize, D3DXVECTOR3 Bpos, D3DXVECTOR3 BMinpos, D3DXVECTOR3 BMaxpos)
+{
+	if (Apos.y - ASize.y < Bpos.x + BMaxpos.x)
+	{
+		if (Apos.z - ASize.z< Bpos.z + BMaxpos.z
+			&& Apos.z + ASize.z > Bpos.z + BMinpos.z
+			&& Apos.y - ASize.y < Bpos.y + BMaxpos.y
+			&& Apos.y + ASize.y > Bpos.y + BMinpos.y)
+		{//当たり判定(X)
+			return CColision::COLISION::COLISON_TOP_Y;
+		}
+		else
+		{
+			return CColision::COLISION::COLISON_NONE;
+		}
+	}
+}
+
 
 //=============================================
 //集中距離判定とモデル当たり判定チェック関数

@@ -70,6 +70,11 @@ void CBullet::Update()
 		//当たり判定チェック変数
 		bool bHitCheck = false;
 
+		//埋まってるかのチェック変数
+		bool bHitUnder = false;
+
+		bHitUnder = HitGround();
+
 		switch (m_type)
 		{
 		case BULLET_TYPE_PLAYER:
