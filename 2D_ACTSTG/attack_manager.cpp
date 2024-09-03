@@ -9,6 +9,7 @@
 #include "colision.h"
 #include "player.h"
 #include "block.h"
+#include "field.h"
 
 //=============================================
 //コンストラクタ
@@ -172,6 +173,45 @@ bool CAttack_Manager::HitBlock()
 				if (ColisionCheck != CColision::COLISION::COLISON_NONE)
 				{//当たってたら
 					//攻撃の削除
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+	}
+}
+
+//=============================================
+//攻撃当たり判定(床)
+//=============================================
+bool CAttack_Manager::HitGround()
+{
+	//位置取得
+	D3DXVECTOR3 Attackpos = GetPos();
+	//サイズ取得
+	D3DXVECTOR3 Attacksize = GetSize();
+
+	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
+	{
+		//オブジェクト取得
+		CObject* pObj = CObject::Getobject(CField::FIELD_PRIORITY, nCnt);
+		if (pObj != nullptr)
+		{//ヌルポインタじゃなければ
+			//タイプ取得
+			CObject::OBJECT_TYPE type = pObj->GetType();
+
+			//敵との当たり判定
+			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_FIELD)
+			{
+				CField* pField = (CField*)pObj;
+
+				CColision::COLISION ColisionCheck = CColision::CheckColision_Y(Attackpos, Attacksize, pField->GetPos(),pField->GetSize());
+
+				if (ColisionCheck == CColision::COLISION::COLISON_TOP_Y)
+				{//当たってたら
 					return true;
 				}
 				else

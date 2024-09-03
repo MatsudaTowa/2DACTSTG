@@ -59,7 +59,7 @@ private:
 	//斬撃関連
 	static const int SLASH_COOLTIME = 30; //クールタイム
 	static const int SLASH_COST = 5; //斬撃コスト
-	static const int CHARGE_INTERVAL = 5; //段階が上がる間隔
+	static const int CHARGE_INTERVAL = 10; //段階が上がる間隔
 	static const int MAX_CHARGE; //最終段階
 
 	static const int MELEE_DAMAGE = 1; //近接ダメージ

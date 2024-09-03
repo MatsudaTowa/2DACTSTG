@@ -13,7 +13,6 @@
 #include "item.h"
 #include "flow.h"
 
-
 //’Êí‚ÌˆÚ“®‘¬“x
 const float CEnemy::DEFAULT_MOVE = 0.3f;
 //ˆÚ“®’ïR

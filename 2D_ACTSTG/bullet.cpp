@@ -69,6 +69,7 @@ void CBullet::Update()
 
 		//当たり判定チェック変数
 		bool bHitCheck = false;
+
 		switch (m_type)
 		{
 		case BULLET_TYPE_PLAYER:

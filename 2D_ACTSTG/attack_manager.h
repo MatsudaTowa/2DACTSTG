@@ -28,6 +28,7 @@ public:
 	bool HitEnemy();
 	bool HitPlayer();
 	bool HitBlock();
+	bool HitGround();
 
 	//õ–½‚Ìİ’è
 	void SetLife(int nLife)
