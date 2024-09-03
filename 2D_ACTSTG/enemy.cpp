@@ -174,7 +174,7 @@ void CEnemy::Update()
 	{//近かったら
 		if (m_pAttackEffect == nullptr)
 		{//生成されてなかったら
-			m_pAttackEffect = CAttack_Effect::Create(GetPos(), D3DXVECTOR3(30.0f, 30.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.9f));
+			m_pAttackEffect = CAttack_Effect::Create(GetPos(), D3DXVECTOR3(30.0f, 30.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
 		}
 	}
 	
@@ -364,13 +364,13 @@ bool CEnemy::PlayerDistance()
 				
 				fDistance = GetPos().x - pPlayer->GetPos().x;
 
-				if (fDistance >= 0.0f && fDistance < 100.0f)
+				if (fDistance >= 0.0f && fDistance < 150.0f)
 				{//エネミーのminに近い
 					bNear = true;
 					
 					bWay = false; //向きをプレイヤーのほうに切り替える
 				}
-				else if (fDistance <= 0.0f && fDistance > -100.0f)
+				else if (fDistance <= 0.0f && fDistance > -150.0f)
 				{//エネミーのmaxに近い
 					bNear = true;
 
@@ -489,13 +489,21 @@ void CNormalEnemy::Update()
 		if (m_pAttackEffect != nullptr)
 		{
 			//サイズ変更
-			m_pAttackEffect->SizeDown(NORMAL_SHOT_FRAME);
+			m_pAttackEffect->SizeChange(1.0f - ((float)m_nShotCnt / (float)NORMAL_SHOT_FRAME));
 		}
+
 		if (m_nShotCnt >= NORMAL_SHOT_FRAME)
 		{//フレーム数に達したら
 
 			//弾発射
-			ShotBullet(GetPos(), D3DXVECTOR3(10.0f, 20.0f, 0.0f), bWay, 1, CBullet::BULLET_TYPE_ENEMY);
+			ShotBullet(GetPos(), D3DXVECTOR3(6.0f, 12.0f, 0.0f), bWay, 1, CBullet::BULLET_TYPE_ENEMY);
+
+			//エフェクトサイズリセット
+			if (m_pAttackEffect != nullptr)
+			{
+				//サイズ変更
+				m_pAttackEffect->SizeReset();
+			}
 
 			//ショットカウントリセット
 			m_nShotCnt = 0;
@@ -506,10 +514,10 @@ void CNormalEnemy::Update()
 		if (m_pAttackEffect != nullptr)
 		{
 			//サイズ変更
-			m_pAttackEffect->SizeUp(NORMAL_SHOT_FRAME);
+			m_pAttackEffect->SizeChange(1.0f - ((float)m_nShotCnt / (float)NORMAL_SHOT_FRAME));
 		}
 		//ショットカウントダウン
-		if (m_nShotCnt >= 0)
+		if (m_nShotCnt > 0)
 		{
 			m_nShotCnt--;
 		}

@@ -25,8 +25,8 @@ public:
 	void Update()override;
 	void Draw()override;
 
-	void SizeUp(int nSpritFrame);
-	void SizeDown(int nSpritFrame);
+	void SizeChange(float fRatioFrame);
+	void SizeReset();
 
 	//エフェクト作成
 	static CAttack_Effect* Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXCOLOR col);

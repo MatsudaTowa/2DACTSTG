@@ -94,15 +94,15 @@ void CAttack_Effect::Draw()
 //=============================================
 //拡大
 //=============================================
-void CAttack_Effect::SizeUp(int nSpritFrame)
+void CAttack_Effect::SizeChange(float fRatioFrame)
 {
-	float fAddSize = m_DefaultSize.x / (float)nSpritFrame;
-	D3DXVECTOR3 size = GetSize();
+	float fAddSize = m_DefaultSize.x * fRatioFrame;
+	D3DXVECTOR3 size = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-	if (size.x < m_DefaultSize.x)
+	//if (size.x < m_DefaultSize.x)
 	{
-		size.x += fAddSize;
-		size.y += fAddSize;
+		size.x = fAddSize;
+		size.y = fAddSize;
 	}
 
 	SetSize(size);
@@ -110,20 +110,11 @@ void CAttack_Effect::SizeUp(int nSpritFrame)
 }
 
 //=============================================
-//縮小
+//サイズリセット
 //=============================================
-void CAttack_Effect::SizeDown(int nSpritFrame)
+void CAttack_Effect::SizeReset()
 {
-	float fSubSize = m_DefaultSize.x / (float)nSpritFrame;
-	D3DXVECTOR3 size = GetSize();
-
-	if (size.x > 0)
-	{
-		size.x -= fSubSize;
-		size.y -= fSubSize;
-	}
-
-	SetSize(size);
+	SetSize(m_DefaultSize);
 }
 
 //=============================================
