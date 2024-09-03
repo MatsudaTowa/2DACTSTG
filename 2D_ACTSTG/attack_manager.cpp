@@ -214,6 +214,7 @@ bool CAttack_Manager::HitGround()
 
 				if (ColisionCheck == CColision::COLISION::COLISON_TOP_Y)
 				{//“–‚½‚Á‚Ä‚½‚ç
+					//–„‚Ü‚Á‚Ä‚é•ª‚ð‘«‚·
 					Attackpos.y += pField->GetPos().y - (Attackpos.y - Attacksize.y);
 
 					SetPos(Attackpos);
