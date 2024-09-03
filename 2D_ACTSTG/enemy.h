@@ -11,6 +11,7 @@
 #include "character.h"
 #include "colision_view.h"
 #include "lockon.h"
+#include "attack_effect.h"
 
 //=============================================
 //エネミークラス
@@ -55,6 +56,8 @@ public:
 
 	static int m_nNumEnemy; //エネミーの総数
 
+	CAttack_Effect* m_pAttackEffect; //攻撃エフェクト
+
 private:
 	static const std::string MODEL_NAME;	//モデルの名前  
 	static const std::string FLOW_MODEL_NAME;	//モデルの名前  
@@ -75,6 +78,8 @@ private:
 	CColision_View*m_pColisionView; //エネミーの当たり判定
 
 	CLockOn*m_pLockOn; //ロックオンの情報
+
+
 };
 
 //=============================================

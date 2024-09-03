@@ -76,6 +76,7 @@ HRESULT CEnemy::Init()
 	//当たり判定可視化
 	m_pColisionView = CColision_View::Create(GetPos(), GetMinPos(), GetMaxPos(), D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f));
 #endif
+	m_pAttackEffect = nullptr;
 	m_pLockOn = nullptr;
 	return S_OK;
 }
@@ -166,10 +167,25 @@ void CEnemy::Update()
 	//可視化された当たり判定を動かす
 	m_pColisionView->SetPos(pos);
 #endif
+
+	bool bNear = PlayerDistance();
+
+	if (bNear)
+	{//近かったら
+		if (m_pAttackEffect == nullptr)
+		{//生成されてなかったら
+			m_pAttackEffect = CAttack_Effect::Create(GetPos(), D3DXVECTOR3(30.0f, 30.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.9f));
+		}
+	}
 	
 	if(m_pLockOn != nullptr)
 	{//照準をエネミーに合わせて動かす
 		m_pLockOn->SetPos(D3DXVECTOR3(GetPos().x, GetPos().y + 5.0f, -10.0f));
+	}
+
+	if (m_pAttackEffect != nullptr)
+	{//照準をエネミーに合わせて動かす
+		m_pAttackEffect->SetPos(D3DXVECTOR3(GetPos().x, GetPos().y + 5.0f, -10.0f));
 	}
 	//プレイヤーとの接触処理
 	HitPlayer();
@@ -470,8 +486,14 @@ void CNormalEnemy::Update()
 		//ショットカウント加算
 		m_nShotCnt++;
 
+		if (m_pAttackEffect != nullptr)
+		{
+			//サイズ変更
+			m_pAttackEffect->SizeDown(NORMAL_SHOT_FRAME);
+		}
 		if (m_nShotCnt >= NORMAL_SHOT_FRAME)
 		{//フレーム数に達したら
+
 			//弾発射
 			ShotBullet(GetPos(), D3DXVECTOR3(10.0f, 20.0f, 0.0f), bWay, 1, CBullet::BULLET_TYPE_ENEMY);
 
@@ -481,6 +503,11 @@ void CNormalEnemy::Update()
 	}
 	else if (bDistance == false)
 	{
+		if (m_pAttackEffect != nullptr)
+		{
+			//サイズ変更
+			m_pAttackEffect->SizeUp(NORMAL_SHOT_FRAME);
+		}
 		//ショットカウントダウン
 		if (m_nShotCnt >= 0)
 		{
