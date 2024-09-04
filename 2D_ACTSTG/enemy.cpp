@@ -167,7 +167,6 @@ void CEnemy::Update()
 	//可視化された当たり判定を動かす
 	m_pColisionView->SetPos(pos);
 #endif
-
 	bool bNear = PlayerDistance();
 
 	if (bNear)
@@ -370,17 +369,17 @@ bool CEnemy::PlayerDistance()
 				
 				fDistance = GetPos().x - pPlayer->GetPos().x;
 
-				if (fDistance >= 0.0f && fDistance < 150.0f)
+				if (fDistance >= 0.0f && fDistance < 120.0f)
 				{//エネミーのminに近い
 					bNear = true;
 					
-					bWay = false; //向きをプレイヤーのほうに切り替える
+					//bWay = false; //向きをプレイヤーのほうに切り替える
 				}
-				else if (fDistance <= 0.0f && fDistance > -150.0f)
+				else if (fDistance <= 0.0f && fDistance > -120.0f)
 				{//エネミーのmaxに近い
 					bNear = true;
 
-					bWay = true; //向きをプレイヤーのほうに切り替える
+					//bWay = true; //向きをプレイヤーのほうに切り替える
 				}
 				else
 				{//近くない
@@ -495,7 +494,7 @@ void CNormalEnemy::Update()
 		if (m_pAttackEffect != nullptr)
 		{
 			//サイズ変更
-			m_pAttackEffect->SizeChange(1.0f - ((float)m_nShotCnt / (float)NORMAL_SHOT_FRAME));
+			m_pAttackEffect->SizeChange(((float)m_nShotCnt / (float)NORMAL_SHOT_FRAME));
 		}
 
 		if (m_nShotCnt >= NORMAL_SHOT_FRAME)
@@ -520,7 +519,7 @@ void CNormalEnemy::Update()
 		if (m_pAttackEffect != nullptr)
 		{
 			//サイズ変更
-			m_pAttackEffect->SizeChange(1.0f - ((float)m_nShotCnt / (float)NORMAL_SHOT_FRAME));
+			m_pAttackEffect->SizeChange(((float)m_nShotCnt / (float)NORMAL_SHOT_FRAME));
 		}
 		//ショットカウントダウン
 		if (m_nShotCnt > 0)
@@ -608,8 +607,15 @@ void CNormalEnemy::EnemyMove()
 
 	rot.y = rotMoveY + D3DX_PI;
 
+	//プレイヤーとの距離を測る
+	bool bDistance = PlayerDistance();
+
 	SetRot(rot); //rotを代入
-	SetMove(move);//移動量代入
+
+	//if (bDistance == false)
+	{
+		SetMove(move);//移動量代入
+	}
 
 	//着地してるか代入
 	SetLanding(bLanding);
@@ -671,7 +677,7 @@ void CFlowEnemy::Update()
 		if (m_pAttackEffect != nullptr)
 		{
 			//サイズ変更
-			m_pAttackEffect->SizeChange(1.0f - ((float)m_nShotCnt / (float)NORMAL_SHOT_FRAME));
+			m_pAttackEffect->SizeChange(((float)m_nShotCnt / (float)NORMAL_SHOT_FRAME));
 		}
 
 		if (m_nShotCnt >= NORMAL_SHOT_FRAME)
@@ -711,7 +717,7 @@ void CFlowEnemy::Update()
 		if (m_pAttackEffect != nullptr)
 		{
 			//サイズ変更
-			m_pAttackEffect->SizeChange(1.0f - ((float)m_nShotCnt / (float)NORMAL_SHOT_FRAME));
+			m_pAttackEffect->SizeChange(((float)m_nShotCnt / (float)NORMAL_SHOT_FRAME));
 		}
 		//ショットカウントダウン
 		if (m_nShotCnt >= 0)
@@ -807,6 +813,7 @@ void CFlowEnemy::EnemyMove()
 	{
 		SetMove(move);//移動量代入
 	}
+
 
 	//着地してるか代入
 	SetLanding(bLanding);

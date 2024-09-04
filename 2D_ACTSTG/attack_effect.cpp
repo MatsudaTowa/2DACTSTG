@@ -24,6 +24,7 @@ LPDIRECT3DTEXTURE9 CAttack_Effect::m_pTextureTemp = nullptr;
 //=============================================
 CAttack_Effect::CAttack_Effect(int nPriority):CBillboard(nPriority)
 {
+	SetSize(D3DXVECTOR3(0.0f,0.0f,0.0f));
 }
 
 //=============================================
@@ -131,8 +132,6 @@ CAttack_Effect* CAttack_Effect::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXCO
 	CTexture* pTexture = CManager::GetTexture();
 
 	pAttack_Effect->SetPos(pos); //pos設定
-
-	pAttack_Effect->SetSize(size); //サイズ設定
 
 	pAttack_Effect->m_DefaultSize = size; //サイズ設定
 
