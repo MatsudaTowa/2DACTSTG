@@ -26,7 +26,7 @@ const float CPlayer::DEFAULT_MOVE = 1.0f;
 const float CPlayer::DAMPING_COEFFICIENT = 0.3f;
 
 //通常のジャンプ力
-const float CPlayer::DEFAULT_JUMP = 25.0f;
+const float CPlayer::DEFAULT_JUMP = 30.0f;
 
 //ジャンプ回数
 const int CPlayer::MAX_JUMPCNT = 2;

@@ -333,6 +333,12 @@ void CEnemy::Damage(int nDamage)
 			m_bLockOn = false;
 		}
 
+		if (m_pAttackEffect != nullptr)
+		{//攻撃エフェクト破棄
+			m_pAttackEffect->Uninit();
+			m_pAttackEffect = nullptr;
+		}
+
 		Uninit();
 	}
 }
@@ -576,7 +582,6 @@ void CNormalEnemy::EnemyMove()
 		vecDirection.z -= 0.0f;
 	}
 
-
 	//移動量取得
 	D3DXVECTOR3 move = GetMove();
 	float rotMoveY = atan2f(vecDirection.x, vecDirection.z);
@@ -663,9 +668,21 @@ void CFlowEnemy::Update()
 		//ショットカウント加算
 		m_nShotCnt++;
 
+		if (m_pAttackEffect != nullptr)
+		{
+			//サイズ変更
+			m_pAttackEffect->SizeChange(1.0f - ((float)m_nShotCnt / (float)NORMAL_SHOT_FRAME));
+		}
+
 		if (m_nShotCnt >= NORMAL_SHOT_FRAME)
 		{//フレーム数に達したら
 			//弾発射
+						//エフェクトサイズリセット
+			if (m_pAttackEffect != nullptr)
+			{
+				//サイズ変更
+				m_pAttackEffect->SizeReset();
+			}
 			for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
 			{
 				//オブジェクト取得
@@ -691,6 +708,11 @@ void CFlowEnemy::Update()
 	}
 	else if(bDistance == false)
 	{
+		if (m_pAttackEffect != nullptr)
+		{
+			//サイズ変更
+			m_pAttackEffect->SizeChange(1.0f - ((float)m_nShotCnt / (float)NORMAL_SHOT_FRAME));
+		}
 		//ショットカウントダウン
 		if (m_nShotCnt >= 0)
 		{
@@ -776,8 +798,15 @@ void CFlowEnemy::EnemyMove()
 	}
 	rot.y = rotMoveY + D3DX_PI;
 
+	//プレイヤーとの距離を測る
+	bool bDistance = PlayerDistance();
+
 	SetRot(rot); //rotを代入
-	SetMove(move);//移動量代入
+
+	if (bDistance == false)
+	{
+		SetMove(move);//移動量代入
+	}
 
 	//着地してるか代入
 	SetLanding(bLanding);
