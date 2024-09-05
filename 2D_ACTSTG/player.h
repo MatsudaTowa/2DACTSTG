@@ -1,6 +1,6 @@
 //=============================================
 //
-//3DTemplate[player.h]
+//プレイヤー処理[player.h]
 //Auther Matsuda Towa
 //
 //=============================================
@@ -11,6 +11,7 @@
 #include "character.h"
 #include "manager.h"
 #include "gauge.h"
+#include "item_UI.h"
 //プレイヤークラス
 class CPlayer : public CCharacter
 {
@@ -78,6 +79,8 @@ private:
 	int m_nJumpCnt; //ジャンプカウント
 	int m_nChargeCnt; //何段階目かカウント
 	int m_nSlashDamage; //斬撃のダメージ(引き渡し用)
+
+	CItem_UI* m_pItemUI; //何を持ってるのかの2DUI
 
 	static LPDIRECT3DTEXTURE9 m_pTextureTemp;
 

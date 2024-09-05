@@ -40,6 +40,7 @@ HRESULT CItem::Init()
 	SetVtx(D3DXVECTOR3(0.0f, 0.0f, -1.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
 	m_pButton_UI = nullptr;
+
 	return S_OK;
 }
 
@@ -160,6 +161,7 @@ void CItem::HitItem()
 					if (pKeyboard->GetTrigger(DIK_F))
 					{
 						pPlayer->m_Attack = pPlayerAttack;
+
 						//ƒAƒCƒeƒ€‚Ìíœ
 						m_pButton_UI->Uninit();
 						m_pButton_UI = nullptr;

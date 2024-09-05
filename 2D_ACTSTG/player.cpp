@@ -1,6 +1,6 @@
 //=============================================
 //
-//3DTemplate[player.cpp]
+//プレイヤー処理[player.cpp]
 //Auther Matsuda Towa
 //
 //=============================================
@@ -96,6 +96,13 @@ HRESULT CPlayer::Init()
 	//ムーブ値代入
 	SetMove(move);
 
+	m_pItemUI = nullptr;
+
+	if (m_pItemUI == nullptr)
+	{
+		m_pItemUI = CItem_UI::Create(D3DXVECTOR3(1000.0f, 600.0f, 0.0f), D3DXVECTOR2(80.0f, 80.0f));
+	}
+
 	return S_OK;
 }
 
@@ -118,6 +125,25 @@ void CPlayer::Update()
 
 	//状態を取得
 	CCharacter::CHARACTER_STATE state = GetState();
+
+	if (m_pItemUI != nullptr)
+	{
+		switch (m_Attack)
+		{
+		case CPlayer::PLAYER_ATTACK_MELEE:
+			m_pItemUI->SetTex(CItem_UI::ITEM_UI_TYPE_NONE);
+			break;
+		case CPlayer::PLAYER_ATTACK_PANETRARING_SLASH:
+			m_pItemUI->SetTex(CItem_UI::ITEM_UI_TYPE_PANETRARING_SLASH);
+			break;
+		case CPlayer::PLAYER_ATTACK_FLOW:
+			m_pItemUI->SetTex(CItem_UI::ITEM_UI_TYPE_FLOW);
+			break;
+		default:
+			break;
+		}
+	}
+
 
 	if (state == CCharacter::CHARACTER_STATE::CHARACTER_DAMAGE)
 	{
@@ -418,7 +444,6 @@ void CPlayer::Gauge(CGauge* pGauge)
 			pFlow_Range = CFlow_Range::Create(D3DXVECTOR3(pos.x + GetMinPos().x, pos.y, pos.z),
 				D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-10.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 70.0f, 0.0f));
 		}
-
 	}
 
 	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)

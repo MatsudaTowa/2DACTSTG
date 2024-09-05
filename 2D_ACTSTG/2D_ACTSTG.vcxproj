@@ -175,6 +175,7 @@
     <ClCompile Include="gauge_fream.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="item.cpp" />
+    <ClCompile Include="item_UI.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="lockon.cpp" />
     <ClCompile Include="main.cpp" />
@@ -227,6 +228,7 @@
     <ClInclude Include="gauge_fream.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="item.h" />
+    <ClInclude Include="item_UI.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="lockon.h" />
     <ClInclude Include="main.h" />

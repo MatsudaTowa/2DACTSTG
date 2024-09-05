@@ -10,6 +10,8 @@
 #include "main.h"
 #include "billboard.h"
 #include "button_UI.h"
+#include "item_UI.h"
+
 class CItem : public CBillboard
 {
 public:
@@ -22,7 +24,7 @@ public:
 		ITEMTYPE_NONE = 0,
 		ITEMTYPE_PANETRARING_SLASH, //斬撃の剣
 		ITEMTYPE_FLOW, //集中斬撃の剣
-		BLOCKTYPE_MAX,
+		ITEMTYPE_MAX,
 	}ITEMTYPE;
 
 	CItem(int nPriority = ITEM_PRIORITY);
@@ -43,6 +45,6 @@ private:
 	static 	LPD3DXBUFFER m_pBuffMat; //マテリアル情報
 	static	DWORD m_dwNumMat; //マテリアル数;
 
-	CButton_UI*m_pButton_UI;
+	CButton_UI*m_pButton_UI; //「Fで拾う」3DUI
 };
 #endif
