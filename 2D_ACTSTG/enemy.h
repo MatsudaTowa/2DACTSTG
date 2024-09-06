@@ -75,10 +75,9 @@ private:
 
 	bool m_bLockOn; //ロックオン状態かどうか
 
-	CColision_View*m_pColisionView; //エネミーの当たり判定
-
 	CLockOn*m_pLockOn; //ロックオンの情報
 
+	CColision_View* m_pColisionView; //エネミーの当たり判定
 
 };
 
@@ -124,6 +123,8 @@ private:
 	int m_nShotCnt; //弾を発射するカウント
 	int m_nTurnFrameCnt; //折り返しフレームをカウントする変数
 	bool m_bOldWay; //過去の方向
+	bool m_bLockOnShot; //ロックオンしてるかどうか
+
 };
 
 //=============================================

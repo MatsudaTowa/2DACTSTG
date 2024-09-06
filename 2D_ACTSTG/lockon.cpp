@@ -94,6 +94,14 @@ void CLockOn::ChangeSize()
 }
 
 //=============================================
+//サイズリセット
+//=============================================
+void CLockOn::SizeReset()
+{
+	SetSize(m_DefaultSize);
+}
+
+//=============================================
 //生成
 //=============================================
 CLockOn* CLockOn::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXCOLOR col)
@@ -112,6 +120,8 @@ CLockOn* CLockOn::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXCOLOR col)
 
 	pLockOn->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME))); //テクスチャの設定
 
+	pLockOn->m_DefaultSize = size;
+
 	pLockOn->m_col = col; //カラーの設定
 
 	pLockOn->SetType(OBJECT_TYPE_LOCKON); //オブジェクトのタイプ設定
@@ -119,4 +129,21 @@ CLockOn* CLockOn::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXCOLOR col)
 	pLockOn->Init(); //エフェクトの初期化処理
 
 	return pLockOn;
+}
+
+//=============================================
+//サイズチェンジ
+//=============================================
+void CLockOn::ChangeSize(float fRatioFrame)
+{
+	float fAddSize = m_DefaultSize.x * fRatioFrame;
+	D3DXVECTOR3 size = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+	//if (size.x < m_DefaultSize.x)
+	{
+		size.x = fAddSize;
+		size.y = fAddSize;
+	}
+
+	SetSize(size);
 }

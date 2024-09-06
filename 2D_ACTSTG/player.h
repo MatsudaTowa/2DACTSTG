@@ -12,6 +12,7 @@
 #include "manager.h"
 #include "gauge.h"
 #include "item_UI.h"
+#include "lockon.h"
 //プレイヤークラス
 class CPlayer : public CCharacter
 {
@@ -33,6 +34,14 @@ public:
 	void Update()override;
 	void Draw()override;
 
+	void LockOn();
+
+	void LockOn_ChangeSize(float fRatioFrame);
+
+	void LockOn_Flow();	//集中斬撃を照準に合わせて出す
+
+	void Delete_LockOn();	//照準削除
+
 	//プレイヤー作成
 	static CPlayer* Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nLife);
 
@@ -45,6 +54,10 @@ public:
 	PLAYER_ATTACK m_Attack; //プレイヤーの攻撃方法
 
 	static bool m_PlayerDeath;
+
+	bool m_bLockOn; //ロックオン状態かどうか
+
+	CLockOn* m_pLockOn; //ロックオンの情報
 
 private:
 	static const std::string MODEL_NAME;	//モデルの名前

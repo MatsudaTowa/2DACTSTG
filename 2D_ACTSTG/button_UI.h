@@ -23,7 +23,7 @@ public:
 
 	static const std::string TEXTURE_NAME_PAD_Y;	//テクスチャの名前
 	static const std::string TEXTURE_NAME_KEYBOARD_F;	//テクスチャの名前
-	static const int BUTTON_UI_PRIORITY = 10; //描画順
+	static const int BUTTON_UI_PRIORITY = 20; //描画順
 	CButton_UI(int nPriority = BUTTON_UI_PRIORITY);
 	~CButton_UI()override;
 	HRESULT Init()override;

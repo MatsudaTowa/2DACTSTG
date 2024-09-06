@@ -624,7 +624,7 @@ void CNormalEnemy::EnemyMove()
 //=============================================
 //コンストラクタ
 //=============================================
-CFlowEnemy::CFlowEnemy(int nPriority) :CEnemy(nPriority), m_nTurnFrameCnt(0), m_bOldWay(false)
+CFlowEnemy::CFlowEnemy(int nPriority) :CEnemy(nPriority), m_nTurnFrameCnt(0), m_bOldWay(false), m_bLockOnShot(false)
 {
 }
 
@@ -651,6 +651,27 @@ HRESULT CFlowEnemy::Init()
 //=============================================
 void CFlowEnemy::Uninit()
 {
+	if (m_bLockOnShot == true)
+	{
+		for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
+		{
+			//オブジェクト取得
+			CObject* pObj = CObject::Getobject(CPlayer::PLAYER_PRIORITY, nCnt);
+			if (pObj != nullptr)
+			{//ヌルポインタじゃなければ
+				//タイプ取得
+				CObject::OBJECT_TYPE type = pObj->GetType();
+
+				//敵との当たり判定
+				if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_PLAYER)
+				{
+					CPlayer* pPlayer = (CPlayer*)pObj;
+
+					pPlayer->Delete_LockOn();
+				}
+			}
+		}
+	}
 	//親クラスの終了
 	CEnemy::Uninit();
 }
@@ -670,25 +691,50 @@ void CFlowEnemy::Update()
 	{//近かったら
 		//向きを取得
 		bool bWay = GetWay();
+		m_bLockOnShot = true;
 
-		//ショットカウント加算
-		m_nShotCnt++;
-
-		if (m_pAttackEffect != nullptr)
+		for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
 		{
-			//サイズ変更
-			m_pAttackEffect->SizeChange(((float)m_nShotCnt / (float)NORMAL_SHOT_FRAME));
-		}
+			//オブジェクト取得
+			CObject* pObj = CObject::Getobject(CPlayer::PLAYER_PRIORITY, nCnt);
+			if (pObj != nullptr)
+			{//ヌルポインタじゃなければ
+				//タイプ取得
+				CObject::OBJECT_TYPE type = pObj->GetType();
 
-		if (m_nShotCnt >= NORMAL_SHOT_FRAME)
-		{//フレーム数に達したら
-			//弾発射
-						//エフェクトサイズリセット
-			if (m_pAttackEffect != nullptr)
-			{
-				//サイズ変更
-				m_pAttackEffect->SizeReset();
+				//敵との当たり判定
+				if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_PLAYER)
+				{
+					CPlayer* pPlayer = (CPlayer*)pObj;
+
+					pPlayer->LockOn();
+
+					pPlayer->LockOn_ChangeSize((1.0f- (float)m_nShotCnt / (float)NORMAL_SHOT_FRAME));
+
+					//ショットカウント加算
+					m_nShotCnt++;
+
+					if (m_nShotCnt >= NORMAL_SHOT_FRAME)
+					{//フレーム数に達したら
+						//弾発射
+
+						if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_PLAYER)
+						{
+							pPlayer->LockOn_Flow();
+						}
+
+						//ショットカウントリセット
+						m_nShotCnt = 0;
+					}
+
+				}
 			}
+		}
+	}
+	else if(bDistance == false)
+	{
+		if (m_bLockOnShot == true)
+		{
 			for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
 			{
 				//オブジェクト取得
@@ -702,22 +748,11 @@ void CFlowEnemy::Update()
 					if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_PLAYER)
 					{
 						CPlayer* pPlayer = (CPlayer*)pObj;
-						CFlow* pFlow = CFlow::Create(D3DXVECTOR3(pPlayer->GetPos().x,pPlayer->GetPos().y + 5.0f,-13.0f),
-						D3DXVECTOR3(20.0f, 20.0f,0.0f), 90, 1, CFlow::FLOW_TYPE::FLOW_TYPE_ENEMY);
+
+						pPlayer->Delete_LockOn();
 					}
 				}
 			}
-
-			//ショットカウントリセット
-			m_nShotCnt = 0;
-		}
-	}
-	else if(bDistance == false)
-	{
-		if (m_pAttackEffect != nullptr)
-		{
-			//サイズ変更
-			m_pAttackEffect->SizeChange(((float)m_nShotCnt / (float)NORMAL_SHOT_FRAME));
 		}
 		//ショットカウントダウン
 		if (m_nShotCnt >= 0)

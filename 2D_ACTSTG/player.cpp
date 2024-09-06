@@ -15,6 +15,7 @@
 #include "game.h"
 #include"renderer.h"
 #include "flow_range.h"
+#include "flow.h"
 
 //モデルパス
 const std::string CPlayer::MODEL_NAME = "data\\MODEL\\face.x";
@@ -102,6 +103,8 @@ HRESULT CPlayer::Init()
 	{
 		m_pItemUI = CItem_UI::Create(D3DXVECTOR3(1000.0f, 600.0f, 0.0f), D3DXVECTOR2(80.0f, 80.0f));
 	}
+
+	m_pLockOn = nullptr;
 
 	return S_OK;
 }
@@ -206,6 +209,11 @@ void CPlayer::Update()
 	//座標を更新
 	SetPos(pos);
 
+	if (m_pLockOn != nullptr)
+	{//照準をエネミーに合わせて動かす
+		m_pLockOn->SetPos(D3DXVECTOR3(GetPos().x, GetPos().y + 5.0f, -10.0f));
+	}
+
 	//最大最小値取得
 	D3DXVECTOR3 minpos = GetMinPos();
 	D3DXVECTOR3 maxpos = GetMaxPos();
@@ -274,6 +282,68 @@ void CPlayer::Draw()
 }
 
 //=============================================
+//lock-on処理
+//=============================================
+void CPlayer::LockOn()
+{
+	if (m_bLockOn != true)
+	{
+		m_pLockOn = CLockOn::Create(D3DXVECTOR3(GetPos().x, GetPos().y + 5.0f, -10.0f),
+			D3DXVECTOR3(70.0f, 70.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	}
+	m_bLockOn = true;
+}
+
+//=============================================
+//lock-onサイズ変更
+//=============================================
+void CPlayer::LockOn_ChangeSize(float fRatioFrame)
+{
+	m_pLockOn->ChangeSize(fRatioFrame);
+}
+
+//=============================================
+//集中斬撃を照準に合わせて出す
+//=============================================
+void CPlayer::LockOn_Flow()
+{
+	if (m_pLockOn != nullptr)
+	{
+		int nFlowLife = 0;
+		if (m_pLockOn->GetSize().x <= m_pLockOn->MIN_DAMAGE_LOCKON_SIZE
+			&& m_pLockOn->GetSize().x > m_pLockOn->MEDIUM_DAMAGE_LOCKON_SIZE)
+		{//最小ダメージのとき
+			nFlowLife = 30;
+		}
+		else if (m_pLockOn->GetSize().x <= m_pLockOn->MEDIUM_DAMAGE_LOCKON_SIZE
+			&& m_pLockOn->GetSize().x > m_pLockOn->MAX_DAMAGE_LOCKON_SIZE)
+		{//中ダメージのとき
+			nFlowLife = 60;
+		}
+		else if (m_pLockOn->GetSize().x <= m_pLockOn->MAX_DAMAGE_LOCKON_SIZE)
+		{//中ダメージのとき
+			nFlowLife = 90;
+		}
+		CFlow* pFlow = CFlow::Create(D3DXVECTOR3(m_pLockOn->GetPos().x, m_pLockOn->GetPos().y + 5.0f, -10.0f),
+			D3DXVECTOR3(20.0f, 20.0f, 0.0f), nFlowLife, 1, CFlow::FLOW_TYPE::FLOW_TYPE_ENEMY);
+	}
+	Delete_LockOn();
+}
+
+//=============================================
+//照準を削除
+//=============================================
+void CPlayer::Delete_LockOn()
+{
+	if (m_pLockOn != nullptr)
+	{
+		m_pLockOn->Uninit();
+		m_pLockOn = nullptr;
+		m_bLockOn = false;
+	}
+}
+
+//=============================================
 //生成
 //=============================================
 CPlayer* CPlayer::Create(D3DXVECTOR3 pos,D3DXVECTOR3 rot, int nLife)
@@ -311,6 +381,13 @@ void CPlayer::Damage(int nDamage)
 
 	//状態を取得
 	CCharacter::CHARACTER_STATE state = GetState();
+
+	if (m_pLockOn != nullptr)
+	{//照準破棄
+		m_pLockOn->Uninit();
+		m_pLockOn = nullptr;
+		m_bLockOn = false;
+	}
 
 	if (nLife > 0)
 	{//HPが残ってたら
@@ -473,7 +550,6 @@ void CPlayer::Gauge(CGauge* pGauge)
 					m_OldPress = true;
 					m_OldRelease = false;
 				}
-
 			}
 		}
 	}

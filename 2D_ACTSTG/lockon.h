@@ -25,10 +25,13 @@ public:
 	void Update()override;
 	void Draw()override;
 	void ChangeSize();
+	void ChangeSize(float fRatioFrame);
+	void SizeReset();
 	//エフェクト作成
 	static CLockOn* Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXCOLOR col);
 private:
 	static LPDIRECT3DTEXTURE9 m_pTextureTemp;
+	D3DXVECTOR3 m_DefaultSize;
 	D3DXCOLOR m_col;
 };
 #endif
