@@ -16,6 +16,7 @@
 #include"renderer.h"
 #include "flow_range.h"
 #include "flow.h"
+#include "scene.h"
 
 //モデルパス
 const std::string CPlayer::MODEL_NAME = "data\\MODEL\\face.x";
@@ -55,7 +56,8 @@ bool CPlayer::m_PlayerDeath = false;
 //=============================================
 //コンストラクタ
 //=============================================
-CPlayer::CPlayer(int nPriority):CCharacter(nPriority),m_nJumpCnt(0),m_OldPress(false), m_OldRelease(true), m_PressCnt(0),m_ReleaseCnt(0),m_nChargeCnt(0),m_nSlashDamage(0), m_bFlow(false)
+CPlayer::CPlayer(int nPriority):CCharacter(nPriority),m_nJumpCnt(0),m_OldPress(false), m_OldRelease(true), m_PressCnt(0),
+m_ReleaseCnt(0),m_nChargeCnt(0),m_nSlashDamage(0), m_bFlow(false)
 {//イニシャライザーで各メンバ変数初期化
 
 	//プレイヤーの攻撃を近距離のみにする
@@ -91,8 +93,16 @@ HRESULT CPlayer::Init()
 	//移動量初期化
 	D3DXVECTOR3 move = D3DXVECTOR3(0.0f,0.0f,0.0f);
 
-	//ゲージ生成
-	CGauge* pGauge = CGauge::Create(D3DXVECTOR3(0.0f, 70.0f, 0.0f), D3DXVECTOR2(500.0f, 30.0f), CGauge::GAUGE_TYPE_LIFE, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+	//シーンのポインタ取得
+	CScene* pScene = CManager::GetScene();
+
+	//CScene::MODE mode = pScene->GetSceneMode();
+
+	if (CManager::GetScene()->GetSceneMode() == CScene::MODE::MODE_GAME)
+	{//現在のモードを取得してゲームシーンだったら
+		//ゲージ生成
+		CGauge* pGauge = CGauge::Create(D3DXVECTOR3(0.0f, 70.0f, 0.0f), D3DXVECTOR2(500.0f, 30.0f), CGauge::GAUGE_TYPE_LIFE, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+	}
 
 	//ムーブ値代入
 	SetMove(move);
@@ -429,6 +439,25 @@ void CPlayer::Damage(int nDamage)
 		//死んだ状態に
 		m_PlayerDeath = true;
 	}
+}
+
+//=============================================
+//プレイヤー設定
+//=============================================
+void CPlayer::SetPlayer(D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nLife)
+{
+	CModel* pModel = CManager::GetModel();
+
+	SetPos(pos); //pos設定
+	SetRot(rot); //rot設定
+	SetLife(nLife); //体力代入
+
+	//xファイル読み込み
+	BindXFile(pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).pBuffMat,
+		pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).dwNumMat,
+		pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).pMesh);
+
+	SetType(OBJECT_TYPE_PLAYER); //タイプ設定
 }
 
 //=============================================

@@ -9,6 +9,7 @@
 #define _TITLE_H_
 #include "main.h"
 #include "scene.h"
+#include "player.h"
 class CTitle :public CScene
 {
 public:
@@ -19,6 +20,7 @@ public:
 	void Update() override;
 	void Draw() override;
 private:
-
+	//ƒvƒŒƒCƒ„[
+	CPlayer*pPlayer;
 };
 #endif

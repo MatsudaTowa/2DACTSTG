@@ -36,7 +36,7 @@ public:
 
 	// Ã“Iƒƒ“ƒoŠÖ”
 	static CScene* Create(MODE mode);
-
+	MODE GetSceneMode();
 private:
 
 	// ƒƒ“ƒo•Ï”

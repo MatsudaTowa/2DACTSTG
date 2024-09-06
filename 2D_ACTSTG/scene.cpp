@@ -28,7 +28,6 @@ CScene::~CScene()
 //=============================================
 HRESULT CScene::Init()
 {
-
     return S_OK;
 }
 
@@ -60,7 +59,6 @@ CScene* CScene::Create(MODE mode)
 {
     // インスタンス生成
     CScene* pScene = new CScene;
-    pScene->m_Mode = mode;
 
     // 条件分岐
     switch (mode)
@@ -70,26 +68,35 @@ CScene* CScene::Create(MODE mode)
         delete pScene;
         pScene = new CTitle;
         break;
-
     case MODE_GAME: // ゲーム
 
         delete pScene;
         pScene = new CGame;
         break;
-
     case MODE_RESULT: //リザルト
 
         delete pScene;
         pScene = new CResult;
         break;
-
     default:
         break;
     }
-       
+
+    if (pScene != nullptr)
+    {
+        pScene->m_Mode = mode;
+    }
     //今のシーンの初期化
     pScene->Init();
 
     return pScene;
+}
+
+//=============================================
+//シーンの取得
+//=============================================
+CScene::MODE CScene::GetSceneMode()
+{
+    return m_Mode;
 }
 

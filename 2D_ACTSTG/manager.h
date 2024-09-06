@@ -31,6 +31,8 @@ public:
 	static void SetMode(CScene::MODE mode);
 
 	//レンダラー取得
+	static CScene* GetScene();
+	//レンダラー取得
 	static CRenderer*GetRenderer();
 	//キーボード情報取得
 	static CInputKeyboard* GetKeyboard();
