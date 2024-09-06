@@ -10,6 +10,7 @@
 #include "main.h"
 #include "scene.h"
 #include "player.h"
+#include "title_screen.h"
 class CTitle :public CScene
 {
 public:
@@ -21,6 +22,8 @@ public:
 	void Draw() override;
 private:
 	//ƒvƒŒƒCƒ„[
-	CPlayer*pPlayer;
+	CPlayer*m_pPlayer;
+
+	CTitle_Screen*m_pTitleScreen[2];
 };
 #endif

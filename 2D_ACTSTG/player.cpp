@@ -93,16 +93,54 @@ HRESULT CPlayer::Init()
 	//移動量初期化
 	D3DXVECTOR3 move = D3DXVECTOR3(0.0f,0.0f,0.0f);
 
+	//ゲージ生成
+	CGauge* pGauge = CGauge::Create(D3DXVECTOR3(0.0f, 70.0f, 0.0f), D3DXVECTOR2(500.0f, 30.0f), CGauge::GAUGE_TYPE_LIFE, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+	
+	//ムーブ値代入
+	SetMove(move);
+
+	m_pItemUI = nullptr;
+
+	if (m_pItemUI == nullptr)
+	{
+		m_pItemUI = CItem_UI::Create(D3DXVECTOR3(1000.0f, 600.0f, 0.0f), D3DXVECTOR2(0.0f, 0.0f));
+	}
+
+	m_pLockOn = nullptr;
+
+	return S_OK;
+}
+
+//=============================================
+//初期化(セット用)
+//=============================================
+HRESULT CPlayer::Init(D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nLife)
+{
+	CModel* pModel = CManager::GetModel();
+
+	SetPos(pos); //pos設定
+	SetRot(rot); //rot設定
+	SetLife(nLife); //体力代入
+
+	//xファイル読み込み
+	BindXFile(pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).pBuffMat,
+		pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).dwNumMat,
+		pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).pMesh);
+
+	SetType(OBJECT_TYPE_PLAYER); //タイプ設定
+
+	CRenderer* pRender = CManager::GetRenderer();
+	LPDIRECT3DDEVICE9 pDevice = pRender->GetDevice();
+
+	m_bSize = false;
+
+	//移動量初期化
+	D3DXVECTOR3 move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
 	//シーンのポインタ取得
 	CScene* pScene = CManager::GetScene();
 
 	//CScene::MODE mode = pScene->GetSceneMode();
-
-	if (CManager::GetScene()->GetSceneMode() == CScene::MODE::MODE_GAME)
-	{//現在のモードを取得してゲームシーンだったら
-		//ゲージ生成
-		CGauge* pGauge = CGauge::Create(D3DXVECTOR3(0.0f, 70.0f, 0.0f), D3DXVECTOR2(500.0f, 30.0f), CGauge::GAUGE_TYPE_LIFE, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
-	}
 
 	//ムーブ値代入
 	SetMove(move);
@@ -111,13 +149,14 @@ HRESULT CPlayer::Init()
 
 	if (m_pItemUI == nullptr)
 	{
-		m_pItemUI = CItem_UI::Create(D3DXVECTOR3(1000.0f, 600.0f, 0.0f), D3DXVECTOR2(80.0f, 80.0f));
+		m_pItemUI = CItem_UI::Create(D3DXVECTOR3(1000.0f, 600.0f, 0.0f), D3DXVECTOR2(0.0f, 0.0f));
 	}
 
 	m_pLockOn = nullptr;
 
 	return S_OK;
 }
+
 
 //=============================================
 //終了
@@ -442,25 +481,6 @@ void CPlayer::Damage(int nDamage)
 }
 
 //=============================================
-//プレイヤー設定
-//=============================================
-void CPlayer::SetPlayer(D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nLife)
-{
-	CModel* pModel = CManager::GetModel();
-
-	SetPos(pos); //pos設定
-	SetRot(rot); //rot設定
-	SetLife(nLife); //体力代入
-
-	//xファイル読み込み
-	BindXFile(pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).pBuffMat,
-		pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).dwNumMat,
-		pModel->GetModelInfo(pModel->Regist(&MODEL_NAME)).pMesh);
-
-	SetType(OBJECT_TYPE_PLAYER); //タイプ設定
-}
-
-//=============================================
 //ゲージ処理
 //=============================================
 void CPlayer::Gauge(CGauge* pGauge)
@@ -607,7 +627,7 @@ void CPlayer::ReSpawn()
 	//自分自身のpos取得
 	D3DXVECTOR3 PlayerPos = GetPos();
 
-	PlayerPos = D3DXVECTOR3(-450.0f, 0.5f, 0.0f);
+	PlayerPos = D3DXVECTOR3(-900.0f, 0.5f, 0.0f);
 
 	//pos代入
 	SetPos(PlayerPos);

@@ -44,9 +44,13 @@ HRESULT CTitle::Init()
     CField* pField = CField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1000.0f, 0.0f, 1000.0f));
 
     //ƒvƒŒƒCƒ„[¶¬
-    pPlayer = new CPlayer;  
-    pPlayer->SetPlayer(D3DXVECTOR3(-900.0f, 0.5f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5);
+    m_pPlayer = new CPlayer;  
+    m_pPlayer->Init(D3DXVECTOR3(-900.0f, 0.5f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5);
     
+    m_pTitleScreen[0] = CTitle_Screen::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f,150.0f,0.0f),D3DXVECTOR2(400.0f,300.0f),CTitle_Screen::TITLE_UI::UI_TITLE_ROGO);
+
+    m_pTitleScreen[1]=CTitle_Screen::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, 600.0f, 0.0f), D3DXVECTOR2(200.0f, 100.0f), CTitle_Screen::TITLE_UI::UI_TITLE_PRESS_BUTTON);
+
     CSound*pSound = CManager::GetSound();
 
     pSound->PlaySound(CSound::SOUND_LABEL::SOUND_LABEL_BGM_TITLE);

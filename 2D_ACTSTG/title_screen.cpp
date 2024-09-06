@@ -8,14 +8,15 @@
 #include "manager.h"
 #include "object.h"
 
-
 //texパス
-const std::string CTitle_Screen::TEXTURE_NAME = "data\\TEXTURE\\title_test.png";
+const std::string CTitle_Screen::ROGO_TEXTURE_NAME = "data\\TEXTURE\\rogo_title.png";
+const std::string CTitle_Screen::BUTTON_A_TEXTURE_NAME = "data\\TEXTURE\\title_press_A.png";
+const std::string CTitle_Screen::BUTTON_ENTER_TEXTURE_NAME = "data\\TEXTURE\\title_press_Trigger.png";
 
 //=============================================
 //コンストラクタ
 //=============================================
-CTitle_Screen::CTitle_Screen(int nPriority):CObject2D(nPriority)
+CTitle_Screen::CTitle_Screen(int nPriority):CObject2D(nPriority),m_UItype(CTitle_Screen::TITLE_UI::UI_NONE)
 {
 }
 
@@ -35,16 +36,8 @@ HRESULT CTitle_Screen::Init()
 	//親クラスの初期化を呼ぶ
 	CObject2D::Init();
 
-	//自分自身のサイズ取得
-	D3DXVECTOR2 size = GetSize();
-
-	size = D3DXVECTOR2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f);
-
 	//テクスチャ座標設定
 	SetTexPos(D3DXVECTOR2(1.0f, 1.0f));
-
-	//サイズを代入
-	SetSize(size);
 
 	//頂点設定
 	SetVtx(1.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
@@ -81,7 +74,7 @@ void CTitle_Screen::Draw()
 //=============================================
 //生成
 //=============================================
-CTitle_Screen* CTitle_Screen::Create(D3DXVECTOR3 pos)
+CTitle_Screen* CTitle_Screen::Create(D3DXVECTOR3 pos, D3DXVECTOR2 size, TITLE_UI type)
 {
 	CTexture* pTexture = CManager::GetTexture();
 	CTitle_Screen* pTitle_Screen = new CTitle_Screen;
@@ -91,9 +84,23 @@ CTitle_Screen* CTitle_Screen::Create(D3DXVECTOR3 pos)
 
 	pTitle_Screen->SetPos(pos); //pos設定
 
-	pTitle_Screen->SetType(OBJECT_TYPE_TITLE); //タイプ設定
+	pTitle_Screen->SetSize(size); //size設定
 
-	pTitle_Screen->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME)));
+	pTitle_Screen->m_UItype = type;
+
+	switch (pTitle_Screen->m_UItype)
+	{
+	case CTitle_Screen::TITLE_UI::UI_TITLE_ROGO:
+		pTitle_Screen->BindTexture(pTexture->GetAddress(pTexture->Regist(&ROGO_TEXTURE_NAME)));
+		break;
+	case CTitle_Screen::TITLE_UI::UI_TITLE_PRESS_BUTTON:
+		pTitle_Screen->BindTexture(pTexture->GetAddress(pTexture->Regist(&BUTTON_ENTER_TEXTURE_NAME)));
+		break;
+	default:
+		break;
+	}
+
+	pTitle_Screen->SetType(OBJECT_TYPE_TITLE); //タイプ設定
 
 	pTitle_Screen->Init();
 

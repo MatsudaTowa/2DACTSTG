@@ -30,6 +30,7 @@ public:
 	CPlayer(int nPriority = PLAYER_PRIORITY);
 	~CPlayer()override;
 	HRESULT Init()override;
+	HRESULT Init(D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nLife);
 	void Uninit()override;
 	void Update()override;
 	void Draw()override;
@@ -46,9 +47,6 @@ public:
 	static CPlayer* Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nLife);
 
 	void Damage(int nDamage); //当たり判定
-
-	//プレイヤーセット用
-	void SetPlayer(D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nLife);
 
 	bool m_OldPress; //左クリック押されてるかどうか
 
