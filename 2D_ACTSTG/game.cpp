@@ -90,6 +90,10 @@ HRESULT CGame::Init()
 	//エネミー生成
 	LoadEnemy(&CGame::ENEMY_FILE);
 
+	CSound* pSound = CManager::GetSound();
+
+	pSound->PlaySound(CSound::SOUND_LABEL::SOUND_LABEL_BGM_GAME);
+
 	return S_OK;
 }
 
@@ -104,6 +108,10 @@ void CGame::Uninit()
 		delete m_pTimer;
 		m_pTimer = nullptr;
 	}
+
+	CSound* pSound = CManager::GetSound();
+	//サウンドの停止
+	pSound->StopSound();
 
 	CObject::ReleaseAll();
 }

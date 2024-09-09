@@ -18,6 +18,8 @@ public:
 	typedef enum
 	{
 		SOUND_LABEL_BGM_TITLE = 0,		// BGM0
+		SOUND_LABEL_BGM_GAME,		// BGM1
+		SOUND_LABEL_BGM_RESULT,		// BGM2
 		SOUND_LABEL_MAX
 	} SOUND_LABEL;
 

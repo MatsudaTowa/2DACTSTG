@@ -28,7 +28,7 @@ const std::string CEnemy::MODEL_NAME = "data\\MODEL\\enemy_test.x";
 const std::string CEnemy::FLOW_MODEL_NAME = "data\\MODEL\\flowenemy_test.x";
 
 //モデルパス
-const std::string CEnemy::FLY_MODEL_NAME = "data\\MODEL\\flyingenemy_test.x";
+const std::string CEnemy::BOSS_MODEL_NAME = "data\\MODEL\\boss.x";
 
 //ステート切り替えフレーム
 const int CEnemy::STATE_FRAME = 30;
@@ -99,7 +99,7 @@ void CEnemy::Uninit()
 //=============================================
 void CEnemy::Update()
 {
-	if (m_Type != CEnemy::ENEMY_TYPE::ENEMY_TYPE_FLY)
+	if (m_Type != CEnemy::ENEMY_TYPE::ENEMY_TYPE_BOSS)
 	{//飛ぶ奴以外なら
 		//重力処理
 		Gravity();
@@ -228,8 +228,8 @@ CEnemy* CEnemy::Create(const D3DXVECTOR3& pos,const D3DXVECTOR3& rot, const ENEM
 	case ENEMY_TYPE_FLOW:
 		pEnemy = new CFlowEnemy;
 		break;
-	case ENEMY_TYPE_FLY:
-		pEnemy = new CFlyEnemy;
+	case ENEMY_TYPE_BOSS:
+		pEnemy = new CBossEnemy;
 		break;
 	default:
 		break;
@@ -261,11 +261,11 @@ CEnemy* CEnemy::Create(const D3DXVECTOR3& pos,const D3DXVECTOR3& rot, const ENEM
 			pModel->GetModelInfo(pModel->Regist(&FLOW_MODEL_NAME)).dwNumMat, //マテリアル数取得
 			pModel->GetModelInfo(pModel->Regist(&FLOW_MODEL_NAME)).pMesh); //メッシュ情報取得
 		break;
-	case CEnemy::ENEMY_TYPE::ENEMY_TYPE_FLY:
+	case CEnemy::ENEMY_TYPE::ENEMY_TYPE_BOSS:
 		//Xファイル読み込み
-		pEnemy->BindXFile(pModel->GetModelInfo(pModel->Regist(&FLY_MODEL_NAME)).pBuffMat, //マテリアル取得
-			pModel->GetModelInfo(pModel->Regist(&FLY_MODEL_NAME)).dwNumMat, //マテリアル数取得
-			pModel->GetModelInfo(pModel->Regist(&FLY_MODEL_NAME)).pMesh); //メッシュ情報取得
+		pEnemy->BindXFile(pModel->GetModelInfo(pModel->Regist(&BOSS_MODEL_NAME)).pBuffMat, //マテリアル取得
+			pModel->GetModelInfo(pModel->Regist(&BOSS_MODEL_NAME)).dwNumMat, //マテリアル数取得
+			pModel->GetModelInfo(pModel->Regist(&BOSS_MODEL_NAME)).pMesh); //メッシュ情報取得
 		break;
 	default:
 		break;
@@ -311,9 +311,6 @@ void CEnemy::Damage(int nDamage)
 			pItem = CItem::Create(CItem::ITEMTYPE_PANETRARING_SLASH, D3DXVECTOR3(GetPos().x, GetPos().y, GetPos().z), D3DXVECTOR3(10.0f, 10.0f, 0.0f), GetRot());
 			break;
 		case CEnemy::ENEMY_TYPE::ENEMY_TYPE_FLOW:
-			pItem = CItem::Create(CItem::ITEMTYPE_FLOW, D3DXVECTOR3(GetPos().x, GetPos().y + 10.0f, GetPos().z), D3DXVECTOR3(10.0f, 10.0f, 0.0f), GetRot());
-			break;
-		case CEnemy::ENEMY_TYPE::ENEMY_TYPE_FLY:
 			pItem = CItem::Create(CItem::ITEMTYPE_FLOW, D3DXVECTOR3(GetPos().x, GetPos().y + 10.0f, GetPos().z), D3DXVECTOR3(10.0f, 10.0f, 0.0f), GetRot());
 			break;
 		default:
@@ -854,38 +851,38 @@ void CFlowEnemy::EnemyMove()
 	SetLanding(bLanding);
 }
 
-//通常の移動速度
-const float CFlyEnemy::DEFAULT_MOVE_Y = 0.5f;
+////通常の移動速度
+//const float CBossEnemy::DEFAULT_MOVE_Y = 0.5f;
 
 //=============================================
 //コンストラクタ
 //=============================================
-CFlyEnemy::CFlyEnemy(int nPriority):CEnemy(nPriority), m_nTurnFrameCnt(0), m_bOldWay(false), m_nShotCnt(0)
+CBossEnemy::CBossEnemy(int nPriority):CEnemy(nPriority), m_nTurnFrameCnt(0), m_bOldWay(false), m_nShotCnt(0)
 {
 }
 
 //=============================================
 //デストラクタ
 //=============================================
-CFlyEnemy::~CFlyEnemy()
+CBossEnemy::~CBossEnemy()
 {
 }
 
 //=============================================
 //初期化
 //=============================================
-HRESULT CFlyEnemy::Init()
+HRESULT CBossEnemy::Init()
 {
 	//親クラスの初期化
 	CEnemy::Init();
-	SetLife(ENEMY_FLY_LIFE);
+	SetLife(ENEMY_BOSS_LIFE);
 	return S_OK;
 }
 
 //=============================================
 //終了
 //=============================================
-void CFlyEnemy::Uninit()
+void CBossEnemy::Uninit()
 {
 	//親クラスの終了
 	CEnemy::Uninit();
@@ -894,132 +891,58 @@ void CFlyEnemy::Uninit()
 //=============================================
 //更新
 //=============================================
-void CFlyEnemy::Update()
+void CBossEnemy::Update()
 {
 	//親クラスの更新
 	CEnemy::Update();
 
-	//プレイヤーとの距離を測る
-	bool bDistance = PlayerDistance();
+	////プレイヤーとの距離を測る
+	//bool bDistance = PlayerDistance();
 
-	if (bDistance == true)
-	{//近かったら
-		//向きを取得
-		bool bWay = GetWay();
+	//if (bDistance == true)
+	//{//近かったら
+	//	//向きを取得
+	//	bool bWay = GetWay();
 
-		//ショットカウント加算
-		m_nShotCnt++;
+	//	//ショットカウント加算
+	//	m_nShotCnt++;
 
-		if (m_nShotCnt >= NORMAL_SHOT_FRAME)
-		{//フレーム数に達したら
-			//弾発射
-			for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
-			{
-				//オブジェクト取得
-				CObject* pObj = CObject::Getobject(CPlayer::PLAYER_PRIORITY, nCnt);
-				if (pObj != nullptr)
-				{//ヌルポインタじゃなければ
-					//タイプ取得
-					CObject::OBJECT_TYPE type = pObj->GetType();
+	//	if (m_nShotCnt >= NORMAL_SHOT_FRAME)
+	//	{//フレーム数に達したら
+	//		//弾発射
+	//		for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
+	//		{
+	//			//オブジェクト取得
+	//			CObject* pObj = CObject::Getobject(CPlayer::PLAYER_PRIORITY, nCnt);
+	//			if (pObj != nullptr)
+	//			{//ヌルポインタじゃなければ
+	//				//タイプ取得
+	//				CObject::OBJECT_TYPE type = pObj->GetType();
 
-					//敵との当たり判定
-					if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_PLAYER)
-					{
-						CPlayer* pPlayer = (CPlayer*)pObj;
-						CFlow* pFlow = CFlow::Create(D3DXVECTOR3(pPlayer->GetPos().x, pPlayer->GetPos().y + 5.0f, -13.0f),
-							D3DXVECTOR3(20.0f, 20.0f, 0.0f), 90, 1, CFlow::FLOW_TYPE::FLOW_TYPE_ENEMY);
-					}
-				}
-			}
+	//				//敵との当たり判定
+	//				if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_PLAYER)
+	//				{
+	//					CPlayer* pPlayer = (CPlayer*)pObj;
 
-			//ショットカウントリセット
-			m_nShotCnt = 0;
-		}
-	}
+	//				}
+	//			}
+	//		}
+
+	//		//ショットカウントリセット
+	//		m_nShotCnt = 0;
+	//	}
+	//}
 }
 
 //=============================================
 //描画
 //=============================================
-void CFlyEnemy::Draw()
+void CBossEnemy::Draw()
 {
 	//親クラスの描画
 	CEnemy::Draw();
 }
 
-//=============================================
-//移動処理
-//=============================================
-void CFlyEnemy::EnemyMove()
+void CBossEnemy::EnemyMove()
 {
-	//カウント加算
-	m_nTurnFrameCnt++;
-
-	//向きを取得
-	bool bWay = GetWay();
-
-	if (m_bOldWay != bWay)
-	{//過去の向きと違ったらフレームリセット
-		m_nTurnFrameCnt = 0;
-	}
-
-	if (m_nTurnFrameCnt >= FLOW_ENEMY_TURNFRAME)
-	{//指定フレーム数に到達したら
-
-		//進む方向を切り替える
-		bWay = bWay ? false : true;
-		SetWay(bWay);
-
-		//過去の向きに今の向きを代入
-		m_bOldWay = bWay;
-		//カウントリセット
-		m_nTurnFrameCnt = 0;
-	}
-
-	//移動用単位ベクトル初期化
-	D3DXVECTOR3 vecDirection(0.0f, 0.0f, 0.0f);
-
-	if (bWay == true)
-	{//右向きに進むなら
-		vecDirection.x += 1.0f;
-		vecDirection.y += 1.0f;
-		vecDirection.z += 0.0f;
-	}
-	else if (bWay == false)
-	{//左向きに進むなら
-		vecDirection.x -= 1.0f;
-		vecDirection.y -= 1.0f;
-		vecDirection.z -= 0.0f;
-	}
-
-	//移動量取得
-	D3DXVECTOR3 move = GetMove();
-	float rotMoveY = atan2f(vecDirection.x, vecDirection.y);
-
-	//オブジェクト2Dからrotを取得
-	D3DXVECTOR3 rot = GetRot();
-
-	//着地してるか取得
-	bool bLanding = GetLaunding();
-
-	//状態を取得
-	CCharacter::CHARACTER_STATE state = GetState();
-
-	if (state == CCharacter::CHARACTER_STATE::CHARACTER_DAMAGE)
-	{
-		move.x += sinf(rotMoveY) * DEFAULT_MOVE * 0.5f;
-		move.y += sinf(rotMoveY) * DEFAULT_MOVE * 0.5f;
-	}
-	else
-	{
-		move.x += sinf(rotMoveY) * DEFAULT_MOVE;
-		move.y += sinf(rotMoveY) * DEFAULT_MOVE_Y;
-	}
-	rot.y = rotMoveY + D3DX_PI;
-
-	SetRot(rot); //rotを代入
-	SetMove(move);//移動量代入
-
-	//着地してるか代入
-	SetLanding(bLanding);
 }

@@ -2,7 +2,9 @@
 // サウンドの情報
 const CSound::SOUNDINFO CSound::m_aSoundInfo[CSound::SOUND_LABEL::SOUND_LABEL_MAX] =
 {
-	{"data/SOUND/BGM/aaa_aaa.wav", -1,1.0f},         //BGM0
+	{"data/SOUND/BGM/aaa_aaa.wav", -1,0.7f},         //BGM0
+	{"data/SOUND/BGM/game.wav", -1,0.5f},         //BGM1
+	{"data/SOUND/BGM/result.wav", -1,0.5f},         //BGM2
 };
 CSound::CSound()
 {
@@ -18,8 +20,6 @@ HRESULT CSound::InitSound(HWND hWnd)
 
 	// COMライブラリの初期化
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
-
-
 
 	// XAudio2オブジェクトの作成
 	hr = XAudio2Create(&m_pXAudio2, 0);

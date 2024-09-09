@@ -18,7 +18,7 @@ CNumber::CNumber(int nPriority) : CObject2D(nPriority), m_mintex(D3DXVECTOR2(0.0
 }
 
 //=============================================
-//デストラクト
+//デストラクタ
 //=============================================
 CNumber::~CNumber()
 {
