@@ -75,9 +75,9 @@ void CBullet::Update()
 
 		bHitUnder = HitGround();
 
-		switch (m_type)
+		switch (m_Allegiance)
 		{
-		case BULLET_TYPE_PLAYER:
+		case BULLET_ALLEGIANCE_PLAYER:
 			bHitCheck = HitEnemy();
 			if (bHitCheck == true)
 			{
@@ -85,7 +85,7 @@ void CBullet::Update()
 			}
 			break;
 
-		case BULLET_TYPE_ENEMY:
+		case BULLET_ALLEGIANCE_ENEMY:
 			bHitCheck = HitPlayer();
 			if (bHitCheck == true)
 			{
@@ -125,9 +125,23 @@ void CBullet::Draw()
 //=============================================
 //弾作成
 //=============================================
-CBullet* CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, D3DXVECTOR3 size,int nLife, int nDamage, BULLET_TYPE type)
+CBullet* CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, D3DXVECTOR3 size,int nLife, int nDamage, BULLET_ALLEGIANCE Allegiance,BULLET_TYPE type)
 {
-	CBullet* pBullet = new CBullet;
+	CBullet* pBullet = nullptr;
+
+	switch (type)
+	{
+	case CBullet::BULLET_TYPE::BULLET_TYPE_PANETRARING_SLASH:
+		pBullet = new CPanetRaring_Slash;
+		break;
+
+	case CBullet::BULLET_TYPE::BULLET_TYPE_ELECBULLET:
+		pBullet = new CPanetRaring_Slash;
+		break;
+
+	default:
+		break;
+	}
 
 	if (pBullet == nullptr) {return nullptr;}
 	CTexture* pTexture = CManager::GetTexture();
@@ -139,10 +153,133 @@ CBullet* CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, D3D
 	pBullet->SetLife(nLife); //寿命代入
 	pBullet->SetDamage(nDamage); //威力代入
     pBullet->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME)));
-	pBullet->m_type = type; //弾の設定
+	pBullet->m_Allegiance = Allegiance; //弾の設定
 	pBullet->SetType(OBJECT_TYPE_BULLET); //タイプ設定
 	pBullet->Init();
 
 	return pBullet;
 }
 
+//=============================================
+//移動量取得
+//=============================================
+D3DXVECTOR3 CBullet::GetMove()
+{
+	return m_move;
+}
+
+//=============================================
+//タイプ取得
+//=============================================
+CBullet::BULLET_ALLEGIANCE CBullet::GetBulletType()
+{
+	return m_Allegiance;
+}
+
+//=============================================
+//コンストラクタ
+//=============================================
+CPanetRaring_Slash::CPanetRaring_Slash(int nPriority):CBullet(nPriority)
+{
+}
+
+//=============================================
+//デストラクタ
+//=============================================
+CPanetRaring_Slash::~CPanetRaring_Slash()
+{
+}
+
+//=============================================
+//初期化
+//=============================================
+HRESULT CPanetRaring_Slash::Init()
+{
+	//親クラスの初期化
+	CBullet::Init();
+
+	return S_OK;
+}
+
+//=============================================
+//終了
+//=============================================
+void CPanetRaring_Slash::Uninit()
+{
+	//親クラスの終了
+	CBullet::Uninit();
+}
+
+//=============================================
+//更新
+//=============================================
+void CPanetRaring_Slash::Update()
+{
+	//親クラスの更新
+	CBullet::Update();
+
+	//体力取得
+	int nLife = GetLife();
+
+	if (nLife > 0)
+	{//ライフがあれば処理実行
+
+		//埋まってるかのチェック変数
+		bool bHitUnder = false;
+
+		bHitUnder = HitGround();
+	}
+}
+
+//=============================================
+//描画
+//=============================================
+void CPanetRaring_Slash::Draw()
+{
+	//親クラスの描画
+	CBullet::Draw();
+}
+
+
+//=============================================
+//コンストラクタ
+//=============================================
+CElecBullet::CElecBullet(int nPriority) :CBullet(nPriority)
+{
+}
+
+//=============================================
+//デストラクタ
+//=============================================
+CElecBullet::~CElecBullet()
+{
+}
+
+//=============================================
+//初期化
+//=============================================
+HRESULT CElecBullet::Init()
+{
+	return E_NOTIMPL;
+}
+
+//=============================================
+//終了
+//=============================================
+void CElecBullet::Uninit()
+{
+}
+
+//=============================================
+//更新
+//=============================================
+void CElecBullet::Update()
+{
+}
+
+//=============================================
+//描画
+//=============================================
+void CElecBullet::Draw()
+{
+}

@@ -498,7 +498,7 @@ void CNormalEnemy::Update()
 		{//フレーム数に達したら
 
 			//弾発射
-			ShotBullet(GetPos(), D3DXVECTOR3(6.0f, 12.0f, 0.0f), bWay, 1, CBullet::BULLET_TYPE_ENEMY);
+			ShotBullet(GetPos(), D3DXVECTOR3(6.0f, 12.0f, 0.0f), bWay, 1, CBullet::BULLET_ALLEGIANCE_ENEMY,CBullet::BULLET_TYPE_PANETRARING_SLASH);
 
 			//エフェクトサイズリセット
 			if (m_pAttackEffect != nullptr)
