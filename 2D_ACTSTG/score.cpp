@@ -1,60 +1,51 @@
 //=============================================
 //
-//タイマー処理「timer.cpp」
+//スコア処理「scorer.cpp」
 // Author松田永久
 //
 //=============================================
-#include "timer.h"
+#include "score.h"
 #include "manager.h"
 
 //桁ごとにずらす
-const float CTimer::DIGIT_SHIFT = 50.0f;
+const float CScore::DIGIT_SHIFT = 50.0f;
 
 //=============================================
 //コンストラクタ
 //=============================================
-CTimer::CTimer():m_nFrameCnt(0), m_nCurrentTime(0),m_pos(D3DXVECTOR3(0.0f, 0.0f, 0.0f))
-{//イニシャライザーでカウンターと,今の時間pos初期化
+CScore::CScore():m_nScore(0),m_pos(D3DXVECTOR3(0.0f,0.0f,0.0f))
+{//イニシャライザーでメンバ変数初期化
 
-	//タイマー
-	m_nCurrentTime = CTimer::LIMIT_TIME;
 	//初期位置代入
-	m_pos = D3DXVECTOR3(660.0f, 50.0f, 0.0f);
-
-	//最初からセットするため
-	//m_nFrameCnt = 60;
+	m_pos = D3DXVECTOR3(1100.0f, 50.0f, 0.0f);
 
 	for (int nCnt = 0; nCnt < NUM_DIGIT; nCnt++)
 	{
 		m_pNumber[nCnt] = nullptr;
 	}
+
 }
 
 //=============================================
 //デストラクタ
 //=============================================
-CTimer::~CTimer()
+CScore::~CScore()
 {
 }
 
 //=============================================
 //初期化
 //=============================================
-HRESULT CTimer::Init()
+HRESULT CScore::Init()
 {
 	for (int nCnt = 0; nCnt < NUM_DIGIT; nCnt++)
 	{
-		//ナンバー生成
-		/*if (m_pNumber[nCnt] == nullptr)
-		{
-			m_pNumber[nCnt] = new CNumber();
-		}*/
 
 		if (m_pNumber[nCnt] == nullptr)
 		{
-			m_pNumber[nCnt] = CNumber::Create(m_pos,D3DXVECTOR2(30.0f,50.0f));
+			m_pNumber[nCnt] = CNumber::Create(m_pos, D3DXVECTOR2(30.0f, 50.0f));
 		}
-		
+
 		//座標をずらす
 		m_pos.x -= DIGIT_SHIFT;
 	}
@@ -65,14 +56,13 @@ HRESULT CTimer::Init()
 //=============================================
 //終了
 //=============================================
-void CTimer::Uninit()
+void CScore::Uninit()
 {
 	for (int nCnt = 0; nCnt < NUM_DIGIT; nCnt++)
 	{
 		if (m_pNumber[nCnt] != nullptr)
 		{
 			m_pNumber[nCnt]->Uninit();
-			//delete m_pNumber[nCnt];
 			m_pNumber[nCnt] = nullptr;
 		}
 	}
@@ -81,32 +71,23 @@ void CTimer::Uninit()
 //=============================================
 //更新
 //=============================================
-void CTimer::Update()
+void CScore::Update()
 {
-	SetTimer();
-
-	m_nFrameCnt++;
-
-	if (m_nFrameCnt >= 60)
-	{
-		m_nCurrentTime--;
-		m_nFrameCnt = 0;
-	}
-
-	if (m_nCurrentTime <= 0)
-	{
-		m_nCurrentTime = 0;
-		CManager::SetMode(CScene::MODE::MODE_RESULT);
-	}
-	////頂点設定
-	//SetTimerVtx();
+	SetScore(m_nScore);
 }
 
+//=============================================
+//描画
+//=============================================
+void CScore::AddScore(int nValue)
+{
+	m_nScore += nValue;
+}
 
 //=============================================
-//タイマー用の頂点生成
+//スコア設定
 //=============================================
-void CTimer::SetTimer()
+void CScore::SetScore(int nScore)
 {
 	//テクスチャ座標設定
 	int a_PosTexU[NUM_DIGIT];
@@ -117,7 +98,7 @@ void CTimer::SetTimer()
 	for (nCnt = 0; nCnt < NUM_DIGIT; nCnt++)
 	{
 		//今の時間から計算
-		a_PosTexU[nCnt] = m_nCurrentTime / nDigit % 10;
+		a_PosTexU[nCnt] = m_nScore / nDigit % 10;
 
 		//桁を進める
 		nDigit *= 10;
@@ -131,7 +112,7 @@ void CTimer::SetTimer()
 		fMinTexU = a_PosTexU[nCnt] * 0.1f;
 		fMaxTexU = fMinTexU + 0.1f;
 
-		m_pNumber[nCnt]->SetNumber(fMinTexU, fMaxTexU,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f));
+		m_pNumber[nCnt]->SetNumber(fMinTexU, fMaxTexU, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
 	}
 }

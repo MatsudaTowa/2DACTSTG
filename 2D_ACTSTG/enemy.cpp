@@ -12,6 +12,8 @@
 #include "bullet.h"
 #include "item.h"
 #include "flow.h"
+#include "score.h"
+#include "game.h"
 
 //’Êí‚ÌˆÚ“®‘¬“x
 const float CEnemy::DEFAULT_MOVE = 0.3f;
@@ -334,6 +336,10 @@ void CEnemy::Damage(int nDamage)
 			m_pAttackEffect->Uninit();
 			m_pAttackEffect = nullptr;
 		}
+
+		CScore*pScore = CGame::GetScore();
+
+		pScore->AddScore(100);
 
 		Uninit();
 	}

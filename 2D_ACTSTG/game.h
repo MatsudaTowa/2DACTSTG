@@ -11,6 +11,7 @@
 #include "scene.h"
 #include "edit.h"
 #include "timer.h"
+#include "score.h"
 #include "enemy.h"
 
 class CGame:public CScene
@@ -34,12 +35,14 @@ public:
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;
+	static CScore*GetScore();
 private:
 	int m_nResultDelay; //リザルトへのディレイ
 	bool m_bEdit; //エディットしてるかどうか
 	LOAD_ENEMY m_LoadEnemy; //読み込むときに必要なエネミーの情報
 	static CEdit*m_pEdit;
 	static CTimer*m_pTimer;
+	static CScore*m_pScore;
 
 	void LoadEnemy(const std::string* pFileName);
 };

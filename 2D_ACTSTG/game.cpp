@@ -28,6 +28,9 @@ CEdit* CGame::m_pEdit = nullptr;
 //タイム設定
 CTimer* CGame::m_pTimer = nullptr;
 
+//スコア設定
+CScore* CGame::m_pScore = nullptr;
+
 //=============================================
 //コンストラクタ
 //=============================================
@@ -58,11 +61,20 @@ HRESULT CGame::Init()
 		m_pEdit = new CEdit;
 	}
 
+	//タイマー初期化
 	if (m_pTimer == nullptr)
 	{
 		m_pTimer = new CTimer;
 
 		m_pTimer->Init();
+	}
+
+	//スコア初期化
+	if (m_pScore == nullptr)
+	{
+		m_pScore = new CScore;
+
+		m_pScore->Init();
 	}
 
 	//ブロック生成
@@ -76,7 +88,7 @@ HRESULT CGame::Init()
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f), 3, false);
 
 	//ゲージのフレームUI生成
-	CGauge_Fream* pGauge_Fream = CGauge_Fream::Create(D3DXVECTOR3(980.0f,80.0f,0.0f),D3DXVECTOR2(280.0f,120.0f));
+	CGauge_Fream* pGauge_Fream = CGauge_Fream::Create(D3DXVECTOR3(250.0f,150.0f,0.0f),D3DXVECTOR2(280.0f,120.0f));
 
 	//地面生成
 	CField* pField = CField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1000.0f, 0.0f, 1000.0f));
@@ -105,8 +117,13 @@ void CGame::Uninit()
 	if (m_pTimer != nullptr)
 	{
 		m_pTimer->Uninit();
-		delete m_pTimer;
 		m_pTimer = nullptr;
+	}
+
+	if (m_pScore != nullptr)
+	{
+		m_pScore->Uninit();
+		m_pScore = nullptr;
 	}
 
 	CSound* pSound = CManager::GetSound();
@@ -139,14 +156,18 @@ void CGame::Update()
 	
 	//if (m_bEdit == false)
 	//{
-		CObject::UpdateAll();
+	CObject::UpdateAll();
 
-		if (m_pTimer != nullptr)
-		{
-			m_pTimer->Update();
-		}
+	if (m_pTimer != nullptr)
+	{
+		m_pTimer->Update();
+	}
 	//}
 
+	if (m_pScore != nullptr)
+	{
+		m_pScore->Update();
+	}
 	if (CPlayer::m_PlayerDeath || CEnemy::m_nNumEnemy <= 0)
 	{//プレイヤーが死ぬかエネミーを全部殺したら
 		//カウント加算
@@ -176,6 +197,14 @@ void CGame::Update()
 //=============================================
 void CGame::Draw()
 {
+}
+
+//=============================================
+//スコア取得
+//=============================================
+CScore* CGame::GetScore()
+{
+	return m_pScore;
 }
 
 //=============================================
