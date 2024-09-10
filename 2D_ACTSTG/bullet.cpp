@@ -149,7 +149,7 @@ CBullet* CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, D3D
 		break;
 
 	case CBullet::BULLET_TYPE::BULLET_TYPE_ELECBULLET:
-		pBullet = new CPanetRaring_Slash;
+		pBullet = new CElecBullet;
 		break;
 
 	default:

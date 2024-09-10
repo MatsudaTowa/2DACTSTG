@@ -498,7 +498,7 @@ void CNormalEnemy::Update()
 		{//フレーム数に達したら
 
 			//弾発射
-			ShotBullet(GetPos(), D3DXVECTOR3(6.0f, 12.0f, 0.0f), bWay, 1, CBullet::BULLET_ALLEGIANCE_ENEMY,CBullet::BULLET_TYPE_PANETRARING_SLASH);
+			ShotBullet(GetPos(),2.0f, D3DXVECTOR3(6.0f, 12.0f, 0.0f), bWay, 1, CBullet::BULLET_ALLEGIANCE_ENEMY,CBullet::BULLET_TYPE_PANETRARING_SLASH);
 
 			//エフェクトサイズリセット
 			if (m_pAttackEffect != nullptr)
@@ -854,6 +854,9 @@ void CFlowEnemy::EnemyMove()
 ////通常の移動速度
 //const float CBossEnemy::DEFAULT_MOVE_Y = 0.5f;
 
+//弾を生成する円周の半径
+const float CBossEnemy::CREATE_RADIUS = 50.0f;
+
 //=============================================
 //コンストラクタ
 //=============================================
@@ -909,9 +912,21 @@ void CBossEnemy::Update()
 
 		if (m_nShotCnt >= NORMAL_SHOT_FRAME)
 		{//フレーム数に達したら
+			
+			for (int nCnt = 0; nCnt < CBossEnemy::CREATE_BULLET; nCnt++)
+			{//既定の数、弾生成
+				D3DXVECTOR3 CreatePos = D3DXVECTOR3(0.0f,0.0f,0.0f);
+				
+				CreatePos.x = CREATE_RADIUS * sinf((D3DX_PI * 2.0f) * ((1.0f / CBossEnemy::CREATE_BULLET) * nCnt));
+				CreatePos.y = CREATE_RADIUS * cosf((D3DX_PI * 2.0f) * ((1.0f / CBossEnemy::CREATE_BULLET) * nCnt));
 
-			//弾発射
-			ShotBullet(GetPos(), D3DXVECTOR3(0.0f, 0.0f, 0.0f), bWay, 1, CBullet::BULLET_ALLEGIANCE_ENEMY, CBullet::BULLET_TYPE_ELECBULLET);
+				//ボスの位置を基準にする
+				CreatePos += GetPos() + (GetMaxPos() * 0.5f);
+
+				//弾発射
+				ShotBullet(CreatePos, 0.0f, D3DXVECTOR3(10.0f, 10.0f, 0.0f), bWay, 1, CBullet::BULLET_ALLEGIANCE_ENEMY, CBullet::BULLET_TYPE_ELECBULLET);
+
+			}
 
 			//ショットカウントリセット
 			m_nShotCnt = 0;

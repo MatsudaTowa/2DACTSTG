@@ -35,7 +35,7 @@ public:
 	void HitField(); //°“–‚½‚è”»’è
 	void HitPlayer(); //ƒvƒŒƒCƒ„[‚Æ‚Ì“–‚½‚è”»’è
 	void HitEnemy(); //“G‚Æ‚Ì“–‚½‚è”»’è
-	void ShotBullet(D3DXVECTOR3 pos, D3DXVECTOR3 size, bool bWay, int nDamage,CBullet::BULLET_ALLEGIANCE Allegiance, CBullet::BULLET_TYPE type); //’e”­Ëˆ—
+	void ShotBullet(D3DXVECTOR3 pos,float move, D3DXVECTOR3 size, bool bWay, int nDamage,CBullet::BULLET_ALLEGIANCE Allegiance, CBullet::BULLET_TYPE type); //’e”­Ëˆ—
 
 	//ˆÚ“®—Ê‘ã“ü
 	void SetMove(D3DXVECTOR3 move)

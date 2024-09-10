@@ -133,9 +133,6 @@ private:
 class CBossEnemy : public CEnemy
 {
 public:
-	static const int BOSS_ENEMY_TURNFRAME = 120; //飛んでるエネミーの移動折り返しフレーム
-	static const int ENEMY_BOSS_LIFE = 30; //エネミーの体力
-
 	CBossEnemy(int nPriority = ENEMY_PRIORITY);
 	~CBossEnemy()override;
 	HRESULT Init()override;
@@ -144,6 +141,11 @@ public:
 	void Draw()override;
 	void EnemyMove() override;
 private:
+	static const int BOSS_ENEMY_TURNFRAME = 120; //飛んでるエネミーの移動折り返しフレーム
+	static const int ENEMY_BOSS_LIFE = 30; //エネミーの体力
+	static const int CREATE_BULLET = 6; //生成する弾の数
+	static const float CREATE_RADIUS; //生成する弾の位置
+
 	int m_nShotCnt; //弾を発射するカウント
 	int m_nTurnFrameCnt; //折り返しフレームをカウントする変数
 	bool m_bOldWay; //過去の方向
