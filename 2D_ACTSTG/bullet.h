@@ -100,6 +100,9 @@ public:
 	void Uninit()override;
 	void Update()override;
 	void Draw()override;
+
+	void SetElecType(ELECTYPE type);
+
 private:
 	ELECTYPE m_Electype;
 };

@@ -128,7 +128,7 @@ private:
 };
 
 //=============================================
-//飛行斬撃の敵クラス
+//ボスの敵クラス
 //=============================================
 class CBossEnemy : public CEnemy
 {
@@ -144,10 +144,14 @@ private:
 	static const int BOSS_ENEMY_TURNFRAME = 120; //飛んでるエネミーの移動折り返しフレーム
 	static const int ENEMY_BOSS_LIFE = 30; //エネミーの体力
 	static const int CREATE_BULLET = 6; //生成する弾の数
+	static const int BOSS_SHOT_FRAME = 60; //発射するカウント
 	static const float CREATE_RADIUS; //生成する弾の位置
 
 	int m_nShotCnt; //弾を発射するカウント
+	int m_nNumBullet; //クリエイトされた弾を数える
 	int m_nTurnFrameCnt; //折り返しフレームをカウントする変数
 	bool m_bOldWay; //過去の方向
+	bool m_bShot; //弾を発射するかどうか
+	//CBullet*pBullet[CREATE_BULLET]; //ボス用の弾のポインタ
 };
 #endif

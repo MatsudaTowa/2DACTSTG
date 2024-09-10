@@ -866,7 +866,7 @@ const float CBossEnemy::CREATE_RADIUS = 50.0f;
 //=============================================
 //コンストラクタ
 //=============================================
-CBossEnemy::CBossEnemy(int nPriority):CEnemy(nPriority), m_nTurnFrameCnt(0), m_bOldWay(false), m_nShotCnt(0)
+CBossEnemy::CBossEnemy(int nPriority):CEnemy(nPriority), m_nTurnFrameCnt(0), m_nNumBullet(0),m_bOldWay(false), m_nShotCnt(0)
 {
 }
 
@@ -916,23 +916,27 @@ void CBossEnemy::Update()
 		//ショットカウント加算
 		m_nShotCnt++;
 
-		if (m_nShotCnt >= NORMAL_SHOT_FRAME)
+		if (m_nShotCnt >= BOSS_SHOT_FRAME)
 		{//フレーム数に達したら
 			
-			for (int nCnt = 0; nCnt < CBossEnemy::CREATE_BULLET; nCnt++)
-			{//既定の数、弾生成
-				D3DXVECTOR3 CreatePos = D3DXVECTOR3(0.0f,0.0f,0.0f);
-				
-				CreatePos.x = CREATE_RADIUS * sinf((D3DX_PI * 2.0f) * ((1.0f / CBossEnemy::CREATE_BULLET) * nCnt));
-				CreatePos.y = CREATE_RADIUS * cosf((D3DX_PI * 2.0f) * ((1.0f / CBossEnemy::CREATE_BULLET) * nCnt));
+			//for (int nCnt = 0; nCnt < CBossEnemy::CREATE_BULLET; nCnt++)
+			//{//既定の数、弾生成
+			if (m_nNumBullet < CBossEnemy::CREATE_BULLET)
+			{
+				D3DXVECTOR3 CreatePos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+				CreatePos.x = CREATE_RADIUS * sinf((D3DX_PI * 2.0f) * ((1.0f / CBossEnemy::CREATE_BULLET) * m_nNumBullet));
+				CreatePos.y = CREATE_RADIUS * cosf((D3DX_PI * 2.0f) * ((1.0f / CBossEnemy::CREATE_BULLET) * m_nNumBullet));
 
 				//ボスの位置を基準にする
 				CreatePos += GetPos() + (GetMaxPos() * 0.5f);
 
 				//弾発射
 				ShotBullet(CreatePos, 0.0f, D3DXVECTOR3(10.0f, 10.0f, 0.0f), bWay, 1, CBullet::BULLET_ALLEGIANCE_ENEMY, CBullet::BULLET_TYPE_ELECBULLET);
-
+				m_nNumBullet++;
 			}
+			//}
+
 
 			//ショットカウントリセット
 			m_nShotCnt = 0;

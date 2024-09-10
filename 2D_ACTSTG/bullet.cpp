@@ -330,3 +330,8 @@ void CElecBullet::Draw()
 	//eƒNƒ‰ƒX‚Ì•`‰æ
 	CBullet::Draw();
 }
+
+void CElecBullet::SetElecType(ELECTYPE type)
+{
+	m_Electype = type;
+}
