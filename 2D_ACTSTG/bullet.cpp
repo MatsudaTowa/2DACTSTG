@@ -11,7 +11,8 @@
 
 //テクスチャ初期化
 LPDIRECT3DTEXTURE9 CBullet::m_pTextureTemp = nullptr;
-const std::string CBullet::TEXTURE_NAME ="data\\TEXTURE\\slash_test.png";
+const std::string CBullet::PANETRARING_TEXTURE_NAME ="data\\TEXTURE\\slash_test.png";
+const std::string CBullet::ELEC_TEXTURE_NAME ="data\\TEXTURE\\elekball.png";
 
 //=============================================
 //コンストラクタ
@@ -52,9 +53,29 @@ void CBullet::Uninit()
 //=============================================
 void CBullet::Update()
 {
+
 	//親クラスの更新
 	CAttack_Manager::Update();
+	
+	//使用しているとき
+	OnActive();
 
+}
+
+//=============================================  
+//描画
+//=============================================
+void CBullet::Draw()
+{
+	//親クラスの描画
+	CAttack_Manager::Draw();
+}
+
+//=============================================
+//使用されてる時の処理
+//=============================================
+void CBullet::OnActive()
+{
 	//体力取得
 	int nLife = GetLife();
 
@@ -113,19 +134,11 @@ void CBullet::Update()
 	}
 }
 
-//=============================================  
-//描画
-//=============================================
-void CBullet::Draw()
-{
-	//親クラスの描画
-	CAttack_Manager::Draw();
-}
-
 //=============================================
 //弾作成
 //=============================================
-CBullet* CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, D3DXVECTOR3 size,int nLife, int nDamage, BULLET_ALLEGIANCE Allegiance,BULLET_TYPE type)
+CBullet* CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, D3DXVECTOR3 size
+,int nLife, int nDamage, BULLET_ALLEGIANCE Allegiance,BULLET_TYPE type)
 {
 	CBullet* pBullet = nullptr;
 
@@ -144,6 +157,7 @@ CBullet* CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, D3D
 	}
 
 	if (pBullet == nullptr) {return nullptr;}
+
 	CTexture* pTexture = CManager::GetTexture();
 
 	pBullet->SetPos(pos); //pos設定
@@ -152,7 +166,20 @@ CBullet* CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, D3D
 	pBullet->m_move = move; //移動量代入
 	pBullet->SetLife(nLife); //寿命代入
 	pBullet->SetDamage(nDamage); //威力代入
-    pBullet->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME)));
+
+	switch (type)
+	{
+	case CBullet::BULLET_TYPE::BULLET_TYPE_PANETRARING_SLASH:
+		pBullet->BindTexture(pTexture->GetAddress(pTexture->Regist(&PANETRARING_TEXTURE_NAME)));
+		break;
+
+	case CBullet::BULLET_TYPE::BULLET_TYPE_ELECBULLET:
+		pBullet->BindTexture(pTexture->GetAddress(pTexture->Regist(&ELEC_TEXTURE_NAME)));
+		break;
+
+	default:
+		break;
+	}
 	pBullet->m_Allegiance = Allegiance; //弾の設定
 	pBullet->SetType(OBJECT_TYPE_BULLET); //タイプ設定
 	pBullet->Init();
@@ -169,9 +196,9 @@ D3DXVECTOR3 CBullet::GetMove()
 }
 
 //=============================================
-//タイプ取得
+//敵か自分か取得
 //=============================================
-CBullet::BULLET_ALLEGIANCE CBullet::GetBulletType()
+CBullet::BULLET_ALLEGIANCE CBullet::GetBulletAllegiance()
 {
 	return m_Allegiance;
 }
@@ -244,8 +271,8 @@ void CPanetRaring_Slash::Draw()
 //=============================================
 //コンストラクタ
 //=============================================
-CElecBullet::CElecBullet(int nPriority) :CBullet(nPriority)
-{
+CElecBullet::CElecBullet(int nPriority) :CBullet(nPriority),m_Electype(CElecBullet::ELECTYPE::TYPE_NONE)
+{//イニシャライザーでプライオリティ設定、タイプ初期化
 }
 
 //=============================================
@@ -260,7 +287,13 @@ CElecBullet::~CElecBullet()
 //=============================================
 HRESULT CElecBullet::Init()
 {
-	return E_NOTIMPL;
+	//親クラスの初期化
+	CBullet::Init();
+
+	//スタンバイ状態に
+	m_Electype = CElecBullet::ELECTYPE::TYPE_STAND_BY;
+
+	return S_OK;
 }
 
 //=============================================
@@ -268,6 +301,8 @@ HRESULT CElecBullet::Init()
 //=============================================
 void CElecBullet::Uninit()
 {
+	//親クラスの終了
+	CBullet::Uninit();
 }
 
 //=============================================
@@ -275,6 +310,16 @@ void CElecBullet::Uninit()
 //=============================================
 void CElecBullet::Update()
 {
+	if (m_Electype == CElecBullet::ELECTYPE::TYPE_MOVE)
+	{
+		//親クラスの更新
+		CBullet::Update();
+	}
+	else if (m_Electype == CElecBullet::ELECTYPE::TYPE_STAND_BY)
+	{
+		//使用しているとき
+		OnActive();
+	}
 }
 
 //=============================================
@@ -282,4 +327,6 @@ void CElecBullet::Update()
 //=============================================
 void CElecBullet::Draw()
 {
+	//親クラスの描画
+	CBullet::Draw();
 }

@@ -370,13 +370,13 @@ bool CEnemy::PlayerDistance()
 				{//エネミーのminに近い
 					bNear = true;
 					
-					//bWay = false; //向きをプレイヤーのほうに切り替える
+					bWay = false; //向きをプレイヤーのほうに切り替える
 				}
 				else if (fDistance <= 0.0f && fDistance > -120.0f)
 				{//エネミーのmaxに近い
 					bNear = true;
 
-					//bWay = true; //向きをプレイヤーのほうに切り替える
+					bWay = true; //向きをプレイヤーのほうに切り替える
 				}
 				else
 				{//近くない
@@ -896,42 +896,27 @@ void CBossEnemy::Update()
 	//親クラスの更新
 	CEnemy::Update();
 
-	////プレイヤーとの距離を測る
-	//bool bDistance = PlayerDistance();
+	//プレイヤーとの距離を測る
+	bool bDistance = PlayerDistance();
 
-	//if (bDistance == true)
-	//{//近かったら
-	//	//向きを取得
-	//	bool bWay = GetWay();
+	if (bDistance == true)
+	{//近かったら
+		//向きを取得
+		bool bWay = GetWay();
 
-	//	//ショットカウント加算
-	//	m_nShotCnt++;
+		//ショットカウント加算
+		m_nShotCnt++;
 
-	//	if (m_nShotCnt >= NORMAL_SHOT_FRAME)
-	//	{//フレーム数に達したら
-	//		//弾発射
-	//		for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
-	//		{
-	//			//オブジェクト取得
-	//			CObject* pObj = CObject::Getobject(CPlayer::PLAYER_PRIORITY, nCnt);
-	//			if (pObj != nullptr)
-	//			{//ヌルポインタじゃなければ
-	//				//タイプ取得
-	//				CObject::OBJECT_TYPE type = pObj->GetType();
+		if (m_nShotCnt >= NORMAL_SHOT_FRAME)
+		{//フレーム数に達したら
 
-	//				//敵との当たり判定
-	//				if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_PLAYER)
-	//				{
-	//					CPlayer* pPlayer = (CPlayer*)pObj;
+			//弾発射
+			ShotBullet(GetPos(), D3DXVECTOR3(0.0f, 0.0f, 0.0f), bWay, 1, CBullet::BULLET_ALLEGIANCE_ENEMY, CBullet::BULLET_TYPE_ELECBULLET);
 
-	//				}
-	//			}
-	//		}
-
-	//		//ショットカウントリセット
-	//		m_nShotCnt = 0;
-	//	}
-	//}
+			//ショットカウントリセット
+			m_nShotCnt = 0;
+		}
+	}
 }
 
 //=============================================

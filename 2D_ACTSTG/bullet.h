@@ -14,7 +14,9 @@
 class CBullet : public CAttack_Manager
 {
 public:
-	static const std::string TEXTURE_NAME;	//テクスチャの名前
+	static const std::string PANETRARING_TEXTURE_NAME;	//テクスチャの名前
+	static const std::string ELEC_TEXTURE_NAME;	//テクスチャの名前
+
 	static const int BULLET_PRIORITY = 4; //描画順
 
 	//敵か自分かの判断する列挙
@@ -39,25 +41,32 @@ public:
 	void Uninit()override;
 	void Update()override;
 	void Draw()override;
-	//弾作成
-	static CBullet* Create(D3DXVECTOR3 pos,D3DXVECTOR3 move,D3DXVECTOR3 rot, D3DXVECTOR3 size,int nLife,int nDamage, BULLET_ALLEGIANCE Allegiance,BULLET_TYPE type);
 
+	void OnActive();
+
+	//弾作成
+	static CBullet* Create(D3DXVECTOR3 pos,D3DXVECTOR3 move,D3DXVECTOR3 rot,
+	D3DXVECTOR3 size,int nLife,int nDamage, BULLET_ALLEGIANCE Allegiance,BULLET_TYPE type);
+
+	//移動量設定
 	void SetMove(D3DXVECTOR3 move)
 	{
 		m_move = move;
 	}
 
-	void SetBulletType(BULLET_ALLEGIANCE Allegiance)
+	//敵か自分かの設定
+	void SetBulletAllegiance(BULLET_ALLEGIANCE Allegiance)
 	{
 		m_Allegiance = Allegiance;
 	}
 
 	D3DXVECTOR3 GetMove();
 
-	BULLET_ALLEGIANCE GetBulletType();
+	BULLET_ALLEGIANCE GetBulletAllegiance();
 private:
-	BULLET_ALLEGIANCE m_Allegiance;
-	D3DXVECTOR3 m_move;
+	BULLET_ALLEGIANCE m_Allegiance; //敵か自分かを判断する列挙型変数
+	BULLET_TYPE m_type; //弾の種類
+	D3DXVECTOR3 m_move; //移動量
 	static LPDIRECT3DTEXTURE9 m_pTextureTemp;
 };
 
@@ -75,11 +84,23 @@ public:
 class CElecBullet : public CBullet
 {
 public:
+
+	//電撃弾のタイプ
+	typedef enum
+	{
+		TYPE_NONE = 0,
+		TYPE_STAND_BY,
+		TYPE_MOVE,
+		TYPE_MAX,
+	}ELECTYPE;
+
 	CElecBullet(int nPriority = BULLET_PRIORITY);
 	~CElecBullet()override;
 	HRESULT Init()override;
 	void Uninit()override;
 	void Update()override;
 	void Draw()override;
+private:
+	ELECTYPE m_Electype;
 };
 #endif

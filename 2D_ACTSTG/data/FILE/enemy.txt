@@ -46,7 +46,7 @@ END_ENEMYSET
 
 ENEMYSET
 	POS = 800.0 25.0 0.0f
-	ROT = 0.0 0.0 0.0
+	ROT = 0.0 1.57 0.0
 	TYPE = 2
 END_ENEMYSET
 END		# この行は絶対消さないこと！
