@@ -102,12 +102,12 @@ public:
 	void Draw()override;
 
 	void SetElecType(ELECTYPE type);
-
 	//íeçÏê¨
 	static CElecBullet* ElecCreate(D3DXVECTOR3 pos, D3DXVECTOR3 rot,D3DXVECTOR3 size,
 	int nLife, int nDamage, BULLET_ALLEGIANCE Allegiance, BULLET_TYPE type);
 
 private:
 	ELECTYPE m_Electype;
+	int m_nStandbyCnt;
 };
 #endif

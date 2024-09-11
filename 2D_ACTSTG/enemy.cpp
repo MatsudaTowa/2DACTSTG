@@ -868,10 +868,10 @@ const float CBossEnemy::CREATE_RADIUS = 50.0f;
 //=============================================
 CBossEnemy::CBossEnemy(int nPriority):CEnemy(nPriority), m_nTurnFrameCnt(0), m_nNumBullet(0),m_bOldWay(false), m_bShot(false), m_nShotCnt(0)
 {
-	for (int nCnt = 0; nCnt < CBossEnemy::CREATE_BULLET; nCnt++)
+	/*for (int nCnt = 0; nCnt < CBossEnemy::CREATE_BULLET; nCnt++)
 	{
 		pBullet[nCnt] = nullptr;
-	}
+	}*/
 }
 
 //=============================================
@@ -937,23 +937,23 @@ void CBossEnemy::Update()
 
 				if (bWay == true)
 				{//右向き
-					pBullet[m_nNumBullet] = CElecBullet::ElecCreate(CreatePos,D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 2.0f),
+					/*pBullet[m_nNumBullet] = */CElecBullet::ElecCreate(CreatePos,D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 2.0f),
 					D3DXVECTOR3(10.0f, 10.0f, 0.0f), 60, 1, CBullet::BULLET_ALLEGIANCE_ENEMY, CBullet::BULLET_TYPE_ELECBULLET);
 				}
 				else if (bWay == false)
 				{//左向き
-					pBullet[m_nNumBullet] = CElecBullet::ElecCreate(CreatePos, D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 4.0f),
+					/*pBullet[m_nNumBullet] = */CElecBullet::ElecCreate(CreatePos, D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 4.0f),
 						D3DXVECTOR3(10.0f, 10.0f, 0.0f), 60, 1, CBullet::BULLET_ALLEGIANCE_ENEMY, CBullet::BULLET_TYPE_ELECBULLET);
 				}
 
 				m_nNumBullet++;
-
-				//弾発射
-				//ShotBullet(CreatePos, 0.0f, D3DXVECTOR3(10.0f, 10.0f, 0.0f), bWay, 1, CBullet::BULLET_ALLEGIANCE_ENEMY, CBullet::BULLET_TYPE_ELECBULLET);			
 			}
 			if (m_bShot == true)
 			{
-				pBullet[m_nNumBullet - 1]->SetElecType(CElecBullet::ELECTYPE::TYPE_MOVE);
+				//if (pBullet[m_nNumBullet - 1] != nullptr)
+				//{
+					//pBullet[m_nNumBullet - 1]->SetElecType(CElecBullet::ELECTYPE::TYPE_MOVE);
+				//}
 				m_nNumBullet--;
 				if (m_nNumBullet <= 0)
 				{
@@ -961,13 +961,11 @@ void CBossEnemy::Update()
 					m_bShot = false;
 				}
 			}
-			//}
 
 			if (m_nNumBullet >= CBossEnemy::CREATE_BULLET)
 			{
 				m_bShot = true;
 			}
-
 
 			//ショットカウントリセット
 			m_nShotCnt = 0;

@@ -271,7 +271,7 @@ void CPanetRaring_Slash::Draw()
 //=============================================
 //コンストラクタ
 //=============================================
-CElecBullet::CElecBullet(int nPriority) :CBullet(nPriority),m_Electype(CElecBullet::ELECTYPE::TYPE_NONE)
+CElecBullet::CElecBullet(int nPriority) :CBullet(nPriority),m_Electype(CElecBullet::ELECTYPE::TYPE_NONE),m_nStandbyCnt()
 {//イニシャライザーでプライオリティ設定、タイプ初期化
 }
 
@@ -292,6 +292,9 @@ HRESULT CElecBullet::Init()
 
 	//スタンバイ状態に
 	m_Electype = CElecBullet::ELECTYPE::TYPE_STAND_BY;
+
+	//スタンバイ状態の時間を設定
+	m_nStandbyCnt = CBossEnemy::BOSS_SHOT_FRAME * CBossEnemy::CREATE_BULLET;
 
 	return S_OK;
 }
@@ -318,6 +321,14 @@ void CElecBullet::Update()
 	}
 	else if (m_Electype == CElecBullet::ELECTYPE::TYPE_STAND_BY)
 	{
+		//カウントダウン
+		m_nStandbyCnt--;
+
+		if (m_nStandbyCnt <= 0)
+		{//0以下になったら
+			m_Electype = CElecBullet::ELECTYPE::TYPE_MOVE;
+		}
+
 		//使用しているとき
 		OnActive();
 	}
