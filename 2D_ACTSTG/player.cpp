@@ -537,7 +537,7 @@ void CPlayer::Gauge(CGauge* pGauge)
 			m_nSlashDamage = 1;
 		}
 		//弾発射
-		ShotBullet(pos,2.0f, m_SlashSize, bWay, m_nSlashDamage, CBullet::BULLET_ALLEGIANCE_PLAYER,CBullet::BULLET_TYPE_PANETRARING_SLASH);
+		ShotBullet(pos,4.0f, m_SlashSize, bWay, m_nSlashDamage, CBullet::BULLET_ALLEGIANCE_PLAYER,CBullet::BULLET_TYPE_PANETRARING_SLASH);
 
 		//斬撃のサイズリセット
 		m_SlashSize = D3DXVECTOR3(10.0f, 10.0f, 0.0f);

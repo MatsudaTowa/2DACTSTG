@@ -22,7 +22,7 @@ public:
 	static const int ENEMY_PRIORITY = 4; //描画順
 	static const float DEFAULT_MOVE; //通常時の移動	 
 
-	static const int NORMAL_SHOT_FRAME = 180; //発射するカウント
+	static const int NORMAL_SHOT_FRAME = 120; //発射するカウント
 	//エネミーの列挙定義
 	typedef enum
 	{
@@ -146,7 +146,7 @@ public:
 	void EnemyMove() override;
 private:
 	static const int BOSS_ENEMY_TURNFRAME = 120; //飛んでるエネミーの移動折り返しフレーム
-	static const int ENEMY_BOSS_LIFE = 30; //エネミーの体力
+	static const int ENEMY_BOSS_LIFE = 10; //エネミーの体力
 	static const float CREATE_RADIUS; //生成する弾の位置
 
 	int m_nShotCnt; //弾を発射するカウント

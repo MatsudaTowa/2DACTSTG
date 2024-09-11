@@ -353,8 +353,8 @@ void CElecBullet::Update()
 
 			D3DXVECTOR3 move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-			move.x += sinf(fAngle) * 5.f;
-			move.y += cosf(fAngle) * 5.f;
+			move.x += sinf(fAngle) * 5.0f;
+			move.y += cosf(fAngle) * 5.0f;
 
 			SetMove(D3DXVECTOR3(move.x, move.y, 0.0f));
 		}

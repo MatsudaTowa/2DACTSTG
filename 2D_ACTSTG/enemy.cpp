@@ -342,6 +342,11 @@ void CEnemy::Damage(int nDamage)
 		pScore->AddScore(100);
 
 		Uninit();
+
+		if (m_Type == CEnemy::ENEMY_TYPE::ENEMY_TYPE_BOSS)
+		{
+			CManager::SetMode(CScene::MODE::MODE_RESULT);
+		}
 	}
 }
 
@@ -372,13 +377,13 @@ bool CEnemy::PlayerDistance()
 				
 				fDistance = GetPos().x - pPlayer->GetPos().x;
 
-				if (fDistance >= 0.0f && fDistance < 120.0f)
+				if (fDistance >= 0.0f && fDistance < 150.0f)
 				{//エネミーのminに近い
 					bNear = true;
 					
 					bWay = false; //向きをプレイヤーのほうに切り替える
 				}
-				else if (fDistance <= 0.0f && fDistance > -120.0f)
+				else if (fDistance <= 0.0f && fDistance > -150.0f)
 				{//エネミーのmaxに近い
 					bNear = true;
 
@@ -852,7 +857,6 @@ void CFlowEnemy::EnemyMove()
 		SetMove(move);//移動量代入
 	}
 
-
 	//着地してるか代入
 	SetLanding(bLanding);
 }
@@ -981,4 +985,79 @@ void CBossEnemy::Draw()
 //=============================================
 void CBossEnemy::EnemyMove()
 {
+	////カウント加算
+	//m_nTurnFrameCnt++;
+
+	////向きを取得
+	//bool bWay = GetWay();
+
+	//if (m_bOldWay != bWay)
+	//{//過去の向きと違ったらフレームリセット
+	//	m_nTurnFrameCnt = 0;
+	//}
+
+	//if (m_nTurnFrameCnt >= BOSS_ENEMY_TURNFRAME)
+	//{//指定フレーム数に到達したら
+
+	//	//進む方向を切り替える
+	//	bWay = bWay ? false : true;
+	//	SetWay(bWay);
+
+	//	//過去の向きに今の向きを代入
+	//	m_bOldWay = bWay;
+	//	//カウントリセット
+	//	m_nTurnFrameCnt = 0;
+	//}
+
+	////移動用単位ベクトル初期化
+	//D3DXVECTOR3 vecDirection(0.0f, 0.0f, 0.0f);
+
+	//if (bWay == true)
+	//{//右向きに進むなら
+	//	vecDirection.x += 1.0f;
+	//	vecDirection.z += 0.0f;
+	//}
+	//else if (bWay == false)
+	//{//左向きに進むなら
+	//	vecDirection.x -= 1.0f;
+	//	vecDirection.z -= 0.0f;
+	//}
+
+	////移動量取得
+	//D3DXVECTOR3 move = GetMove();
+	//float rotMoveY = atan2f(vecDirection.x, vecDirection.z);
+
+	////オブジェクト2Dからrotを取得
+	//D3DXVECTOR3 rot = GetRot();
+
+	////着地してるか取得
+	//bool bLanding = GetLaunding();
+
+	////状態を取得
+	//CCharacter::CHARACTER_STATE state = GetState();
+
+	//if (state == CCharacter::CHARACTER_STATE::CHARACTER_DAMAGE)
+	//{
+	//	move.x += sinf(rotMoveY) * DEFAULT_MOVE * 0.5f;
+	//	move.z += cosf(rotMoveY) * DEFAULT_MOVE * 0.5f;
+	//}
+	//else
+	//{
+	//	move.x += sinf(rotMoveY) * DEFAULT_MOVE;
+	//	move.z += cosf(rotMoveY) * DEFAULT_MOVE;
+	//}
+	//rot.y = rotMoveY + D3DX_PI;
+
+	////プレイヤーとの距離を測る
+	//bool bDistance = PlayerDistance();
+
+	//SetRot(rot); //rotを代入
+
+	//if (bDistance == false)
+	//{
+	//	SetMove(move);//移動量代入
+	//}
+
+	////着地してるか代入
+	//SetLanding(bLanding);
 }

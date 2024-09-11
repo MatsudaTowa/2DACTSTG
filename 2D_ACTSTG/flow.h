@@ -16,7 +16,7 @@ class CFlow : public CAttack_Manager
 public:
 	static const std::string TEXTURE_NAME;	//テクスチャの名前
 	static const int FLOW_PRIORITY = 10; //描画順
-	static const int PLAYER_DAMAGE_FRAME = 30; //ダメージを与えるフレーム間隔
+	static const int PLAYER_DAMAGE_FRAME = 60; //ダメージを与えるフレーム間隔
 	static const int ENEMY_DAMAGE_FRAME = 10; //ダメージを与えるフレーム間隔
 	static const int TEX_SPLIT_X = 4; //テクスチャの分割数
 	static const int TEX_SPLIT_Y = 1; //テクスチャの分割数

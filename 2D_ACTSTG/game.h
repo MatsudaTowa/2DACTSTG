@@ -45,7 +45,6 @@ private:
 	static CEdit*m_pEdit;
 	static CTimer*m_pTimer;
 	static CScore*m_pScore;
-
 	static CPlayer*m_pPlayer;
 
 	void LoadEnemy(const std::string* pFileName);
