@@ -13,6 +13,7 @@
 #include "timer.h"
 #include "score.h"
 #include "enemy.h"
+#include "player.h"
 
 class CGame:public CScene
 {
@@ -36,6 +37,7 @@ public:
 	void Update() override;
 	void Draw() override;
 	static CScore*GetScore();
+	static CPlayer*GetPlayer();
 private:
 	int m_nResultDelay; //リザルトへのディレイ
 	bool m_bEdit; //エディットしてるかどうか
@@ -43,6 +45,8 @@ private:
 	static CEdit*m_pEdit;
 	static CTimer*m_pTimer;
 	static CScore*m_pScore;
+
+	static CPlayer*m_pPlayer;
 
 	void LoadEnemy(const std::string* pFileName);
 };

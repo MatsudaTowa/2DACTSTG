@@ -8,6 +8,7 @@
 #include "manager.h"
 #include "effect.h"
 #include "enemy.h"
+#include "game.h"
 
 //テクスチャ初期化
 LPDIRECT3DTEXTURE9 CBullet::m_pTextureTemp = nullptr;
@@ -96,6 +97,15 @@ void CBullet::OnActive()
 
 		bHitUnder = HitGround();
 
+		if (m_type != CBullet::BULLET_TYPE_PANETRARING_SLASH)
+		{
+			if (bHitUnder == true)
+			{//当たってたら
+				Uninit();
+				return;
+			}
+		}
+
 		switch (m_Allegiance)
 		{
 		case BULLET_ALLEGIANCE_PLAYER:
@@ -180,6 +190,7 @@ CBullet* CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, D3D
 	default:
 		break;
 	}
+	pBullet->m_type = type;
 	pBullet->m_Allegiance = Allegiance; //弾の設定
 	pBullet->SetType(OBJECT_TYPE_BULLET); //タイプ設定
 	pBullet->Init();
@@ -271,8 +282,9 @@ void CPanetRaring_Slash::Draw()
 //=============================================
 //コンストラクタ
 //=============================================
-CElecBullet::CElecBullet(int nPriority) :CBullet(nPriority),m_Electype(CElecBullet::ELECTYPE::TYPE_NONE),m_nStandbyCnt()
-{//イニシャライザーでプライオリティ設定、タイプ初期化
+CElecBullet::CElecBullet(int nPriority) :CBullet(nPriority),m_Electype(CElecBullet::ELECTYPE::TYPE_NONE),
+m_nStandbyCnt(0),m_TargetPos(D3DXVECTOR3(0.0f,0.0f,0.0f))
+{//イニシャライザーでプライオリティ設定、各メンバ変数初期化
 }
 
 //=============================================
@@ -296,6 +308,10 @@ HRESULT CElecBullet::Init()
 	//スタンバイ状態の時間を設定
 	m_nStandbyCnt = CBossEnemy::BOSS_SHOT_FRAME * CBossEnemy::CREATE_BULLET;
 
+	D3DXVECTOR3 PlayerPos = CGame::GetPlayer()->GetPos();
+	D3DXVECTOR3 PlayerMaxPos = CGame::GetPlayer()->GetMaxPos();
+	m_TargetPos = PlayerPos - PlayerMaxPos * 0.5f;
+
 	return S_OK;
 }
 
@@ -315,7 +331,21 @@ void CElecBullet::Update()
 {
 	if (m_Electype == CElecBullet::ELECTYPE::TYPE_MOVE)
 	{
-		SetMove(D3DXVECTOR3(-3.0f,0.0f,0.0f));
+		float x = m_TargetPos.x - GetPos().x; //敵との距離の差分計算（横）
+		float y = m_TargetPos.y - GetPos().y; //敵との距離の差分計算（縦）
+
+		float fAngle = atan2f(x, y);
+
+		D3DXVECTOR3 rot = GetRot();
+
+		rot.y = fAngle + D3DX_PI;
+
+		D3DXVECTOR3 move = D3DXVECTOR3(0.0f,0.0f,0.0f);
+
+		move.x += sinf(fAngle) * 5.f;
+		move.y += cosf(fAngle) * 5.f;
+
+		SetMove(D3DXVECTOR3(move.x, move.y,0.0f));
 		//親クラスの更新
 		CBullet::Update();
 	}
@@ -360,27 +390,12 @@ CElecBullet* CElecBullet::ElecCreate(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTO
 	pBullet->SetLife(nLife); //寿命代入
 	pBullet->SetDamage(nDamage); //威力代入
 
-	switch (type)
-	{
-	case CBullet::BULLET_TYPE::BULLET_TYPE_PANETRARING_SLASH:
-		pBullet->BindTexture(pTexture->GetAddress(pTexture->Regist(&PANETRARING_TEXTURE_NAME)));
-		break;
+	pBullet->BindTexture(pTexture->GetAddress(pTexture->Regist(&ELEC_TEXTURE_NAME)));
 
-	case CBullet::BULLET_TYPE::BULLET_TYPE_ELECBULLET:
-		pBullet->BindTexture(pTexture->GetAddress(pTexture->Regist(&ELEC_TEXTURE_NAME)));
-		break;
-
-	default:
-		break;
-	}
+	pBullet->SetBulletType(type);
 	pBullet->SetBulletAllegiance(Allegiance); //弾の設定
 	pBullet->SetType(OBJECT_TYPE_BULLET); //タイプ設定
 	pBullet->Init();
 
 	return pBullet;
-}
-
-void CElecBullet::SetElecType(ELECTYPE type)
-{
-	m_Electype = type;
 }

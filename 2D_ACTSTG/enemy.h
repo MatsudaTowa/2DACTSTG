@@ -133,9 +133,8 @@ private:
 class CBossEnemy : public CEnemy
 {
 public:
-
 	//定数
-	static const int BOSS_SHOT_FRAME = 60; //発射するカウント
+	static const int BOSS_SHOT_FRAME = 20; //発射するカウント
 	static const int CREATE_BULLET = 6; //生成する弾の数
 
 	CBossEnemy(int nPriority = ENEMY_PRIORITY);

@@ -9,7 +9,6 @@
 #include "object2D.h"
 #include "object3D.h"
 #include "objectX.h"
-#include "player.h"
 #include "player_test.h"
 #include "bullet.h"
 #include "effect.h"
@@ -30,6 +29,9 @@ CTimer* CGame::m_pTimer = nullptr;
 
 //スコア設定
 CScore* CGame::m_pScore = nullptr;
+
+//プレイヤー
+CPlayer*CGame::m_pPlayer = nullptr;
 
 //=============================================
 //コンストラクタ
@@ -94,7 +96,7 @@ HRESULT CGame::Init()
 	CField* pField = CField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1000.0f, 0.0f, 1000.0f));
 
 	//プレイヤー生成
-	CPlayer* pPlayer = CPlayer::Create(D3DXVECTOR3(-900.0f, 0.5f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),5);
+	m_pPlayer = CPlayer::Create(D3DXVECTOR3(-900.0f, 0.5f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),5);
 
 	//プレイヤー生成
 	//CPlayer_test* pPlayer_test = CPlayer_test::Create(D3DXVECTOR3(-450.0f, 0.5f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5);
@@ -124,6 +126,10 @@ void CGame::Uninit()
 	{
 		m_pScore->Uninit();
 		m_pScore = nullptr;
+	}
+	if (m_pPlayer != nullptr)
+	{
+		m_pPlayer = nullptr;
 	}
 
 	CSound* pSound = CManager::GetSound();
@@ -205,6 +211,14 @@ void CGame::Draw()
 CScore* CGame::GetScore()
 {
 	return m_pScore;
+}
+
+//=============================================
+//プレイヤー取得
+//=============================================
+CPlayer* CGame::GetPlayer()
+{
+	return m_pPlayer;
 }
 
 //=============================================

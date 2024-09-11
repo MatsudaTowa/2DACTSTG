@@ -17,7 +17,7 @@ CScore::CScore():m_nScore(0),m_pos(D3DXVECTOR3(0.0f,0.0f,0.0f))
 {//イニシャライザーでメンバ変数初期化
 
 	//初期位置代入
-	m_pos = D3DXVECTOR3(1100.0f, 50.0f, 0.0f);
+	m_pos = D3DXVECTOR3(300.0f, 650.0f, 0.0f);
 
 	for (int nCnt = 0; nCnt < NUM_DIGIT; nCnt++)
 	{

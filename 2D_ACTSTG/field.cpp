@@ -8,7 +8,7 @@
 #include "manager.h"
 
 //texパス
-const std::string CField::TEXTURE_NAME = "data\\TEXTURE\\bg_test.jpg";
+const std::string CField::TEXTURE_NAME = "data\\TEXTURE\\soil.jpg";
 
 //テクスチャ初期化
 LPDIRECT3DTEXTURE9 CField::m_pTextureTemp = nullptr;

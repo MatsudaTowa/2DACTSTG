@@ -173,8 +173,8 @@ void CCamera::SetCamera()
 	case TYPE_PARALLEL_SIDEVIEW:
 		//ïΩçsìäâe
 		D3DXMatrixOrthoLH(&m_mtxProjection,
-		(float)SCREEN_WIDTH,
-		(float)SCREEN_HEIGHT,
+		(float)SCREEN_WIDTH * 0.2f,
+		(float)SCREEN_HEIGHT* 0.2f,
 		5.0f,
 		500.0f);
 		break;
