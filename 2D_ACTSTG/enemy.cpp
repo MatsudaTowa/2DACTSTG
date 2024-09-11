@@ -861,7 +861,7 @@ void CFlowEnemy::EnemyMove()
 //const float CBossEnemy::DEFAULT_MOVE_Y = 0.5f;
 
 //弾を生成する円周の半径
-const float CBossEnemy::CREATE_RADIUS = 50.0f;
+const float CBossEnemy::CREATE_RADIUS = 35.0f;
 
 //=============================================
 //コンストラクタ

@@ -331,21 +331,6 @@ void CElecBullet::Update()
 {
 	if (m_Electype == CElecBullet::ELECTYPE::TYPE_MOVE)
 	{
-		float x = m_TargetPos.x - GetPos().x; //敵との距離の差分計算（横）
-		float y = m_TargetPos.y - GetPos().y; //敵との距離の差分計算（縦）
-
-		float fAngle = atan2f(x, y);
-
-		D3DXVECTOR3 rot = GetRot();
-
-		rot.y = fAngle + D3DX_PI;
-
-		D3DXVECTOR3 move = D3DXVECTOR3(0.0f,0.0f,0.0f);
-
-		move.x += sinf(fAngle) * 5.f;
-		move.y += cosf(fAngle) * 5.f;
-
-		SetMove(D3DXVECTOR3(move.x, move.y,0.0f));
 		//親クラスの更新
 		CBullet::Update();
 	}
@@ -357,6 +342,21 @@ void CElecBullet::Update()
 		if (m_nStandbyCnt <= 0)
 		{//0以下になったら
 			m_Electype = CElecBullet::ELECTYPE::TYPE_MOVE;
+			float x = m_TargetPos.x - GetPos().x; //敵との距離の差分計算（横）
+			float y = m_TargetPos.y - GetPos().y; //敵との距離の差分計算（縦）
+
+			float fAngle = atan2f(x, y);
+
+			D3DXVECTOR3 rot = GetRot();
+
+			rot.y = fAngle + D3DX_PI;
+
+			D3DXVECTOR3 move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+			move.x += sinf(fAngle) * 5.f;
+			move.y += cosf(fAngle) * 5.f;
+
+			SetMove(D3DXVECTOR3(move.x, move.y, 0.0f));
 		}
 
 		//使用しているとき
