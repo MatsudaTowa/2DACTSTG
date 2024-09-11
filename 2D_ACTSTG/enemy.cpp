@@ -866,8 +866,12 @@ const float CBossEnemy::CREATE_RADIUS = 50.0f;
 //=============================================
 //コンストラクタ
 //=============================================
-CBossEnemy::CBossEnemy(int nPriority):CEnemy(nPriority), m_nTurnFrameCnt(0), m_nNumBullet(0),m_bOldWay(false), m_nShotCnt(0)
+CBossEnemy::CBossEnemy(int nPriority):CEnemy(nPriority), m_nTurnFrameCnt(0), m_nNumBullet(0),m_bOldWay(false), m_bShot(false), m_nShotCnt(0)
 {
+	for (int nCnt = 0; nCnt < CBossEnemy::CREATE_BULLET; nCnt++)
+	{
+		pBullet[nCnt] = nullptr;
+	}
 }
 
 //=============================================
@@ -921,7 +925,7 @@ void CBossEnemy::Update()
 			
 			//for (int nCnt = 0; nCnt < CBossEnemy::CREATE_BULLET; nCnt++)
 			//{//既定の数、弾生成
-			if (m_nNumBullet < CBossEnemy::CREATE_BULLET)
+			if (m_nNumBullet < CBossEnemy::CREATE_BULLET  && m_bShot == false)
 			{
 				D3DXVECTOR3 CreatePos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
@@ -931,11 +935,38 @@ void CBossEnemy::Update()
 				//ボスの位置を基準にする
 				CreatePos += GetPos() + (GetMaxPos() * 0.5f);
 
-				//弾発射
-				ShotBullet(CreatePos, 0.0f, D3DXVECTOR3(10.0f, 10.0f, 0.0f), bWay, 1, CBullet::BULLET_ALLEGIANCE_ENEMY, CBullet::BULLET_TYPE_ELECBULLET);
+				if (bWay == true)
+				{//右向き
+					pBullet[m_nNumBullet] = CElecBullet::ElecCreate(CreatePos,D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 2.0f),
+					D3DXVECTOR3(10.0f, 10.0f, 0.0f), 60, 1, CBullet::BULLET_ALLEGIANCE_ENEMY, CBullet::BULLET_TYPE_ELECBULLET);
+				}
+				else if (bWay == false)
+				{//左向き
+					pBullet[m_nNumBullet] = CElecBullet::ElecCreate(CreatePos, D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 4.0f),
+						D3DXVECTOR3(10.0f, 10.0f, 0.0f), 60, 1, CBullet::BULLET_ALLEGIANCE_ENEMY, CBullet::BULLET_TYPE_ELECBULLET);
+				}
+
 				m_nNumBullet++;
+
+				//弾発射
+				//ShotBullet(CreatePos, 0.0f, D3DXVECTOR3(10.0f, 10.0f, 0.0f), bWay, 1, CBullet::BULLET_ALLEGIANCE_ENEMY, CBullet::BULLET_TYPE_ELECBULLET);			
+			}
+			if (m_bShot == true)
+			{
+				pBullet[m_nNumBullet - 1]->SetElecType(CElecBullet::ELECTYPE::TYPE_MOVE);
+				m_nNumBullet--;
+				if (m_nNumBullet <= 0)
+				{
+					m_nNumBullet = 0;
+					m_bShot = false;
+				}
 			}
 			//}
+
+			if (m_nNumBullet >= CBossEnemy::CREATE_BULLET)
+			{
+				m_bShot = true;
+			}
 
 
 			//ショットカウントリセット

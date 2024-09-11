@@ -152,6 +152,6 @@ private:
 	int m_nTurnFrameCnt; //折り返しフレームをカウントする変数
 	bool m_bOldWay; //過去の方向
 	bool m_bShot; //弾を発射するかどうか
-	//CBullet*pBullet[CREATE_BULLET]; //ボス用の弾のポインタ
+	CElecBullet*pBullet[CREATE_BULLET]; //ボス用の弾のポインタ
 };
 #endif

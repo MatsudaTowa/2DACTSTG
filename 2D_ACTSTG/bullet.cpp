@@ -312,6 +312,7 @@ void CElecBullet::Update()
 {
 	if (m_Electype == CElecBullet::ELECTYPE::TYPE_MOVE)
 	{
+		SetMove(D3DXVECTOR3(-3.0f,0.0f,0.0f));
 		//親クラスの更新
 		CBullet::Update();
 	}
@@ -329,6 +330,43 @@ void CElecBullet::Draw()
 {
 	//親クラスの描画
 	CBullet::Draw();
+}
+
+//=============================================
+//生成
+//=============================================
+CElecBullet* CElecBullet::ElecCreate(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 size, int nLife, int nDamage, BULLET_ALLEGIANCE Allegiance, BULLET_TYPE type)
+{
+	CElecBullet* pBullet = new CElecBullet;
+
+	if (pBullet == nullptr) { return nullptr; }
+
+	CTexture* pTexture = CManager::GetTexture();
+
+	pBullet->SetPos(pos); //pos設定
+	pBullet->SetSize(size); //サイズ設定
+	pBullet->SetRot(rot);
+	pBullet->SetLife(nLife); //寿命代入
+	pBullet->SetDamage(nDamage); //威力代入
+
+	switch (type)
+	{
+	case CBullet::BULLET_TYPE::BULLET_TYPE_PANETRARING_SLASH:
+		pBullet->BindTexture(pTexture->GetAddress(pTexture->Regist(&PANETRARING_TEXTURE_NAME)));
+		break;
+
+	case CBullet::BULLET_TYPE::BULLET_TYPE_ELECBULLET:
+		pBullet->BindTexture(pTexture->GetAddress(pTexture->Regist(&ELEC_TEXTURE_NAME)));
+		break;
+
+	default:
+		break;
+	}
+	pBullet->SetBulletAllegiance(Allegiance); //弾の設定
+	pBullet->SetType(OBJECT_TYPE_BULLET); //タイプ設定
+	pBullet->Init();
+
+	return pBullet;
 }
 
 void CElecBullet::SetElecType(ELECTYPE type)
