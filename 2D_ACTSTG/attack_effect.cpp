@@ -49,7 +49,7 @@ HRESULT CAttack_Effect::Init()
 //=============================================
 void CAttack_Effect::Uninit()
 {
-	CObject3D::Uninit();
+ 	CObject3D::Uninit();
 }
 
 //=============================================

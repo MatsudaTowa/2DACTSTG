@@ -54,7 +54,6 @@ void CBullet::Uninit()
 //=============================================
 void CBullet::Update()
 {
-
 	//親クラスの更新
 	CAttack_Manager::Update();
 	

@@ -104,6 +104,7 @@ HRESULT CGame::Init()
 	//エネミー生成
 	LoadEnemy(&CGame::ENEMY_FILE);
 
+
 	CSound* pSound = CManager::GetSound();
 
 	pSound->PlaySound(CSound::SOUND_LABEL::SOUND_LABEL_BGM_GAME);

@@ -30,6 +30,9 @@ const std::string CEnemy::MODEL_NAME = "data\\MODEL\\enemy_test.x";
 const std::string CEnemy::FLOW_MODEL_NAME = "data\\MODEL\\flowenemy_test.x";
 
 //モデルパス
+const std::string CEnemy::FLY_MODEL_NAME = "data\\MODEL\\jett.x";
+
+//モデルパス
 const std::string CEnemy::BOSS_MODEL_NAME = "data\\MODEL\\boss.x";
 
 //ステート切り替えフレーム
@@ -61,6 +64,8 @@ CEnemy::CEnemy(int nPriority):CCharacter(nPriority), m_bLockOn(false)
 //=============================================
 CEnemy::~CEnemy()
 {
+	//総数減らす
+	m_nNumEnemy--;
 }
 
 //=============================================
@@ -88,12 +93,20 @@ HRESULT CEnemy::Init()
 //=============================================
 void CEnemy::Uninit()
 {
+	if (m_pAttackEffect != nullptr)
+	{
+		m_pAttackEffect->Uninit();
+		m_pAttackEffect = nullptr;
+	}
+
+	if (m_pLockOn != nullptr)
+	{
+		m_pLockOn->Uninit();
+		m_pLockOn = nullptr;
+	}
+	
 	//親クラスの終了
 	CObjectX::Uninit();
-
-	//総数減らす
-	m_nNumEnemy--;
-
 }
 
 //=============================================
@@ -101,7 +114,7 @@ void CEnemy::Uninit()
 //=============================================
 void CEnemy::Update()
 {
-	if (m_Type != CEnemy::ENEMY_TYPE::ENEMY_TYPE_BOSS)
+	if (m_Type != CEnemy::ENEMY_TYPE::ENEMY_TYPE_BOSS && m_Type != CEnemy::ENEMY_TYPE::ENEMY_TYPE_FLY)
 	{//飛ぶ奴以外なら
 		//重力処理
 		Gravity();
@@ -230,6 +243,9 @@ CEnemy* CEnemy::Create(const D3DXVECTOR3& pos,const D3DXVECTOR3& rot, const ENEM
 	case ENEMY_TYPE_FLOW:
 		pEnemy = new CFlowEnemy;
 		break;
+	case ENEMY_TYPE_FLY:
+		pEnemy = new CFlyEnemy;
+		break;
 	case ENEMY_TYPE_BOSS:
 		pEnemy = new CBossEnemy;
 		break;
@@ -263,6 +279,12 @@ CEnemy* CEnemy::Create(const D3DXVECTOR3& pos,const D3DXVECTOR3& rot, const ENEM
 			pModel->GetModelInfo(pModel->Regist(&FLOW_MODEL_NAME)).dwNumMat, //マテリアル数取得
 			pModel->GetModelInfo(pModel->Regist(&FLOW_MODEL_NAME)).pMesh); //メッシュ情報取得
 		break;
+	case CEnemy::ENEMY_TYPE::ENEMY_TYPE_FLY:
+		//Xファイル読み込み
+		pEnemy->BindXFile(pModel->GetModelInfo(pModel->Regist(&FLY_MODEL_NAME)).pBuffMat, //マテリアル取得
+			pModel->GetModelInfo(pModel->Regist(&FLY_MODEL_NAME)).dwNumMat, //マテリアル数取得
+			pModel->GetModelInfo(pModel->Regist(&FLY_MODEL_NAME)).pMesh); //メッシュ情報取得
+		break;
 	case CEnemy::ENEMY_TYPE::ENEMY_TYPE_BOSS:
 		//Xファイル読み込み
 		pEnemy->BindXFile(pModel->GetModelInfo(pModel->Regist(&BOSS_MODEL_NAME)).pBuffMat, //マテリアル取得
@@ -293,6 +315,11 @@ void CEnemy::Damage(int nDamage)
 	{//ダメージ状態以外でHPが残ってたら
 		nLife -= nDamage;
 
+		if (nLife < 0)
+		{
+			nLife = 0;
+		}
+
 		//ダメージ状態に変更
 		state = CCharacter::CHARACTER_STATE::CHARACTER_DAMAGE;
 
@@ -305,17 +332,24 @@ void CEnemy::Damage(int nDamage)
 	if (nLife <= 0)
 	{//HPが0以下だったら
 		//破棄
-		CItem* pItem = nullptr;
+		//CItem* pItem = nullptr;
 
 		switch (m_Type)
 		{
 		case CEnemy::ENEMY_TYPE::ENEMY_TYPE_NORMAL:
-			pItem = CItem::Create(CItem::ITEMTYPE_PANETRARING_SLASH, D3DXVECTOR3(GetPos().x, GetPos().y, GetPos().z), D3DXVECTOR3(10.0f, 10.0f, 0.0f), GetRot());
+			/*pItem = */CItem::Create(CItem::ITEMTYPE_PANETRARING_SLASH, D3DXVECTOR3(GetPos().x, GetPos().y, GetPos().z), D3DXVECTOR3(10.0f, 10.0f, 0.0f), GetRot());
 			break;
 		case CEnemy::ENEMY_TYPE::ENEMY_TYPE_FLOW:
-			pItem = CItem::Create(CItem::ITEMTYPE_FLOW, D3DXVECTOR3(GetPos().x, GetPos().y + 10.0f, GetPos().z), D3DXVECTOR3(10.0f, 10.0f, 0.0f), GetRot());
+			/*pItem = */CItem::Create(CItem::ITEMTYPE_FLOW, D3DXVECTOR3(GetPos().x, GetPos().y + 10.0f, GetPos().z), D3DXVECTOR3(10.0f, 10.0f, 0.0f), GetRot());
+			break;
+
+		case CEnemy::ENEMY_TYPE::ENEMY_TYPE_FLY:
+			break;
+
+		case CEnemy::ENEMY_TYPE::ENEMY_TYPE_BOSS:
 			break;
 		default:
+			assert(false);
 			break;
 		}
 
@@ -341,13 +375,14 @@ void CEnemy::Damage(int nDamage)
 
 		pScore->AddScore(100);
 
-		Uninit();
-
 		if (m_Type == CEnemy::ENEMY_TYPE::ENEMY_TYPE_BOSS)
 		{
 			CBossEnemy::m_BossDeath = true;
 			//CManager::SetMode(CScene::MODE::MODE_RESULT);
 		}
+
+		Uninit();
+		return;
 	}
 }
 
@@ -862,6 +897,65 @@ void CFlowEnemy::EnemyMove()
 	SetLanding(bLanding);
 }
 
+//=============================================
+//コンストラクタ
+//=============================================
+CFlyEnemy::CFlyEnemy(int nPriority):CEnemy(nPriority), m_nShotCnt(0), m_nTurnFrameCnt(0), m_bOldWay(false), m_bLockOnShot(false)
+{
+}
+
+//=============================================
+//デストラクタ
+//=============================================
+CFlyEnemy::~CFlyEnemy()
+{
+}
+
+//=============================================
+//初期化
+//=============================================
+HRESULT CFlyEnemy::Init()
+{
+	//親クラスの初期化
+	CEnemy::Init();
+	SetLife(ENEMY_FLY_LIFE);
+	return S_OK;
+}
+
+//=============================================
+//終了
+//=============================================
+void CFlyEnemy::Uninit()
+{
+	//親クラスの終了
+	CEnemy::Uninit();
+}
+
+//=============================================
+//更新
+//=============================================
+void CFlyEnemy::Update()
+{
+	//親クラスの更新
+	CEnemy::Update();
+}
+
+//=============================================
+//描画
+//=============================================
+void CFlyEnemy::Draw()
+{
+	//親クラスの描画
+	CEnemy::Draw();
+}
+
+//=============================================
+//移動
+//=============================================
+void CFlyEnemy::EnemyMove()
+{
+}
+
 ////通常の移動速度
 //const float CBossEnemy::DEFAULT_MOVE_Y = 0.5f;
 
@@ -937,16 +1031,8 @@ void CBossEnemy::Update()
 				//ボスの位置を基準にする
 				CreatePos += GetPos() + (GetMaxPos() * 0.5f);
 
-				if (bWay == true)
-				{//右向き
-					CElecBullet::ElecCreate(CreatePos,D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 2.0f),
-					D3DXVECTOR3(10.0f, 10.0f, 0.0f), 60, 1, CBullet::BULLET_ALLEGIANCE_ENEMY, CBullet::BULLET_TYPE_ELECBULLET);
-				}
-				else if (bWay == false)
-				{//左向き
-					CElecBullet::ElecCreate(CreatePos, D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 4.0f),
-					D3DXVECTOR3(10.0f, 10.0f, 0.0f), 60, 1, CBullet::BULLET_ALLEGIANCE_ENEMY, CBullet::BULLET_TYPE_ELECBULLET);
-				}
+				CElecBullet::ElecCreate(CreatePos,D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 2.0f),
+				D3DXVECTOR3(10.0f, 10.0f, 0.0f), 60, 1, CBullet::BULLET_ALLEGIANCE_ENEMY, CBullet::BULLET_TYPE_ELECBULLET);
 
 				m_nNumBullet++;
 			}
@@ -985,79 +1071,79 @@ void CBossEnemy::Draw()
 //=============================================
 void CBossEnemy::EnemyMove()
 {
-	////カウント加算
-	//m_nTurnFrameCnt++;
+	//カウント加算
+	m_nTurnFrameCnt++;
 
-	////向きを取得
-	//bool bWay = GetWay();
+	//向きを取得
+	bool bWay = GetWay();
 
-	//if (m_bOldWay != bWay)
-	//{//過去の向きと違ったらフレームリセット
-	//	m_nTurnFrameCnt = 0;
-	//}
+	if (m_bOldWay != bWay)
+	{//過去の向きと違ったらフレームリセット
+		m_nTurnFrameCnt = 0;
+	}
 
-	//if (m_nTurnFrameCnt >= BOSS_ENEMY_TURNFRAME)
-	//{//指定フレーム数に到達したら
+	if (m_nTurnFrameCnt >= BOSS_ENEMY_TURNFRAME)
+	{//指定フレーム数に到達したら
 
-	//	//進む方向を切り替える
-	//	bWay = bWay ? false : true;
-	//	SetWay(bWay);
+		//進む方向を切り替える
+		bWay = bWay ? false : true;
+		SetWay(bWay);
 
-	//	//過去の向きに今の向きを代入
-	//	m_bOldWay = bWay;
-	//	//カウントリセット
-	//	m_nTurnFrameCnt = 0;
-	//}
+		//過去の向きに今の向きを代入
+		m_bOldWay = bWay;
+		//カウントリセット
+		m_nTurnFrameCnt = 0;
+	}
 
-	////移動用単位ベクトル初期化
-	//D3DXVECTOR3 vecDirection(0.0f, 0.0f, 0.0f);
+	//移動用単位ベクトル初期化
+	D3DXVECTOR3 vecDirection(0.0f, 0.0f, 0.0f);
 
-	//if (bWay == true)
-	//{//右向きに進むなら
-	//	vecDirection.x += 1.0f;
-	//	vecDirection.z += 0.0f;
-	//}
-	//else if (bWay == false)
-	//{//左向きに進むなら
-	//	vecDirection.x -= 1.0f;
-	//	vecDirection.z -= 0.0f;
-	//}
+	if (bWay == true)
+	{//右向きに進むなら
+		vecDirection.x += 1.0f;
+		vecDirection.z += 0.0f;
+	}
+	else if (bWay == false)
+	{//左向きに進むなら
+		vecDirection.x -= 1.0f;
+		vecDirection.z -= 0.0f;
+	}
 
-	////移動量取得
-	//D3DXVECTOR3 move = GetMove();
-	//float rotMoveY = atan2f(vecDirection.x, vecDirection.z);
+	//移動量取得
+	D3DXVECTOR3 move = GetMove();
+	float rotMoveY = atan2f(vecDirection.x, vecDirection.z);
 
-	////オブジェクト2Dからrotを取得
-	//D3DXVECTOR3 rot = GetRot();
+	//オブジェクト2Dからrotを取得
+	D3DXVECTOR3 rot = GetRot();
 
-	////着地してるか取得
-	//bool bLanding = GetLaunding();
+	//着地してるか取得
+	bool bLanding = GetLaunding();
 
-	////状態を取得
-	//CCharacter::CHARACTER_STATE state = GetState();
+	//状態を取得
+	CCharacter::CHARACTER_STATE state = GetState();
 
-	//if (state == CCharacter::CHARACTER_STATE::CHARACTER_DAMAGE)
-	//{
-	//	move.x += sinf(rotMoveY) * DEFAULT_MOVE * 0.5f;
-	//	move.z += cosf(rotMoveY) * DEFAULT_MOVE * 0.5f;
-	//}
-	//else
-	//{
-	//	move.x += sinf(rotMoveY) * DEFAULT_MOVE;
-	//	move.z += cosf(rotMoveY) * DEFAULT_MOVE;
-	//}
-	//rot.y = rotMoveY + D3DX_PI;
+	if (state == CCharacter::CHARACTER_STATE::CHARACTER_DAMAGE)
+	{
+		move.x += sinf(rotMoveY) * DEFAULT_MOVE * 0.5f;
+		move.z += cosf(rotMoveY) * DEFAULT_MOVE * 0.5f;
+	}
+	else
+	{
+		move.x += sinf(rotMoveY) * DEFAULT_MOVE;
+		move.z += cosf(rotMoveY) * DEFAULT_MOVE;
+	}
+	rot.y = rotMoveY + D3DX_PI;
 
-	////プレイヤーとの距離を測る
-	//bool bDistance = PlayerDistance();
+	//プレイヤーとの距離を測る
+	bool bDistance = PlayerDistance();
 
-	//SetRot(rot); //rotを代入
+	SetRot(rot); //rotを代入
 
-	//if (bDistance == false)
-	//{
-	//	SetMove(move);//移動量代入
-	//}
+	if (bDistance == false)
+	{
+		SetMove(move);//移動量代入
+	}
 
-	////着地してるか代入
-	//SetLanding(bLanding);
+	//着地してるか代入
+	SetLanding(bLanding);
 }

@@ -105,6 +105,7 @@ void CMelee::Update()
 		if (bHitCheck == true)
 		{
 			Uninit();
+			return;
 		}
 
 		//ブロックとの当たり判定
@@ -113,12 +114,14 @@ void CMelee::Update()
 		if (bHitCheck == true)
 		{
 			Uninit();
+			return;
 		}
 	}
 	else
 	{
 		//終了
 		Uninit();
+		return;
 	}
 }
 
