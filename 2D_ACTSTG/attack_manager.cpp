@@ -133,7 +133,7 @@ bool CAttack_Manager::HitPlayer()
 				if (ColisionCheck != CColision::COLISION::COLISON_NONE)
 				{//“–‚½‚Á‚Ä‚½‚ç
 					//#ifdef _DEBUG
-					//break;
+					break;
 					//#endif // _DEBUG
 
 					pPlayer->Damage(m_nDamage);

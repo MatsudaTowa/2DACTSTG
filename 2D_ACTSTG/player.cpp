@@ -440,6 +440,7 @@ void CPlayer::Damage(int nDamage)
 
 	if (nLife > 0)
 	{//HPが残ってたら
+
 		nLife -= nDamage;
 
 		//ダメージ状態に変更

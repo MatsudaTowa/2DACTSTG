@@ -9,6 +9,8 @@
 #include "manager.h"
 #include "player.h"
 #include "colision.h"
+#include "score.h"
+#include "game.h"
 
 //テクスチャ初期化
 LPDIRECT3DTEXTURE9 CItem::m_pTextureTemp = nullptr;
@@ -160,7 +162,16 @@ void CItem::HitItem()
 					}
 					if (pKeyboard->GetTrigger(DIK_F))
 					{
-						pPlayer->m_Attack = pPlayerAttack;
+						if (pPlayer->m_Attack != pPlayerAttack)
+						{
+							pPlayer->m_Attack = pPlayerAttack;
+						}
+						else if (pPlayer->m_Attack == pPlayerAttack)
+						{
+							CScore* pScore = CGame::GetScore();
+
+							pScore->AddScore(100);
+						}
 
 						//アイテムの削除
 						m_pButton_UI->Uninit();

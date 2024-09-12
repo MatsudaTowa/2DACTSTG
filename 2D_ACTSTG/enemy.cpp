@@ -843,8 +843,8 @@ void CFlowEnemy::EnemyMove()
 	}
 	else
 	{
-		move.x += sinf(rotMoveY) * DEFAULT_MOVE;
-		move.z += cosf(rotMoveY) * DEFAULT_MOVE;
+		move.x += sinf(rotMoveY) * 0.0f;
+		move.z += cosf(rotMoveY) * 0.0f;
 	}
 	rot.y = rotMoveY + D3DX_PI;
 
@@ -875,10 +875,7 @@ bool CBossEnemy::m_BossDeath = false;
 //=============================================
 CBossEnemy::CBossEnemy(int nPriority):CEnemy(nPriority), m_nTurnFrameCnt(0), m_nNumBullet(0),m_bOldWay(false), m_bShot(false), m_nShotCnt(0)
 {
-	/*for (int nCnt = 0; nCnt < CBossEnemy::CREATE_BULLET; nCnt++)
-	{
-		pBullet[nCnt] = nullptr;
-	}*/
+	m_BossDeath = false;
 }
 
 //=============================================
