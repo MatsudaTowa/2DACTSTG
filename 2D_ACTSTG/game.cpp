@@ -79,15 +79,15 @@ HRESULT CGame::Init()
 		m_pScore->Init();
 	}
 
-	//ブロック生成
-	CBlock* pBlock = CBlock::Create(CBlock::BLOCKTYPE_DEFAULT, D3DXVECTOR3(0.0, 0.0f, 0.0f),
-		D3DXVECTOR3(0.0f, 0.0f, 0.0f), 3, false);
+	////ブロック生成
+	//CBlock* pBlock = CBlock::Create(CBlock::BLOCKTYPE_DEFAULT, D3DXVECTOR3(0.0, 0.0f, 0.0f),
+	//	D3DXVECTOR3(0.0f, 0.0f, 0.0f), 3, false);
 
-	pBlock = CBlock::Create(CBlock::BLOCKTYPE_DEFAULT, D3DXVECTOR3(10.0f, 0.0f, 0.0f),
-		D3DXVECTOR3(0.0f, 0.0f, 0.0f), 3, false);
+	//pBlock = CBlock::Create(CBlock::BLOCKTYPE_DEFAULT, D3DXVECTOR3(10.0f, 0.0f, 0.0f),
+	//	D3DXVECTOR3(0.0f, 0.0f, 0.0f), 3, false);
 
-	pBlock = CBlock::Create(CBlock::BLOCKTYPE_DEFAULT, D3DXVECTOR3(5.0f, 50.0f, 0.0f),
-		D3DXVECTOR3(0.0f, 0.0f, 0.0f), 3, false);
+	//pBlock = CBlock::Create(CBlock::BLOCKTYPE_DEFAULT, D3DXVECTOR3(5.0f, 50.0f, 0.0f),
+	//	D3DXVECTOR3(0.0f, 0.0f, 0.0f), 3, false);
 
 	//ゲージのフレームUI生成
 	CGauge_Fream* pGauge_Fream = CGauge_Fream::Create(D3DXVECTOR3(250.0f,150.0f,0.0f),D3DXVECTOR2(280.0f,120.0f));

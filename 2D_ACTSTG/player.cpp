@@ -187,6 +187,29 @@ void CPlayer::Update()
 			break;
 		case CPlayer::PLAYER_ATTACK_PANETRARING_SLASH:
 			m_pItemUI->SetTex(CItem_UI::ITEM_UI_TYPE_PANETRARING_SLASH);
+
+			for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
+			{
+				//オブジェクト取得
+				CObject* pObj = CObject::Getobject(CFlow_Range::FLOW_RANGE_PRIORITY, nCnt);
+				if (pObj != nullptr)
+				{//ヌルポインタじゃなければ
+					//タイプ取得
+					CObject::OBJECT_TYPE type = pObj->GetType();
+
+					//敵との当たり判定
+					if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_FLOW_RANGE)
+					{
+						CFlow_Range* pFlow_Range = (CFlow_Range*)pObj;
+
+						if (pFlow_Range != nullptr)
+						{
+							pFlow_Range->Uninit();
+						}
+					}
+				}
+			}
+			m_bFlow = false;
 			break;
 		case CPlayer::PLAYER_ATTACK_FLOW:
 			m_pItemUI->SetTex(CItem_UI::ITEM_UI_TYPE_FLOW);
