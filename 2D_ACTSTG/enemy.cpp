@@ -345,7 +345,8 @@ void CEnemy::Damage(int nDamage)
 
 		if (m_Type == CEnemy::ENEMY_TYPE::ENEMY_TYPE_BOSS)
 		{
-			CManager::SetMode(CScene::MODE::MODE_RESULT);
+			CBossEnemy::m_BossDeath = true;
+			//CManager::SetMode(CScene::MODE::MODE_RESULT);
 		}
 	}
 }
@@ -866,6 +867,8 @@ void CFlowEnemy::EnemyMove()
 
 //弾を生成する円周の半径
 const float CBossEnemy::CREATE_RADIUS = 35.0f;
+
+bool CBossEnemy::m_BossDeath = false;
 
 //=============================================
 //コンストラクタ

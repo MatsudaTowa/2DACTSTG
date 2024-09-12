@@ -144,6 +144,8 @@ public:
 	void Update()override;
 	void Draw()override;
 	void EnemyMove() override;
+
+	static bool m_BossDeath;
 private:
 	static const int BOSS_ENEMY_TURNFRAME = 120; //飛んでるエネミーの移動折り返しフレーム
 	static const int ENEMY_BOSS_LIFE = 10; //エネミーの体力

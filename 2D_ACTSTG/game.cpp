@@ -174,7 +174,7 @@ void CGame::Update()
 	{
 		m_pScore->Update();
 	}
-	if (CPlayer::m_PlayerDeath || CEnemy::m_nNumEnemy <= 0)
+	if (CPlayer::m_PlayerDeath|| CBossEnemy::m_BossDeath || CEnemy::m_nNumEnemy <= 0)
 	{//プレイヤーが死ぬかエネミーを全部殺したら
 		//カウント加算
 		m_nResultDelay++;
