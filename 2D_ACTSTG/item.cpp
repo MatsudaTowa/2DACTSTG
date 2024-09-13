@@ -51,6 +51,12 @@ HRESULT CItem::Init()
 //=============================================
 void CItem::Uninit()
 {
+	if (m_pButton_UI != nullptr)
+	{
+		//アイテムの削除
+		m_pButton_UI->Uninit();
+		m_pButton_UI = nullptr;
+	}
 	//親クラスの終了
 	CBillboard::Uninit();
 }
@@ -106,6 +112,8 @@ CItem* CItem::Create(ITEMTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTO
 	pItem->SetType(OBJECT_TYPE_ITEM); //タイプ設定
 
 	pItem->Init();
+
+	return pItem;
 }
 
 //=============================================
@@ -173,9 +181,13 @@ void CItem::HitItem()
 							pScore->AddScore(100);
 						}
 
-						//アイテムの削除
-						m_pButton_UI->Uninit();
-						m_pButton_UI = nullptr;
+						if (m_pButton_UI != nullptr)
+						{
+							//アイテムの削除
+							m_pButton_UI->Uninit();
+							m_pButton_UI = nullptr;
+						}
+
 						Uninit();
 					}
 				}

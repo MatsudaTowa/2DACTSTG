@@ -318,12 +318,12 @@ void CCharacter::ShotBullet(D3DXVECTOR3 pos,float move, D3DXVECTOR3 size, bool b
 {
 	if (bWay == true)
 	{//âEå¸Ç´
-		CBullet* pBullet = CBullet::Create(D3DXVECTOR3(pos.x, pos.y , pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * move, 0.0f, cosf(GetRot().y + D3DX_PI) * move),
+		CBullet::Create(D3DXVECTOR3(pos.x, pos.y , pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * move, 0.0f, cosf(GetRot().y + D3DX_PI) * move),
 			D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 2.0f), D3DXVECTOR3(size.x, size.y, 0.0f), 60, nDamage, Allegiance,type);
 	}
 	else if (bWay == false)
 	{//ç∂å¸Ç´
-		CBullet* pBullet = CBullet::Create(D3DXVECTOR3(pos.x, pos.y, pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * move, 0.0f, cosf(GetRot().y + D3DX_PI) * move),
+		CBullet::Create(D3DXVECTOR3(pos.x, pos.y, pos.z), D3DXVECTOR3(sinf(GetRot().y + D3DX_PI) * move, 0.0f, cosf(GetRot().y + D3DX_PI) * move),
 			D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 4.0f), D3DXVECTOR3(size.x, size.y, 0.0f), 60, nDamage, Allegiance,type);
 	}
 }

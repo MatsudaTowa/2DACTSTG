@@ -69,7 +69,7 @@ void CTexture::Unload()
 //=============================================
 int CTexture::Regist(const std::string* pTex)
 {
-	int nIdx;
+	int nIdx = 0;
 	for (int nCnt = 0; nCnt < MAX_TEX; nCnt++)
 	{
 		if (m_apTexture[nCnt] == nullptr)

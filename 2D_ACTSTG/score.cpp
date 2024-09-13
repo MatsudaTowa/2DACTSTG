@@ -113,6 +113,5 @@ void CScore::SetScore(int nScore)
 		fMaxTexU = fMinTexU + 0.1f;
 
 		m_pNumber[nCnt]->SetNumber(fMinTexU, fMaxTexU, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-
 	}
 }

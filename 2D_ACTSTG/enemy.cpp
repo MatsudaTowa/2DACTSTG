@@ -84,6 +84,12 @@ HRESULT CEnemy::Init()
 	m_pColisionView = CColision_View::Create(GetPos(), GetMinPos(), GetMaxPos(), D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f));
 #endif
 	m_pAttackEffect = nullptr;
+
+	if (m_pAttackEffect == nullptr)
+	{//生成されてなかったら
+		m_pAttackEffect = CAttack_Effect::Create(GetPos(), D3DXVECTOR3(30.0f, 30.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+	}
+
 	m_pLockOn = nullptr;
 	return S_OK;
 }
@@ -93,6 +99,11 @@ HRESULT CEnemy::Init()
 //=============================================
 void CEnemy::Uninit()
 {
+#ifdef _DEBUG
+	//可視化された当たり判定破棄
+	m_pColisionView->Uninit();
+#endif // _DEBUG
+
 	if (m_pAttackEffect != nullptr)
 	{
 		m_pAttackEffect->Uninit();
@@ -171,7 +182,7 @@ void CEnemy::Update()
 	SetOldPos(oldpos);
 
 	//エフェクト生成
-	CEffect* pEffect = CEffect::Create(D3DXVECTOR3(pos.x, pos.y, pos.z), D3DXVECTOR3(10.0f, 10.0f, 0.0f), D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.5f), 30);
+	CEffect::Create(D3DXVECTOR3(pos.x, pos.y, pos.z), D3DXVECTOR3(10.0f, 10.0f, 0.0f), D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.5f), 30);
 
 	pos += move;
 
@@ -182,15 +193,11 @@ void CEnemy::Update()
 	//可視化された当たり判定を動かす
 	m_pColisionView->SetPos(pos);
 #endif
-	bool bNear = PlayerDistance();
 
-	if (bNear)
-	{//近かったら
-		if (m_pAttackEffect == nullptr)
-		{//生成されてなかったら
-			m_pAttackEffect = CAttack_Effect::Create(GetPos(), D3DXVECTOR3(30.0f, 30.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
-		}
-	}
+	//近いか判断するboolの変数初期化
+	bool bNear = false;
+
+	bNear = PlayerDistance();
 	
 	if(m_pLockOn != nullptr)
 	{//照準をエネミーに合わせて動かす
@@ -198,7 +205,7 @@ void CEnemy::Update()
 	}
 
 	if (m_pAttackEffect != nullptr)
-	{//照準をエネミーに合わせて動かす
+	{//エフェクトをエネミーに合わせて動かす
 		m_pAttackEffect->SetPos(D3DXVECTOR3(GetPos().x, GetPos().y + 5.0f, -10.0f));
 	}
 	//プレイヤーとの接触処理
@@ -352,11 +359,6 @@ void CEnemy::Damage(int nDamage)
 			assert(false);
 			break;
 		}
-
-#ifdef _DEBUG
-		//可視化された当たり判定破棄
-		m_pColisionView->Uninit();
-#endif // _DEBUG
 		
 		if (m_pLockOn != nullptr)
 		{//照準破棄
@@ -473,7 +475,7 @@ void CEnemy::LockOn_Flow()
 		{//中ダメージのとき
 			nFlowLife = 90;
 		}
-		CFlow*pFlow = CFlow::Create(D3DXVECTOR3(m_pLockOn->GetPos().x, m_pLockOn->GetPos().y + 5.0f, -10.0f),
+		CFlow::Create(D3DXVECTOR3(m_pLockOn->GetPos().x, m_pLockOn->GetPos().y + 5.0f, -10.0f),
 			D3DXVECTOR3(20.0f, 20.0f, 0.0f), nFlowLife,1,CFlow::FLOW_TYPE::FLOW_TYPE_PLAYER);
 
 		m_pLockOn->Uninit();
@@ -652,7 +654,9 @@ void CNormalEnemy::EnemyMove()
 	rot.y = rotMoveY + D3DX_PI;
 
 	//プレイヤーとの距離を測る
-	bool bDistance = PlayerDistance();
+	bool bDistance = false;
+
+	bDistance = PlayerDistance();
 
 	SetRot(rot); //rotを代入
 
@@ -734,7 +738,8 @@ void CFlowEnemy::Update()
 	if (bDistance == true)
 	{//近かったら
 		//向きを取得
-		bool bWay = GetWay();
+		bool bWay = false;
+		bWay = GetWay();
 		m_bLockOnShot = true;
 
 		for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
@@ -1013,7 +1018,8 @@ void CBossEnemy::Update()
 	if (bDistance == true)
 	{//近かったら
 		//向きを取得
-		bool bWay = GetWay();
+		bool bWay = false;
+		bWay = GetWay();
 
 		//ショットカウント加算
 		m_nShotCnt++;

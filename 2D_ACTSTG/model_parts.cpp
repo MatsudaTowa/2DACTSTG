@@ -210,7 +210,7 @@ void CModel_Parts::Draw()
 //=============================================
 int CModel_Parts::Regist(const std::string* pModel)
 {
-	int nIdx;
+	int nIdx = 0;
 	for (int nCnt = 0; nCnt < MAX_MODEL; nCnt++)
 	{
 		if (m_ModelInfo[nCnt].pBuffMat == nullptr

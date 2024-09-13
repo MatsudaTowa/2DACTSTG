@@ -90,10 +90,10 @@ HRESULT CGame::Init()
 	//	D3DXVECTOR3(0.0f, 0.0f, 0.0f), 3, false);
 
 	//ゲージのフレームUI生成
-	CGauge_Fream* pGauge_Fream = CGauge_Fream::Create(D3DXVECTOR3(250.0f,150.0f,0.0f),D3DXVECTOR2(280.0f,120.0f));
+	CGauge_Fream::Create(D3DXVECTOR3(250.0f,150.0f,0.0f),D3DXVECTOR2(280.0f,120.0f));
 
 	//地面生成
-	CField* pField = CField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1000.0f, 0.0f, 1000.0f));
+	CField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1000.0f, 0.0f, 1000.0f));
 
 	//プレイヤー生成
 	m_pPlayer = CPlayer::Create(D3DXVECTOR3(-900.0f, 0.5f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),5);
@@ -269,7 +269,7 @@ void CGame::LoadEnemy(const std::string* pFileName)
 				if (!strcmp(aDataSearch, "END_ENEMYSET"))
 				{
 					//エネミー生成
-					CEnemy* pEnemy = CEnemy::Create(m_LoadEnemy.pos, m_LoadEnemy.rot, m_LoadEnemy.type);
+					CEnemy::Create(m_LoadEnemy.pos, m_LoadEnemy.rot, m_LoadEnemy.type);
 					break;
 				}
 				else if (!strcmp(aDataSearch, "POS"))

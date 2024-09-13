@@ -110,7 +110,7 @@ HRESULT CPlayer_test::Init()
 	D3DXVECTOR3 move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	//ゲージ生成
-	CGauge* pGauge = CGauge::Create(D3DXVECTOR3(0.0f, 70.0f, 0.0f), D3DXVECTOR2(500.0f, 30.0f), CGauge::GAUGE_TYPE_LIFE, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+	CGauge::Create(D3DXVECTOR3(0.0f, 70.0f, 0.0f), D3DXVECTOR2(500.0f, 30.0f), CGauge::GAUGE_TYPE_LIFE, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
 
 	//ムーブ値代入
 	SetMove(move);
@@ -479,12 +479,12 @@ void CPlayer_test::PerformMelee(D3DXVECTOR3 pos, bool bWay)
 {
 	if (bWay == true)
 	{//右向き
-		CMelee* pMelee = CMelee::Create(D3DXVECTOR3(pos.x + GetMaxPos().x, pos.y + 10.0f, pos.z),
+		CMelee::Create(D3DXVECTOR3(pos.x + GetMaxPos().x, pos.y + 10.0f, pos.z),
 			D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 2.0f), D3DXVECTOR3(10.0f, 10.0f, 0.0f), 30, MELEE_DAMAGE);
 	}
 	else if (bWay == false)
 	{//左向き
-		CMelee* pMelee = CMelee::Create(D3DXVECTOR3(pos.x + GetMinPos().x, pos.y + 10.0f, pos.z),
+		CMelee::Create(D3DXVECTOR3(pos.x + GetMinPos().x, pos.y + 10.0f, pos.z),
 			D3DXVECTOR3(0.0f, 0.0f, GetRot().y * 4.0f), D3DXVECTOR3(10.0f, 10.0f, 0.0f), 30, MELEE_DAMAGE);
 	}
 }

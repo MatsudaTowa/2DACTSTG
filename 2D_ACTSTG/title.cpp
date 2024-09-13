@@ -41,7 +41,7 @@ CTitle::~CTitle()
 HRESULT CTitle::Init()
 {
     //地面生成
-    CField* pField = CField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1000.0f, 0.0f, 1000.0f));
+    CField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1000.0f, 0.0f, 1000.0f));
 
     //プレイヤー生成
     m_pPlayer = new CPlayer;  

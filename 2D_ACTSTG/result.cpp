@@ -27,7 +27,7 @@ CResult::~CResult()
 //=============================================
 HRESULT CResult::Init()
 {
-    CResult_Screen* pResult_Screen = CResult_Screen::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f,SCREEN_HEIGHT * 0.5f, 0.0f));
+    CResult_Screen::Create(D3DXVECTOR3(SCREEN_WIDTH * 0.5f,SCREEN_HEIGHT * 0.5f, 0.0f));
     CSound* pSound = CManager::GetSound();
 
     pSound->PlaySound(CSound::SOUND_LABEL::SOUND_LABEL_BGM_RESULT);

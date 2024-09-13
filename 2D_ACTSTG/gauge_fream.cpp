@@ -40,7 +40,7 @@ HRESULT CGauge_Fream::Init()
     SetVtx(1.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
     //ÉQÅ[ÉWê∂ê¨
-    CGauge*pGauge = CGauge::Create(D3DXVECTOR3(GetPos().x - GetSize().x * 0.5f,GetPos().y - 10.0f,GetPos().z),D3DXVECTOR2(0.0f, 30.0f),CGauge::GAUGE_TYPE_SLASH,D3DXCOLOR(1.0f,0.5f,0.0f,1.0f));
+    CGauge::Create(D3DXVECTOR3(GetPos().x - GetSize().x * 0.5f,GetPos().y - 10.0f,GetPos().z),D3DXVECTOR2(0.0f, 30.0f),CGauge::GAUGE_TYPE_SLASH,D3DXCOLOR(1.0f,0.5f,0.0f,1.0f));
 
     return S_OK;
 }

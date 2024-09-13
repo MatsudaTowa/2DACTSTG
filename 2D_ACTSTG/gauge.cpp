@@ -159,7 +159,6 @@ void CGauge::SetGaugeVtx(float rhw, D3DCOLOR col)
 //=============================================
 CGauge* CGauge::Create(D3DXVECTOR3 pos, D3DXVECTOR2 size, GAUGE_TYPE type, D3DXCOLOR col)
 {
-    CTexture* pTexture = CManager::GetTexture();
     CGauge* pGauge = nullptr;
 
 	switch (type)
@@ -191,12 +190,14 @@ CGauge* CGauge::Create(D3DXVECTOR3 pos, D3DXVECTOR2 size, GAUGE_TYPE type, D3DXC
     //pGauge->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME)));
 
     pGauge->Init();
+
+	return pGauge;
 }
 
 //=============================================
 //コンストラクタ
 //=============================================
-CGauge_Slash::CGauge_Slash(int nPriority)
+CGauge_Slash::CGauge_Slash(int nPriority):CGauge(nPriority)
 {
 }
 
@@ -270,7 +271,7 @@ void CGauge_Slash::Draw()
 //=============================================
 //コンストラクタ
 //=============================================
-CGauge_Life::CGauge_Life(int nPriority)
+CGauge_Life::CGauge_Life(int nPriority):CGauge(nPriority)
 {
 }
 
