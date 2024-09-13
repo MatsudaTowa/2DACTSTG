@@ -83,12 +83,6 @@ HRESULT CEnemy::Init()
 	//当たり判定可視化
 	m_pColisionView = CColision_View::Create(GetPos(), GetMinPos(), GetMaxPos(), D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f));
 #endif
-	m_pAttackEffect = nullptr;
-
-	if (m_pAttackEffect == nullptr)
-	{//生成されてなかったら
-		m_pAttackEffect = CAttack_Effect::Create(GetPos(), D3DXVECTOR3(30.0f, 30.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
-	}
 
 	m_pLockOn = nullptr;
 	return S_OK;
@@ -100,15 +94,12 @@ HRESULT CEnemy::Init()
 void CEnemy::Uninit()
 {
 #ifdef _DEBUG
-	//可視化された当たり判定破棄
-	m_pColisionView->Uninit();
-#endif // _DEBUG
-
-	if (m_pAttackEffect != nullptr)
-	{
-		m_pAttackEffect->Uninit();
-		m_pAttackEffect = nullptr;
+	if (m_pColisionView != nullptr)
+	{//可視化された当たり判定破棄
+		m_pColisionView->Uninit();
+		m_pColisionView = nullptr;
 	}
+#endif // _DEBUG
 
 	if (m_pLockOn != nullptr)
 	{
@@ -117,7 +108,7 @@ void CEnemy::Uninit()
 	}
 	
 	//親クラスの終了
-	CObjectX::Uninit();
+	CCharacter::Uninit();
 }
 
 //=============================================
@@ -204,10 +195,6 @@ void CEnemy::Update()
 		m_pLockOn->SetPos(D3DXVECTOR3(GetPos().x, GetPos().y + 5.0f, -10.0f));
 	}
 
-	if (m_pAttackEffect != nullptr)
-	{//エフェクトをエネミーに合わせて動かす
-		m_pAttackEffect->SetPos(D3DXVECTOR3(GetPos().x, GetPos().y + 5.0f, -10.0f));
-	}
 	//プレイヤーとの接触処理
 	HitPlayer();
 
@@ -367,12 +354,6 @@ void CEnemy::Damage(int nDamage)
 			m_bLockOn = false;
 		}
 
-		if (m_pAttackEffect != nullptr)
-		{//攻撃エフェクト破棄
-			m_pAttackEffect->Uninit();
-			m_pAttackEffect = nullptr;
-		}
-
 		CScore*pScore = CGame::GetScore();
 
 		pScore->AddScore(100);
@@ -505,6 +486,13 @@ HRESULT CNormalEnemy::Init()
 {
 	//親クラスの初期化
 	CEnemy::Init();
+
+	m_pAttackEffect = nullptr;
+
+	if (m_pAttackEffect == nullptr)
+	{//生成されてなかったら
+		m_pAttackEffect = CAttack_Effect::Create(GetPos(), D3DXVECTOR3(30.0f, 30.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+	}
 	SetLife(ENEMY_NORMAL_LIFE);
 	return S_OK;
 }
@@ -514,6 +502,12 @@ HRESULT CNormalEnemy::Init()
 //=============================================
 void CNormalEnemy::Uninit()
 {
+	if (m_pAttackEffect != nullptr)
+	{
+		//m_pAttackEffect->Uninit();
+		m_pAttackEffect->SetSize(D3DXVECTOR3(0.0f,0.0f,0.0f));
+		m_pAttackEffect = nullptr;
+	}
 	//親クラスの終了
 	CEnemy::Uninit();
 }
@@ -525,6 +519,12 @@ void CNormalEnemy::Update()
 {
 	//親クラスの更新
 	CEnemy::Update();
+
+
+	if (m_pAttackEffect != nullptr)
+	{//エフェクトをエネミーに合わせて動かす
+		m_pAttackEffect->SetPos(D3DXVECTOR3(GetPos().x, GetPos().y + 5.0f, -10.0f));
+	}
 
 	//プレイヤーとの距離を測る
 	bool bDistance = PlayerDistance();
@@ -581,7 +581,7 @@ void CNormalEnemy::Update()
 void CNormalEnemy::Draw()
 {
 	//親クラスの描画を呼ぶ
-	CCharacter::Draw();
+	CEnemy::Draw();
 }
 
 //=============================================

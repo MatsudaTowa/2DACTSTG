@@ -57,8 +57,6 @@ public:
 
 	static int m_nNumEnemy; //エネミーの総数
 
-	CAttack_Effect* m_pAttackEffect; //攻撃エフェクト
-
 private:
 	static const std::string MODEL_NAME;	//モデルの名前  
 	static const std::string FLOW_MODEL_NAME;	//モデルの名前  
@@ -99,6 +97,8 @@ public:
 	void Update()override;
 	void Draw()override;
 	void EnemyMove() override;
+
+	CAttack_Effect* m_pAttackEffect; //攻撃エフェクト
 private:
 	int m_nShotCnt; //弾を発射するカウント
 	int m_nTurnFrameCnt; //折り返しフレームをカウントする変数

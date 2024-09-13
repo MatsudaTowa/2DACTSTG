@@ -142,7 +142,6 @@ bool CAttack_Manager::HitPlayer()
 			}
 		}
 	}
-	return false;
 }
 
 //=============================================
@@ -183,7 +182,6 @@ bool CAttack_Manager::HitBlock()
 			}
 		}
 	}
-	return false;
 }
 
 //=============================================
@@ -230,7 +228,7 @@ bool CAttack_Manager::HitGround()
 			}
 		}
 	}
-	return false;
+
 }
 
 //=============================================

@@ -39,6 +39,7 @@ CObject::CObject(int nPriority)
 //=============================================
 CObject::~CObject()
 {
+	m_nNumAll--;
 }
 
 //=============================================
@@ -54,6 +55,8 @@ void CObject::ReleaseAll()
 			{
 				//終了処理
 				m_apObject[nCntPri][nCntObj]->Uninit();
+				m_apObject[nCntPri][nCntObj] = nullptr;
+
 			}
 		}
 	}
@@ -71,7 +74,7 @@ void CObject::UpdateAll()
 		{
 			if (m_apObject[nCntPri][nCntObj] != nullptr)
 			{
-				//終了処理
+				//更新処理
 				m_apObject[nCntPri][nCntObj]->Update();
 			}
 		}
@@ -108,7 +111,6 @@ void CObject::Release()
 	{
 		delete m_apObject[nPri][nID];
 		m_apObject[nPri][nID] = nullptr;
-		m_nNumAll--;
 	}
 }
 
