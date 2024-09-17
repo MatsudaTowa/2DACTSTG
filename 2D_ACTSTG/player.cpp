@@ -301,7 +301,15 @@ void CPlayer::Update()
 	if (Game_state == CGame::GAME_STATE::GAME_STATE_NORMAL && GetPos().x > CCharacter::BOSS_FIELD_X)
 	{//ボス戦状態に移行
 		Game_state = CGame::GAME_STATE::GAME_STATE_BOSS;
+
+		CSound* pSound = CManager::GetSound();
+		//サウンドの停止
+		pSound->StopSound();
+
+		pSound->PlaySound(CSound::SOUND_LABEL::SOUND_LABEL_BGM_GAME_BOSS);
+		
 		CGame::SetState(Game_state);
+
 	}
 
 	if (Game_state == CGame::GAME_STATE::GAME_STATE_BOSS)

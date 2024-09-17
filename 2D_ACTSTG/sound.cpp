@@ -4,7 +4,8 @@ const CSound::SOUNDINFO CSound::m_aSoundInfo[CSound::SOUND_LABEL::SOUND_LABEL_MA
 {
 	{"data/SOUND/BGM/aaa_aaa.wav", -1,0.7f},         //BGM0
 	{"data/SOUND/BGM/game.wav", -1,0.5f},         //BGM1
-	{"data/SOUND/BGM/result.wav", -1,0.5f},         //BGM2
+	{"data/SOUND/BGM/boss.wav", -1,0.5f},         //BGM2
+	{"data/SOUND/BGM/result.wav", -1,0.5f},         //BGM3
 };
 CSound::CSound()
 {
