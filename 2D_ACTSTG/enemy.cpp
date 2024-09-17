@@ -451,7 +451,7 @@ void CEnemy::LockOn_Flow()
 		}
 		else if (m_pLockOn->GetSize().x <= m_pLockOn->MAX_DAMAGE_LOCKON_SIZE)
 		{//’†ƒ_ƒ[ƒW‚Ì‚Æ‚«
-			nFlowLife = 90;
+			nFlowLife = 120;
 		}
 		CFlow::Create(D3DXVECTOR3(m_pLockOn->GetPos().x, m_pLockOn->GetPos().y + 5.0f, -10.0f),
 			D3DXVECTOR3(10.0f, 10.0f, 0.0f), nFlowLife,1,CFlow::FLOW_TYPE::FLOW_TYPE_PLAYER);

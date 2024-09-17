@@ -85,8 +85,8 @@ void CLockOn::ChangeSize()
 
 	if (size.x > CLockOn::MAX_DAMAGE_LOCKON_SIZE && size.y > CLockOn::MAX_DAMAGE_LOCKON_SIZE)
 	{
-		size.x--;
-		size.y--;
+		size.x-=1.2f;
+		size.y-=1.2f;
 	}
 
 	SetSize(size);
