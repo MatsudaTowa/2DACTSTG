@@ -296,6 +296,24 @@ void CPlayer::Update()
 	//エネミーとの接触処理
 	HitEnemy();
 
+	CGame::GAME_STATE Game_state = CGame::GetState();
+
+	if (Game_state == CGame::GAME_STATE::GAME_STATE_NORMAL && GetPos().x > CCharacter::BOSS_FIELD_X)
+	{//ボス戦状態に移行
+		Game_state = CGame::GAME_STATE::GAME_STATE_BOSS;
+		CGame::SetState(Game_state);
+	}
+
+	if (Game_state == CGame::GAME_STATE::GAME_STATE_BOSS)
+	{
+		if (GetOldPos().x >= CCharacter::BOSS_FIELD_X
+			&& GetPos().x < CCharacter::BOSS_FIELD_X)
+		{
+			SetPos(D3DXVECTOR3(GetOldPos().x,GetPos().y,GetPos().z));
+			SetMove(D3DXVECTOR3(0.0f,GetMove().y,GetMove().z));
+		}
+	}
+
 	if (GetLaunding())
 	{//着地してるなら
 		//ジャンプ数リセット
@@ -394,7 +412,7 @@ void CPlayer::LockOn_Flow()
 			nFlowLife = 90;
 		}
 		CFlow* pFlow = CFlow::Create(D3DXVECTOR3(m_pLockOn->GetPos().x, m_pLockOn->GetPos().y + 5.0f, -10.0f),
-			D3DXVECTOR3(20.0f, 20.0f, 0.0f), nFlowLife, 1, CFlow::FLOW_TYPE::FLOW_TYPE_ENEMY);
+			D3DXVECTOR3(10.0f, 10.0f, 0.0f), nFlowLife, 1, CFlow::FLOW_TYPE::FLOW_TYPE_ENEMY);
 	}
 	Delete_LockOn();
 }

@@ -12,6 +12,8 @@
 #include"bullet.h"
 #include "colision.h"
 
+//ボス戦のX座標
+const float CCharacter::BOSS_FIELD_X = 600.0f;
 //重力値
 const float CCharacter::GRAVITY_MOVE = 1.5f;
 //重力最大値

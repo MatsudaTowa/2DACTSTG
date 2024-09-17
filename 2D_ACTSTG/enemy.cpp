@@ -454,7 +454,7 @@ void CEnemy::LockOn_Flow()
 			nFlowLife = 90;
 		}
 		CFlow::Create(D3DXVECTOR3(m_pLockOn->GetPos().x, m_pLockOn->GetPos().y + 5.0f, -10.0f),
-			D3DXVECTOR3(20.0f, 20.0f, 0.0f), nFlowLife,1,CFlow::FLOW_TYPE::FLOW_TYPE_PLAYER);
+			D3DXVECTOR3(10.0f, 10.0f, 0.0f), nFlowLife,1,CFlow::FLOW_TYPE::FLOW_TYPE_PLAYER);
 
 		m_pLockOn->Uninit();
 		m_pLockOn = nullptr;

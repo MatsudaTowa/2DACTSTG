@@ -19,6 +19,13 @@ class CGame:public CScene
 {
 public:
 
+	typedef enum
+	{
+		GAME_STATE_NORMAL = 0,
+		GAME_STATE_BOSS,
+		GAME_STATE_MAX,
+	}GAME_STATE;
+
 	//読み込むときに必要なエネミーの構造体
 	typedef struct
 	{
@@ -46,11 +53,19 @@ public:
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;
+	static void SetState(GAME_STATE state)
+	{
+		m_GameState = state;
+	}
+
+	static GAME_STATE&GetState();
+
 	static CScore*GetScore();
 	static CPlayer*GetPlayer();
 private:
 	int m_nResultDelay; //リザルトへのディレイ
 	bool m_bEdit; //エディットしてるかどうか
+	static GAME_STATE m_GameState; //ゲームステート
 	LOAD_ENEMY m_LoadEnemy; //読み込むときに必要なエネミーの情報
 	LOAD_BLOCK m_LoadBlock; //読み込むときに必要なブロックの情報
 	static CEdit*m_pEdit;

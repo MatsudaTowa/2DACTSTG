@@ -15,6 +15,7 @@ class CCharacter : public CObjectX
 {
 public:
 	static const int CHARACTER_PRIORITY = 8; //•`‰æ‡
+	static const float  BOSS_FIELD_X; //ƒ{ƒXí‚ÌXÀ•W
 
 	typedef enum
 	{

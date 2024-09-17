@@ -34,6 +34,8 @@ CScore* CGame::m_pScore = nullptr;
 //プレイヤー
 CPlayer*CGame::m_pPlayer = nullptr;
 
+CGame::GAME_STATE CGame::m_GameState = CGame::GAME_STATE::GAME_STATE_NORMAL;
+
 //=============================================
 //コンストラクタ
 //=============================================
@@ -84,6 +86,8 @@ HRESULT CGame::Init()
 
 		m_pScore->Init();
 	}
+
+	m_GameState = CGame::GAME_STATE::GAME_STATE_NORMAL;
 
 	////ブロック生成
 	//CBlock* pBlock = CBlock::Create(CBlock::BLOCKTYPE_DEFAULT, D3DXVECTOR3(0.0, 0.0f, 0.0f),
@@ -229,6 +233,11 @@ CScore* CGame::GetScore()
 CPlayer* CGame::GetPlayer()
 {
 	return m_pPlayer;
+}
+
+CGame::GAME_STATE& CGame::GetState()
+{
+	return m_GameState;
 }
 
 //=============================================
