@@ -14,13 +14,18 @@ class CBlock : public CObjectX
 {
 public:
 	static const std::string MODEL_NAME;	//モデルの名前
+	static const std::string WOOD_MODEL_NAME;	//モデルの名前
+	static const std::string AZUMAYA_MODEL_NAME;	//モデルの名前
+	static const std::string DANGOYA_MODEL_NAME;	//モデルの名前
 
 	static const int BLOCK_PRIORITY = 3; //描画順
 	typedef enum
 	{
 		BLOCKTYPE_NONE = 0,
 		BLOCKTYPE_DEFAULT,
-		BLOCKTYPE_BREAK,
+		BLOCKTYPE_WOOD,
+		BLOCKTYPE_AZUMAYA,
+		BLOCKTYPE_DANGOYA,
 		BLOCKTYPE_MAX,
 	}BLOCKTYPE;
 

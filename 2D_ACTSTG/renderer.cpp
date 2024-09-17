@@ -153,7 +153,7 @@ void CRenderer::Draw()
 	//画面クリア（バックバッファ＆Zバッファのクリア)
 	m_pD3DDevice->Clear(0, NULL,
 		(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
-		D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
+		D3DCOLOR_RGBA(188, 226, 232, 0), 1.0f, 0);
 
 	//描画開始
 	if (SUCCEEDED(m_pD3DDevice->BeginScene()))

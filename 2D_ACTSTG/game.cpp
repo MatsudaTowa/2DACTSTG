@@ -20,6 +20,7 @@
 
 //エネミーのファイル
 const std::string CGame::ENEMY_FILE = "data\\FILE\\enemy.txt";
+const std::string CGame::BLOCK_FILE = "data\\FILE\\block.txt";
 
 //エディット設定
 CEdit* CGame::m_pEdit = nullptr;
@@ -43,6 +44,11 @@ CGame::CGame():m_nResultDelay(0),m_bEdit(false)
 	m_LoadEnemy.pos = D3DXVECTOR3(0.0f,0.0f,0.0f);
 	m_LoadEnemy.rot = D3DXVECTOR3(0.0f,0.0f,0.0f);
 	m_LoadEnemy.type = CEnemy::ENEMY_TYPE::ENEMY_TYPE_NORMAL;
+
+	//読み込むブロックの情報初期化
+	m_LoadBlock.pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_LoadBlock.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_LoadBlock.type = CBlock::BLOCKTYPE::BLOCKTYPE_DEFAULT;
 }
 
 //=============================================
@@ -88,6 +94,9 @@ HRESULT CGame::Init()
 
 	//pBlock = CBlock::Create(CBlock::BLOCKTYPE_DEFAULT, D3DXVECTOR3(5.0f, 50.0f, 0.0f),
 	//	D3DXVECTOR3(0.0f, 0.0f, 0.0f), 3, false);
+
+	//ブロック生成
+	LoadBlock(&CGame::BLOCK_FILE);
 
 	//ゲージのフレームUI生成
 	CGauge_Fream::Create(D3DXVECTOR3(250.0f,150.0f,0.0f),D3DXVECTOR2(280.0f,120.0f));
@@ -292,6 +301,82 @@ void CGame::LoadEnemy(const std::string* pFileName)
 				{
 					fscanf(pFile, "%s", &aEqual[0]);
 					fscanf(pFile, "%d", &m_LoadEnemy.type);
+				}
+			}
+		}
+	}
+}
+
+//=============================================
+//ブロック読み込み
+//=============================================
+void CGame::LoadBlock(const std::string* pFileName)
+{
+	char aDataSearch[BLOCK_TXT_MAX];
+	char aEqual[BLOCK_TXT_MAX]; //[＝]読み込み用
+	int nNumBlock; //ブロックの数
+
+	//ファイルの読み込み
+	FILE* pFile = fopen(pFileName->c_str(), "r");
+
+	if (pFile == NULL)
+	{//種類の情報のデータファイルが開けなかった場合
+		//処理を終了する
+		return;
+	}
+	//ENDが見つかるまで読み込みを繰り返す
+	while (1)
+	{
+		fscanf(pFile, "%s", aDataSearch); //検索
+
+		if (!strcmp(aDataSearch, "END"))
+		{//読み込みを終了
+			fclose(pFile);
+			break;
+		}
+		if (aDataSearch[0] == '#')
+		{
+			continue;
+		}
+
+		if (!strcmp(aDataSearch, "NUM_BLOCK"))
+		{//モデル数読み込み
+			fscanf(pFile, "%s", &aEqual[0]);
+			fscanf(pFile, "%d", &nNumBlock);
+		}
+		if (!strcmp(aDataSearch, "BLOCKSET"))
+		{
+			//項目ごとのデータを代入
+			while (1)
+			{
+				fscanf(pFile, "%s", aDataSearch); //検索
+
+				if (!strcmp(aDataSearch, "END_BLOCKSET"))
+				{
+					//エネミー生成
+					CBlock::Create(m_LoadBlock.type, m_LoadBlock.pos, m_LoadBlock.rot,1,false);
+					break;
+				}
+				else if (!strcmp(aDataSearch, "POS"))
+				{
+					fscanf(pFile, "%s", &aEqual[0]);
+					fscanf(pFile, "%f %f %f",
+						&m_LoadBlock.pos.x,
+						&m_LoadBlock.pos.y,
+						&m_LoadBlock.pos.z);
+				}
+				else if (!strcmp(aDataSearch, "ROT"))
+				{
+					fscanf(pFile, "%s", &aEqual[0]);
+					fscanf(pFile, "%f %f %f",
+						&m_LoadBlock.rot.x,
+						&m_LoadBlock.rot.y,
+						&m_LoadBlock.rot.z);
+				}
+				else if (!strcmp(aDataSearch, "TYPE"))
+				{
+					fscanf(pFile, "%s", &aEqual[0]);
+					fscanf(pFile, "%d", &m_LoadBlock.type);
 				}
 			}
 		}
