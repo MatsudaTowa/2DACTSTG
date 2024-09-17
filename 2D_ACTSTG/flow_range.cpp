@@ -201,10 +201,10 @@ void CFlow_Range::SizeUp(bool bWay)
 {
 	if (bWay == true)
 	{//‰EŒü‚«‚¾‚Á‚½‚ç
-		m_Maxpos.x += 1.0f;
+		m_Maxpos.x += 1.5f;
 	}
 	else if (bWay == false)
 	{//¶Œü‚«‚¾‚Á‚½‚ç
-		m_Minpos.x -= 1.0f;
+		m_Minpos.x -= 1.5f;
 	}
 }

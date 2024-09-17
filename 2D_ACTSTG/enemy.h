@@ -88,7 +88,7 @@ class CNormalEnemy : public CEnemy
 {
 public:
 	static const int NORMAL_ENEMY_TURNFRAME = 90; //ノーマルのエネミーの移動折り返しフレーム
-	static const int ENEMY_NORMAL_LIFE = 3; //エネミーの体力
+	static const int ENEMY_NORMAL_LIFE = 4; //エネミーの体力
 
 	CNormalEnemy(int nPriority = ENEMY_PRIORITY);
 	~CNormalEnemy()override;
@@ -112,7 +112,7 @@ class CFlowEnemy : public CEnemy
 {
 public:
 	static const int FLOW_ENEMY_TURNFRAME = 120; //ノーマルのエネミーの移動折り返しフレーム
-	static const int ENEMY_FLOW_LIFE = 3; //エネミーの体力
+	static const int ENEMY_FLOW_LIFE = 4; //エネミーの体力
 
 	CFlowEnemy(int nPriority = ENEMY_PRIORITY);
 	~CFlowEnemy()override;
