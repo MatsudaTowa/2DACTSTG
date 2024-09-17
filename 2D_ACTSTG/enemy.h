@@ -136,7 +136,7 @@ class CFlyEnemy : public CEnemy
 {
 public:
 	static const int FLY_ENEMY_TURNFRAME = 120; //ノーマルのエネミーの移動折り返しフレーム
-	static const int ENEMY_FLY_LIFE = 3; //エネミーの体力
+	static const int ENEMY_FLY_LIFE = 1; //エネミーの体力
 
 	CFlyEnemy(int nPriority = ENEMY_PRIORITY);
 	~CFlyEnemy()override;

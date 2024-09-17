@@ -172,9 +172,6 @@ void CEnemy::Update()
 	//過去の位置代入
 	SetOldPos(oldpos);
 
-	//エフェクト生成
-	CEffect::Create(D3DXVECTOR3(pos.x, pos.y, pos.z), D3DXVECTOR3(10.0f, 10.0f, 0.0f), D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.5f), 30);
-
 	pos += move;
 
 	//座標を更新

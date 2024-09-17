@@ -272,9 +272,6 @@ void CPlayer::Update()
 	//過去の位置代入
 	SetOldPos(oldpos);
 
-	//エフェクト生成
-	CEffect* pEffect = CEffect::Create(D3DXVECTOR3(pos.x,pos.y + 8.0f,pos.z), D3DXVECTOR3(10.0f, 10.0f ,0.0f), D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.5f), 30);
-
 	//移動量追加
 	pos += move;
 
