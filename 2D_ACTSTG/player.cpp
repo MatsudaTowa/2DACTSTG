@@ -94,7 +94,7 @@ HRESULT CPlayer::Init()
 	D3DXVECTOR3 move = D3DXVECTOR3(0.0f,0.0f,0.0f);
 
 	//ゲージ生成
-	CGauge* pGauge = CGauge::Create(D3DXVECTOR3(0.0f, 40.0f, 0.0f), D3DXVECTOR2(500.0f, 30.0f), CGauge::GAUGE_TYPE_LIFE, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+	CGauge* pGauge = CGauge::Create(D3DXVECTOR3(0.0f, 40.0f, 0.0f), D3DXVECTOR2(500.0f, 30.0f), CGauge::GAUGE_TYPE_LIFE, D3DXCOLOR(0.0f, 0.7f, 0.3f, 1.0f));
 	
 	//ムーブ値代入
 	SetMove(move);
