@@ -130,6 +130,7 @@ HRESULT CGame::Init()
 //=============================================
 void CGame::Uninit()
 {
+	m_GameState = GAME_STATE_NORMAL;
 	if (m_pTimer != nullptr)
 	{
 		m_pTimer->Uninit();
