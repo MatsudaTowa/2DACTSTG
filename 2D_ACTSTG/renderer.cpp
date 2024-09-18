@@ -7,6 +7,9 @@
 #include "renderer.h"
 #include "object.h"
 #include "manager.h"
+#include "game.h"
+
+LPDIRECT3DDEVICE9 CRenderer::m_pD3DDevice = nullptr;
 
 //=============================================
 //コンストラクタ
@@ -93,6 +96,14 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindow)
 	m_pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	m_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
+	m_pD3DDevice->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_LINEAR );
+	m_pD3DDevice->SetRenderState(D3DRS_FOGENABLE, FALSE);
+	m_pD3DDevice->SetRenderState(D3DRS_FOGCOLOR, D3DXCOLOR(1.0f,1.0f,1.0f,0.0f));
+	
+	m_fFogStartPos = 100.0f;
+	m_fFogEndPos = 1000.0f;
+	m_pD3DDevice->SetRenderState(D3DRS_FOGSTART, *(DWORD*)(&m_fFogStartPos));
+	m_pD3DDevice->SetRenderState(D3DRS_FOGEND, *(DWORD*)(&m_fFogEndPos));
 	m_pD3DDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	m_pD3DDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 	m_pD3DDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
@@ -143,6 +154,12 @@ void CRenderer::Uninit()
 //=============================================
 void CRenderer::Update()
 {
+	CGame::GAME_STATE Game_state = CGame::GetState();
+
+	if (Game_state == CGame::GAME_STATE::GAME_STATE_BOSS)
+	{
+		m_pD3DDevice->SetRenderState(D3DRS_FOGENABLE, TRUE);
+	}
 }
 
 //=============================================

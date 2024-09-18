@@ -312,16 +312,6 @@ void CPlayer::Update()
 
 	}
 
-	if (Game_state == CGame::GAME_STATE::GAME_STATE_BOSS)
-	{
-		if (GetOldPos().x >= CCharacter::BOSS_FIELD_X
-			&& GetPos().x < CCharacter::BOSS_FIELD_X)
-		{
-			SetPos(D3DXVECTOR3(GetOldPos().x,GetPos().y,GetPos().z));
-			SetMove(D3DXVECTOR3(0.0f,GetMove().y,GetMove().z));
-		}
-	}
-
 	if (GetLaunding())
 	{//着地してるなら
 		//ジャンプ数リセット
