@@ -360,6 +360,32 @@ void CElecBullet::Update()
 
 		//使用しているとき
 		OnActive();
+
+		for (int nCnt = 0; nCnt < CObject::MAX_OBJECT; nCnt++)
+		{
+			//オブジェクト取得
+			CObject* pObj = CObject::Getobject(CEnemy::ENEMY_PRIORITY, nCnt);
+
+			if (pObj != nullptr)
+			{//ヌルポインタじゃなければ
+				//タイプ取得
+				CObject::OBJECT_TYPE type = pObj->GetType();
+				if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_ENEMY)
+				{
+					CEnemy* pEnemy = (CEnemy*)pObj;
+
+					if (pEnemy->m_Type == CEnemy::ENEMY_TYPE::ENEMY_TYPE_BOSS)
+					{
+						//自分自身のpos取得
+						D3DXVECTOR3 pos = GetPos();
+
+						pos += pEnemy->GetMove();
+
+						SetPos(pos);
+					}
+				}
+			}
+		}
 	}
 }
 

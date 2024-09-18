@@ -112,7 +112,7 @@ class CFlowEnemy : public CEnemy
 {
 public:
 	static const int FLOW_ENEMY_TURNFRAME = 120; //ノーマルのエネミーの移動折り返しフレーム
-	static const int ENEMY_FLOW_LIFE = 4; //エネミーの体力
+	static const int ENEMY_FLOW_LIFE = 3; //エネミーの体力
 
 	CFlowEnemy(int nPriority = ENEMY_PRIORITY);
 	~CFlowEnemy()override;
@@ -150,7 +150,6 @@ private:
 	int m_nTurnFrameCnt; //折り返しフレームをカウントする変数
 	bool m_bOldWay; //過去の方向
 	bool m_bLockOnShot; //ロックオンしてるかどうか
-
 };
 
 //=============================================
@@ -162,6 +161,7 @@ public:
 	//定数
 	static const int BOSS_SHOT_FRAME = 20; //発射するカウント
 	static const int CREATE_BULLET = 6; //生成する弾の数
+	static const float BOSS_MOVE; //通常時の移動	 
 
 	CBossEnemy(int nPriority = ENEMY_PRIORITY);
 	~CBossEnemy()override;

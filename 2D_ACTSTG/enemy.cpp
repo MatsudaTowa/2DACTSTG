@@ -963,6 +963,7 @@ void CFlyEnemy::EnemyMove()
 
 //弾を生成する円周の半径
 const float CBossEnemy::CREATE_RADIUS = 35.0f;
+const float CBossEnemy::BOSS_MOVE = 0.2f;
 
 bool CBossEnemy::m_BossDeath = false;
 
@@ -1006,14 +1007,14 @@ void CBossEnemy::Uninit()
 //=============================================
 void CBossEnemy::Update()
 {
-	//親クラスの更新
-	CEnemy::Update();
-
 	//プレイヤーとの距離を測る
 	bool bDistance = PlayerDistance();
 
 	if (bDistance == true)
 	{//近かったら
+		//親クラスの更新
+		CEnemy::Update();
+
 		//向きを取得
 		bool bWay = false;
 		bWay = GetWay();
@@ -1127,13 +1128,13 @@ void CBossEnemy::EnemyMove()
 
 	if (state == CCharacter::CHARACTER_STATE::CHARACTER_DAMAGE)
 	{
-		move.x += sinf(rotMoveY) * DEFAULT_MOVE * 0.5f;
-		move.z += cosf(rotMoveY) * DEFAULT_MOVE * 0.5f;
+		move.x += sinf(rotMoveY) * BOSS_MOVE * 0.5f;
+		move.z += cosf(rotMoveY) * BOSS_MOVE * 0.5f;
 	}
 	else
 	{
-		move.x += sinf(rotMoveY) * DEFAULT_MOVE;
-		move.z += cosf(rotMoveY) * DEFAULT_MOVE;
+		move.x += sinf(rotMoveY) * BOSS_MOVE;
+		move.z += cosf(rotMoveY) * BOSS_MOVE;
 	}
 	rot.y = rotMoveY + D3DX_PI;
 
@@ -1142,10 +1143,8 @@ void CBossEnemy::EnemyMove()
 
 	SetRot(rot); //rotを代入
 
-	if (bDistance == false)
-	{
-		SetMove(move);//移動量代入
-	}
+
+	SetMove(move);//移動量代入
 
 	//着地してるか代入
 	SetLanding(bLanding);
