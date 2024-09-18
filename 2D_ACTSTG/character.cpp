@@ -193,6 +193,20 @@ void CCharacter::HitField()
 					m_move.y = 0.0f;
 					m_bLanding = true; //’…’n
 				}
+
+				if (m_oldpos.x > pField->GetPos().x - pField->GetSize().x
+					&& CharacterPos.x < pField->GetPos().x - pField->GetSize().x)
+				{
+					CharacterPos.x = m_oldpos.x;
+					m_move.x = 0.0f;
+				}
+
+				if (m_oldpos.x < pField->GetPos().x + pField->GetSize().x
+					&& CharacterPos.x > pField->GetPos().x + pField->GetSize().x)
+				{
+					CharacterPos.x = m_oldpos.x;
+					m_move.x = 0.0f;
+				}
 			}
 		}
 	}

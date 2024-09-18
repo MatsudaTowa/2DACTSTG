@@ -181,11 +181,6 @@ void CEnemy::Update()
 	//可視化された当たり判定を動かす
 	m_pColisionView->SetPos(pos);
 #endif
-
-	//近いか判断するboolの変数初期化
-	bool bNear = false;
-
-	bNear = PlayerDistance();
 	
 	if(m_pLockOn != nullptr)
 	{//照準をエネミーに合わせて動かす
@@ -412,7 +407,6 @@ bool CEnemy::PlayerDistance()
 			}
 		}
 	}
-
 	//向きを代入
 	SetWay(bWay);
 	return bNear;
@@ -956,6 +950,73 @@ void CFlyEnemy::Draw()
 //=============================================
 void CFlyEnemy::EnemyMove()
 {
+	//カウント加算
+	m_nTurnFrameCnt++;
+
+	//向きを取得
+	bool bWay = GetWay();
+
+	if (m_bOldWay != bWay)
+	{//過去の向きと違ったらフレームリセット
+		m_nTurnFrameCnt = 0;
+	}
+
+	if (m_nTurnFrameCnt >= FLY_ENEMY_TURNFRAME)
+	{//指定フレーム数に到達したら
+
+		//進む方向を切り替える
+		bWay = bWay ? false : true;
+		SetWay(bWay);
+
+		//過去の向きに今の向きを代入
+		m_bOldWay = bWay;
+		//カウントリセット
+		m_nTurnFrameCnt = 0;
+	}
+
+	//移動用単位ベクトル初期化
+	D3DXVECTOR3 vecDirection(0.0f, 0.0f, 0.0f);
+
+	if (bWay == true)
+	{//右向きに進むなら
+		vecDirection.x += 0.0f;
+		vecDirection.y += 1.0f;
+	}
+	else if (bWay == false)
+	{//左向きに進むなら
+		vecDirection.x -= 0.0f;
+		vecDirection.y -= 1.0f;
+	}
+
+	//移動量取得
+	D3DXVECTOR3 move = GetMove();
+	float rotMoveZ = atan2f(vecDirection.x, vecDirection.y);
+
+	//オブジェクト2Dからrotを取得
+	D3DXVECTOR3 rot = GetRot();
+
+	//着地してるか取得
+	bool bLanding = GetLaunding();
+
+	//状態を取得
+	CCharacter::CHARACTER_STATE state = GetState();
+
+	if (state == CCharacter::CHARACTER_STATE::CHARACTER_DAMAGE)
+	{
+		move.x += sinf(rotMoveZ) * DEFAULT_MOVE * 0.5f;
+		move.y += cosf(rotMoveZ) * DEFAULT_MOVE * 0.5f;
+	}
+	else
+	{
+		move.x += sinf(rotMoveZ) * DEFAULT_MOVE;
+		move.y += cosf(rotMoveZ) * DEFAULT_MOVE;
+	}
+	rot.y = rotMoveZ + D3DX_PI;
+
+	SetRot(rot); //rotを代入
+
+
+	SetMove(move);//移動量代入
 }
 
 ////通常の移動速度

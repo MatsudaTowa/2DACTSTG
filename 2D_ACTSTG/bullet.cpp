@@ -111,7 +111,7 @@ void CBullet::OnActive()
 			bHitCheck = HitEnemy();
 			if (bHitCheck == true)
 			{
-				Uninit();
+				//Uninit();
 			}
 			break;
 
@@ -307,9 +307,7 @@ HRESULT CElecBullet::Init()
 	//スタンバイ状態の時間を設定
 	m_nStandbyCnt = CBossEnemy::BOSS_SHOT_FRAME * CBossEnemy::CREATE_BULLET;
 
-	D3DXVECTOR3 PlayerPos = CGame::GetPlayer()->GetPos();
-	D3DXVECTOR3 PlayerMaxPos = CGame::GetPlayer()->GetMaxPos();
-	m_TargetPos = PlayerPos - PlayerMaxPos * 0.5f;
+
 
 	return S_OK;
 }
@@ -335,6 +333,9 @@ void CElecBullet::Update()
 	}
 	else if (m_Electype == CElecBullet::ELECTYPE::TYPE_STAND_BY)
 	{
+		D3DXVECTOR3 PlayerPos = CGame::GetPlayer()->GetPos();
+		D3DXVECTOR3 PlayerMaxPos = CGame::GetPlayer()->GetMaxPos();
+		m_TargetPos = PlayerPos - PlayerMaxPos * 0.5f;
 		//カウントダウン
 		m_nStandbyCnt--;
 
