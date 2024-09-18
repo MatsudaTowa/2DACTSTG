@@ -80,13 +80,13 @@ void CTitle::Uninit()
 //=============================================
 void CTitle::Update()
 {
-    CObject::UpdateAll();
+    //CObject::UpdateAll();
     CInputKeyboard* pKeyboard = CManager::GetKeyboard();
 
     //CFade*pFade= CFade::GetFade();
     if (pKeyboard->GetTrigger(DIK_RETURN))
     {
-        CManager::SetMode(CScene::MODE::MODE_GAME);
+        CManager::SetMode(CScene::MODE::MODE_TUTORIAL);
     }
 }
 
