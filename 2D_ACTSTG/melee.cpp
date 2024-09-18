@@ -9,6 +9,8 @@
 #include "enemy.h"
 #include "player.h"
 
+const std::string CMelee::TEXTURE_NAME = "data\\TEXTURE\\melee_effect.png";
+
 //=============================================
 //コンストラクタ
 //=============================================
@@ -143,12 +145,14 @@ CMelee* CMelee::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 size, int n
 	//nullならnullを返す
    if(pMelee ==nullptr) {return nullptr;}
 
+   CTexture* pTexture = CManager::GetTexture();
+
    pMelee->SetPos(pos); //pos設定
    pMelee->SetSize(size); //サイズ設定
    pMelee->SetRot(rot); //方向設定
    pMelee->SetLife(nLife); //寿命代入
    pMelee->SetDamage(nDamage); //ダメージ代入
-
+   pMelee->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME))); //テクスチャの設定
    pMelee->SetType(OBJECT_TYPE_MELEE); //タイプ設定
 
    pMelee->Init(); //初期化
