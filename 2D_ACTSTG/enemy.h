@@ -30,6 +30,7 @@ public:
 		ENEMY_TYPE_FLOW,
 		ENEMY_TYPE_FLY,
 		ENEMY_TYPE_BOSS,
+		ENEMY_TYPE_TUTORIAL,
 		ENEMY_TYPE_MAX,
 	}ENEMY_TYPE;
 
@@ -62,6 +63,7 @@ private:
 	static const std::string FLOW_MODEL_NAME;	//モデルの名前  
 	static const std::string FLY_MODEL_NAME;	//モデルの名前 
 	static const std::string BOSS_MODEL_NAME;	//モデルの名前  
+	static const std::string TUTORIAL_MODEL_NAME;	//モデルの名前  
 	static const int STATE_FRAME; //ステート変更フレーム数
 	static const float DAMPING_COEFFICIENT; //移動抵抗
 	static const float DEADZONE_Y; //これを過ぎたら破棄
@@ -183,5 +185,25 @@ private:
 	bool m_bOldWay; //過去の方向
 	bool m_bShot; //弾を発射するかどうか
 	//CElecBullet*pBullet[CREATE_BULLET]; //ボス用の弾のポインタ
+};
+
+//=============================================
+//通常の敵クラス
+//=============================================
+class CTutorialEnemy : public CEnemy
+{
+public:
+	static const int NORMAL_ENEMY_TURNFRAME = 90; //ノーマルのエネミーの移動折り返しフレーム
+	static const int ENEMY_NORMAL_LIFE = 3; //エネミーの体力
+
+	CTutorialEnemy(int nPriority = ENEMY_PRIORITY);
+	~CTutorialEnemy()override;
+	HRESULT Init()override;
+	void Uninit()override;
+	void Update()override;
+	void Draw()override;
+	void EnemyMove() override;
+
+private:
 };
 #endif

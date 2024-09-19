@@ -15,8 +15,10 @@ const std::string CSkip_UI::BUTTON_ENTER_TEXTURE_NAME = "data\\TEXTURE\\skip_ent
 //=============================================
 //コンストラクタ
 //=============================================
-CSkip_UI::CSkip_UI(int nPriority) :CObject2D(nPriority)
+CSkip_UI::CSkip_UI(int nPriority) :CObject2D(nPriority), m_nChangeCnt(0),m_col(D3DXCOLOR(0.0f,0.0f,0.0f,0.0f)),m_bPress(false)
 {
+	//初期値代入
+	m_col = D3DXCOLOR(0.2f,0.2f,0.2f,1.0f);
 }
 
 //=============================================
@@ -39,7 +41,7 @@ HRESULT CSkip_UI::Init()
 	SetTexPos(D3DXVECTOR2(1.0f, 1.0f));
 
 	//頂点設定
-	SetVtx(1.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	SetVtx(1.0f, D3DXCOLOR(m_col));
 	return S_OK;
 }
 
@@ -59,6 +61,9 @@ void CSkip_UI::Update()
 {
 	//親クラスの更新呼ぶ
 	CObject2D::Update();
+
+	//頂点設定
+	SetVtx(1.0f, D3DXCOLOR(m_col));
 }
 
 //=============================================
@@ -92,4 +97,26 @@ CSkip_UI* CSkip_UI::Create(D3DXVECTOR3 pos, D3DXVECTOR2 size)
 	pSkip_UI->Init();
 
 	return pSkip_UI;
+}
+
+void CSkip_UI::ColorChange()
+{
+	m_nChangeCnt++;
+	if (m_nChangeCnt >= CHANGE_FRAME)
+	{
+		if (m_bPress && m_col.r < 1.0f && m_col.g < 1.0f&& m_col.b < 1.0f)
+		{
+			m_col.r += 0.1f;
+			m_col.g += 0.1f;
+			m_col.b += 0.1f;
+		}
+		else if (!m_bPress && m_col.r > 0.2f && m_col.g > 0.2f && m_col.b > 0.2f)
+		{
+			m_col.r -= 0.1f;
+			m_col.g -= 0.1f;
+			m_col.b -= 0.1f;
+		}
+		m_nChangeCnt = 0;
+
+	}
 }

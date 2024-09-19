@@ -35,6 +35,8 @@ const std::string CEnemy::FLY_MODEL_NAME = "data\\MODEL\\jett.x";
 //モデルパス
 const std::string CEnemy::BOSS_MODEL_NAME = "data\\MODEL\\boss.x";
 
+const std::string CEnemy::TUTORIAL_MODEL_NAME = "data\\MODEL\\tutorial_enemy.x";
+
 //ステート切り替えフレーム
 const int CEnemy::STATE_FRAME = 30;
 
@@ -235,6 +237,9 @@ CEnemy* CEnemy::Create(const D3DXVECTOR3& pos,const D3DXVECTOR3& rot, const ENEM
 	case ENEMY_TYPE_BOSS:
 		pEnemy = new CBossEnemy;
 		break;
+	case ENEMY_TYPE_TUTORIAL:
+		pEnemy = new CTutorialEnemy;
+		break;
 	default:
 		break;
 	}
@@ -276,6 +281,12 @@ CEnemy* CEnemy::Create(const D3DXVECTOR3& pos,const D3DXVECTOR3& rot, const ENEM
 		pEnemy->BindXFile(pModel->GetModelInfo(pModel->Regist(&BOSS_MODEL_NAME)).pBuffMat, //マテリアル取得
 			pModel->GetModelInfo(pModel->Regist(&BOSS_MODEL_NAME)).dwNumMat, //マテリアル数取得
 			pModel->GetModelInfo(pModel->Regist(&BOSS_MODEL_NAME)).pMesh); //メッシュ情報取得
+		break;
+	case CEnemy::ENEMY_TYPE::ENEMY_TYPE_TUTORIAL:
+		//Xファイル読み込み
+		pEnemy->BindXFile(pModel->GetModelInfo(pModel->Regist(&TUTORIAL_MODEL_NAME)).pBuffMat, //マテリアル取得
+			pModel->GetModelInfo(pModel->Regist(&TUTORIAL_MODEL_NAME)).dwNumMat, //マテリアル数取得
+			pModel->GetModelInfo(pModel->Regist(&TUTORIAL_MODEL_NAME)).pMesh); //メッシュ情報取得
 		break;
 	default:
 		break;
@@ -334,6 +345,9 @@ void CEnemy::Damage(int nDamage)
 
 		case CEnemy::ENEMY_TYPE::ENEMY_TYPE_BOSS:
 			break;
+		case CEnemy::ENEMY_TYPE::ENEMY_TYPE_TUTORIAL:
+			CEnemy::Create(D3DXVECTOR3(-200.0f,10.5f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f), CEnemy::ENEMY_TYPE::ENEMY_TYPE_TUTORIAL);
+			break;
 		default:
 			assert(false);
 			break;
@@ -346,9 +360,16 @@ void CEnemy::Damage(int nDamage)
 			m_bLockOn = false;
 		}
 
-		CScore*pScore = CGame::GetScore();
+		//現在のシーンを取得
+		CScene::MODE pScene = CScene::GetSceneMode();
 
-		pScore->AddScore(100);
+		if (pScene == CScene::MODE::MODE_GAME)
+		{
+			CScore* pScore = CGame::GetScore();
+
+			pScore->AddScore(100);
+		}
+
 
 		if (m_Type == CEnemy::ENEMY_TYPE::ENEMY_TYPE_BOSS)
 		{
@@ -1209,4 +1230,61 @@ void CBossEnemy::EnemyMove()
 
 	//着地してるか代入
 	SetLanding(bLanding);
+}
+
+//=============================================
+//コンストラクタ
+//=============================================
+CTutorialEnemy::CTutorialEnemy(int nPriority)
+{
+}
+
+
+//=============================================
+//デストラクタ
+//=============================================
+CTutorialEnemy::~CTutorialEnemy()
+{
+}
+
+//=============================================
+//初期化
+//=============================================
+HRESULT CTutorialEnemy::Init()
+{
+	//親クラスの初期化
+	CEnemy::Init();
+	SetLife(ENEMY_NORMAL_LIFE);
+	return S_OK;
+}
+
+//=============================================
+//終了
+//=============================================
+void CTutorialEnemy::Uninit()
+{
+	//親クラスの終了
+	CEnemy::Uninit();
+}
+
+//=============================================
+//更新
+//=============================================
+void CTutorialEnemy::Update()
+{
+	//親クラスの更新
+	CEnemy::Update();
+}
+
+//=============================================
+//描画
+//=============================================
+void CTutorialEnemy::Draw()
+{
+	//親クラスの描画
+	CEnemy::Draw();
+}
+
+void CTutorialEnemy::EnemyMove()
+{
 }

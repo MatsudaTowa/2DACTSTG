@@ -22,6 +22,8 @@
 #include "manager.h"
 #include "sound.h"
 
+const std::string CTutorial::ENEMY_FILE = "data\\FILE\\tutorial_enemy.txt";
+
 const std::string CTutorial::BLOCK_FILE = "data\\FILE\\block.txt";
 
 //=============================================
@@ -46,17 +48,22 @@ HRESULT CTutorial::Init()
 	//地面生成
 	CField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1000.0f, 0.0f, 1000.0f));
 
+	//ゲージのフレームUI生成
+	CGauge_Fream::Create(D3DXVECTOR3(250.0f, 150.0f, 0.0f), D3DXVECTOR2(280.0f, 120.0f));
+
 	//ブロック生成
 	LoadBlock(&CTutorial::BLOCK_FILE);
+	//エネミー生成
+	LoadEnemy(&CTutorial::ENEMY_FILE);
 
 	//プレイヤー生成
 	m_pPlayer = new CPlayer;
 	m_pPlayer->Init(D3DXVECTOR3(-900.0f, 0.5f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5);
 
-	CTutorial_UI::Create(D3DXVECTOR3(-900.0f,70.0f,100.0f),D3DXVECTOR3(60.0f,40.0f,0.0f),CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_MOVE_KEYBOARD);
-	CTutorial_UI::Create(D3DXVECTOR3(-700.0f, 70.0f, 100.0f), D3DXVECTOR3(60.0f, 20.0f, 0.0f), CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_MELEE_MOUSE);
-	CTutorial_UI::Create(D3DXVECTOR3(-500.0f, 70.0f, 100.0f), D3DXVECTOR3(60.0f, 20.0f, 0.0f), CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_SLASH_MOUSE);
-
+	CTutorial_UI::Create(D3DXVECTOR3(-900.0f,40.0f,100.0f),D3DXVECTOR3(60.0f,40.0f,0.0f),CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_MOVE_KEYBOARD);
+	CTutorial_UI::Create(D3DXVECTOR3(-700.0f, 40.0f, 100.0f), D3DXVECTOR3(60.0f, 20.0f, 0.0f), CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_MELEE_MOUSE);
+	CTutorial_UI::Create(D3DXVECTOR3(-500.0f, 40.0f, 100.0f), D3DXVECTOR3(60.0f, 20.0f, 0.0f), CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_SLASH_MOUSE);
+	CTutorial_UI::Create(D3DXVECTOR3(-300.0f, 40.0f, 100.0f), D3DXVECTOR3(60.0f, 40.0f, 0.0f), CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_GAUGE);
 
 	CItem::Create(CItem::ITEMTYPE::ITEMTYPE_PANETRARING_SLASH, D3DXVECTOR3(-600.0f, 10.0f, 0.0f),D3DXVECTOR3(10.0f,10.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
 	CItem::Create(CItem::ITEMTYPE::ITEMTYPE_FLOW, D3DXVECTOR3(-550.0f, 10.0f, 0.0f), D3DXVECTOR3(10.0f, 10.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
@@ -85,9 +92,23 @@ void CTutorial::Update()
 	CInputKeyboard* pKeyboard = CManager::GetKeyboard();
 
 	//CFade*pFade= CFade::GetFade();
-	if (pKeyboard->GetTrigger(DIK_RETURN))
+	if (pKeyboard->GetPress(DIK_RETURN))
 	{
-		CManager::SetMode(CScene::MODE::MODE_GAME);
+		m_pSkipUI->m_bPress = true; //押してる状態に
+		m_pSkipUI->ColorChange();
+		if (m_pSkipUI->m_col.r >= 1.0f && m_pSkipUI->m_col.g >= 1.0f && m_pSkipUI->m_col.b >= 1.0f)
+		{
+			//スキップUIのメンバ変数初期化
+			m_pSkipUI->m_col = D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
+			m_pSkipUI->m_bPress = false;
+			CManager::SetMode(CScene::MODE::MODE_GAME);
+		}
+	}
+	else
+	{
+		m_pSkipUI->m_bPress = false; //押してない状態に
+		m_pSkipUI->ColorChange();
+
 	}
 }
 
@@ -96,6 +117,79 @@ void CTutorial::Update()
 //=============================================
 void CTutorial::Draw()
 {
+}
+
+void CTutorial::LoadEnemy(const std::string* pFileName)
+{
+	char aDataSearch[ENEMY_TXT_MAX];
+	char aEqual[ENEMY_TXT_MAX]; //[＝]読み込み用
+	int nNumEnemy; //エネミーの数
+
+	//ファイルの読み込み
+	FILE* pFile = fopen(pFileName->c_str(), "r");
+
+	if (pFile == NULL)
+	{//種類の情報のデータファイルが開けなかった場合
+		//処理を終了する
+		return;
+	}
+	//ENDが見つかるまで読み込みを繰り返す
+	while (1)
+	{
+		fscanf(pFile, "%s", aDataSearch); //検索
+
+		if (!strcmp(aDataSearch, "END"))
+		{//読み込みを終了
+			fclose(pFile);
+			break;
+		}
+		if (aDataSearch[0] == '#')
+		{
+			continue;
+		}
+
+		if (!strcmp(aDataSearch, "NUM_ENEMY"))
+		{//モデル数読み込み
+			fscanf(pFile, "%s", &aEqual[0]);
+			fscanf(pFile, "%d", &nNumEnemy);
+		}
+		if (!strcmp(aDataSearch, "ENEMYSET"))
+		{
+			//項目ごとのデータを代入
+			while (1)
+			{
+				fscanf(pFile, "%s", aDataSearch); //検索
+
+				if (!strcmp(aDataSearch, "END_ENEMYSET"))
+				{
+					//エネミー生成
+					CEnemy::Create(m_LoadEnemy.pos, m_LoadEnemy.rot, m_LoadEnemy.type);
+					break;
+				}
+				else if (!strcmp(aDataSearch, "POS"))
+				{
+					fscanf(pFile, "%s", &aEqual[0]);
+					fscanf(pFile, "%f %f %f",
+						&m_LoadEnemy.pos.x,
+						&m_LoadEnemy.pos.y,
+						&m_LoadEnemy.pos.z);
+				}
+				else if (!strcmp(aDataSearch, "ROT"))
+				{
+					fscanf(pFile, "%s", &aEqual[0]);
+					fscanf(pFile, "%f %f %f",
+						&m_LoadEnemy.rot.x,
+						&m_LoadEnemy.rot.y,
+						&m_LoadEnemy.rot.z);
+				}
+				else if (!strcmp(aDataSearch, "TYPE"))
+				{
+					fscanf(pFile, "%s", &aEqual[0]);
+					fscanf(pFile, "%d", &m_LoadEnemy.type);
+				}
+			}
+		}
+	}
 }
 
 //=============================================

@@ -294,8 +294,8 @@ void CPlayer::Update()
 
 		if (pScene == CScene::MODE::MODE_TUTORIAL)
 		{
-			if (GetOldPos().x < -300.0f
-				&& GetPos().x > -300.0f)
+			if (GetOldPos().x < -180.0f
+				&& GetPos().x > -180.0f)
 			{
 				SetPos(D3DXVECTOR3(GetOldPos().x, GetPos().y, GetPos().z));
 				SetMove(D3DXVECTOR3(0.0f,GetMove().y,GetMove().z));
