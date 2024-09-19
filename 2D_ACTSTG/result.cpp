@@ -8,6 +8,9 @@
 #include "result_screen.h"
 #include "manager.h"
 
+//スコア設定
+CScore* CResult::m_pScore = nullptr;
+
 //=============================================
 //コンストラクタ
 //=============================================
@@ -31,6 +34,16 @@ HRESULT CResult::Init()
     CSound* pSound = CManager::GetSound();
 
     pSound->PlaySound(CSound::SOUND_LABEL::SOUND_LABEL_BGM_RESULT);
+
+    //スコア初期化
+    if (m_pScore == nullptr)
+    {
+        m_pScore = new CScore;
+
+        m_pScore->Init();
+    }
+    int nScore = m_pScore->GetScore();
+    m_pScore->AddScore(nScore);
     return S_OK;
 }
 
@@ -42,6 +55,11 @@ void CResult::Uninit()
     CSound* pSound = CManager::GetSound();
     //サウンドの停止
     pSound->StopSound();
+    if (m_pScore != nullptr)
+    {
+        m_pScore->Uninit();
+        m_pScore = nullptr;
+    }
     CObject::ReleaseAll();
 }
 
@@ -51,6 +69,10 @@ void CResult::Uninit()
 void CResult::Update()
 {
     CObject::UpdateAll();
+    if (m_pScore != nullptr)
+    {
+        m_pScore->Update();
+    }
     CInputKeyboard* pKeyboard = CManager::GetKeyboard();
     if (pKeyboard->GetTrigger(DIK_RETURN))
     {

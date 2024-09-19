@@ -8,7 +8,7 @@
 #include "manager.h"
 
 //texパス
-const std::string CResult_Screen::TEXTURE_NAME = "data\\TEXTURE\\result_test.png";
+const std::string CResult_Screen::TEXTURE_NAME = "data\\TEXTURE\\result.png";
 
 //=============================================
 //コンストラクタ

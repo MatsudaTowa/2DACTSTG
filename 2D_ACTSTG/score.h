@@ -18,6 +18,7 @@ class CScore
 public:
 	static const int NUM_DIGIT = 6;  //桁数
 	static const float DIGIT_SHIFT;  //桁ごとに座標をずらす
+	static const float DEBUG_DIGIT_SHIFT;  //桁ごとに座標をずらす
 
 	CScore();
 	~CScore();
@@ -25,10 +26,15 @@ public:
 	void Uninit();
 	void Update();
 	void AddScore(int nValue);
-
+	int m_nScore; //スコアの値
+	void SaveScore(int nScore)
+	{
+		m_nSaveScore = nScore;
+	}
+	static int GetScore();
 private:
 	void SetScore(int nScore);
-	int m_nScore; //スコアの値
+	static int m_nSaveScore; //スコアセーブ用
 	D3DXVECTOR3 m_pos;
 	CNumber* m_pNumber[NUM_DIGIT];
 };

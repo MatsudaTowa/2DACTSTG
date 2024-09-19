@@ -117,7 +117,6 @@ HRESULT CGame::Init()
 	//エネミー生成
 	LoadEnemy(&CGame::ENEMY_FILE);
 
-
 	CSound* pSound = CManager::GetSound();
 
 	pSound->PlaySound(CSound::SOUND_LABEL::SOUND_LABEL_BGM_GAME);
@@ -197,6 +196,8 @@ void CGame::Update()
 		{
 			//ディレイカウントリセット
 			m_nResultDelay = 0;
+
+			m_pScore->SaveScore(m_pScore->m_nScore);
 
 			//リザルト遷移
 			CManager::SetMode(CScene::MODE::MODE_RESULT);

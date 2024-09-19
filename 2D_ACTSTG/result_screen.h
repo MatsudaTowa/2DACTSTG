@@ -14,7 +14,7 @@
 class CResult_Screen : public CObject2D
 {
 public:
-	static const int RESULT_SCREEN_PRIORITY = 90;  //ï`âÊèá
+	static const int RESULT_SCREEN_PRIORITY = 30;  //ï`âÊèá
 	CResult_Screen(int nPriority = RESULT_SCREEN_PRIORITY);
 	~CResult_Screen()override;
 	HRESULT Init()override;
