@@ -17,6 +17,8 @@
 #include "colision.h"
 #include "block.h"
 #include "field.h"
+#include "tutorial_UI.h"
+#include "item.h"
 #include "manager.h"
 #include "sound.h"
 
@@ -51,7 +53,15 @@ HRESULT CTutorial::Init()
 	m_pPlayer = new CPlayer;
 	m_pPlayer->Init(D3DXVECTOR3(-900.0f, 0.5f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5);
 
-	m_pSkipUI = CSkip_UI::Create(D3DXVECTOR3(1100.0f,600.0f,0.0f),D3DXVECTOR2(150.0f,70.0f));
+	CTutorial_UI::Create(D3DXVECTOR3(-900.0f,70.0f,100.0f),D3DXVECTOR3(60.0f,40.0f,0.0f),CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_MOVE_KEYBOARD);
+	CTutorial_UI::Create(D3DXVECTOR3(-700.0f, 70.0f, 100.0f), D3DXVECTOR3(60.0f, 20.0f, 0.0f), CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_MELEE_MOUSE);
+	CTutorial_UI::Create(D3DXVECTOR3(-500.0f, 70.0f, 100.0f), D3DXVECTOR3(60.0f, 20.0f, 0.0f), CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_SLASH_MOUSE);
+
+
+	CItem::Create(CItem::ITEMTYPE::ITEMTYPE_PANETRARING_SLASH, D3DXVECTOR3(-600.0f, 10.0f, 0.0f),D3DXVECTOR3(10.0f,10.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
+	CItem::Create(CItem::ITEMTYPE::ITEMTYPE_FLOW, D3DXVECTOR3(-550.0f, 10.0f, 0.0f), D3DXVECTOR3(10.0f, 10.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+	m_pSkipUI = CSkip_UI::Create(D3DXVECTOR3(200.0f,600.0f,0.0f),D3DXVECTOR2(150.0f,70.0f));
 	return S_OK;
 }
 

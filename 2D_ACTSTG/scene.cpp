@@ -10,6 +10,8 @@
 #include "game.h"
 #include "result.h"
 #include "manager.h"
+
+CScene::MODE CScene::m_Mode = CScene::MODE::MODE_TITLE;
 //=============================================
 //コンストラクタ
 //=============================================

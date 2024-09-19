@@ -205,6 +205,7 @@
     <ClCompile Include="title.cpp" />
     <ClCompile Include="title_screen.cpp" />
     <ClCompile Include="tutorial.cpp" />
+    <ClCompile Include="tutorial_UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="attack_effect.h" />
@@ -258,6 +259,7 @@
     <ClInclude Include="title.h" />
     <ClInclude Include="title_screen.h" />
     <ClInclude Include="tutorial.h" />
+    <ClInclude Include="tutorial_UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

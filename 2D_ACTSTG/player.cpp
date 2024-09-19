@@ -175,186 +175,202 @@ void CPlayer::Update()
 {
 	//SetColor(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
 
-	//状態を取得
-	CCharacter::CHARACTER_STATE state = GetState();
+	//現在のシーンを取得
+	CScene::MODE pScene = CScene::GetSceneMode();
 
-	if (m_pItemUI != nullptr)
+	if (pScene != CScene::MODE::MODE_TITLE)
 	{
-		switch (m_Attack)
+		//状態を取得
+		CCharacter::CHARACTER_STATE state = GetState();
+
+		if (m_pItemUI != nullptr)
 		{
-		case CPlayer::PLAYER_ATTACK_MELEE:
-			m_pItemUI->SetTex(CItem_UI::ITEM_UI_TYPE_NONE);
-			break;
-		case CPlayer::PLAYER_ATTACK_PANETRARING_SLASH:
-			m_pItemUI->SetTex(CItem_UI::ITEM_UI_TYPE_PANETRARING_SLASH);
-
-			for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
+			switch (m_Attack)
 			{
-				//オブジェクト取得
-				CObject* pObj = CObject::Getobject(CFlow_Range::FLOW_RANGE_PRIORITY, nCnt);
-				if (pObj != nullptr)
-				{//ヌルポインタじゃなければ
-					//タイプ取得
-					CObject::OBJECT_TYPE type = pObj->GetType();
+			case CPlayer::PLAYER_ATTACK_MELEE:
+				m_pItemUI->SetTex(CItem_UI::ITEM_UI_TYPE_NONE);
+				break;
+			case CPlayer::PLAYER_ATTACK_PANETRARING_SLASH:
+				m_pItemUI->SetTex(CItem_UI::ITEM_UI_TYPE_PANETRARING_SLASH);
 
-					//敵との当たり判定
-					if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_FLOW_RANGE)
-					{
-						CFlow_Range* pFlow_Range = (CFlow_Range*)pObj;
+				for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
+				{
+					//オブジェクト取得
+					CObject* pObj = CObject::Getobject(CFlow_Range::FLOW_RANGE_PRIORITY, nCnt);
+					if (pObj != nullptr)
+					{//ヌルポインタじゃなければ
+						//タイプ取得
+						CObject::OBJECT_TYPE type = pObj->GetType();
 
-						if (pFlow_Range != nullptr)
+						//敵との当たり判定
+						if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_FLOW_RANGE)
 						{
-							pFlow_Range->Uninit();
+							CFlow_Range* pFlow_Range = (CFlow_Range*)pObj;
+
+							if (pFlow_Range != nullptr)
+							{
+								pFlow_Range->Uninit();
+							}
 						}
 					}
 				}
+				m_bFlow = false;
+				break;
+			case CPlayer::PLAYER_ATTACK_FLOW:
+				m_pItemUI->SetTex(CItem_UI::ITEM_UI_TYPE_FLOW);
+				break;
+			default:
+				break;
 			}
-			m_bFlow = false;
-			break;
-		case CPlayer::PLAYER_ATTACK_FLOW:
-			m_pItemUI->SetTex(CItem_UI::ITEM_UI_TYPE_FLOW);
-			break;
-		default:
-			break;
 		}
-	}
 
 
-	if (state == CCharacter::CHARACTER_STATE::CHARACTER_DAMAGE)
-	{
-		//状態のカウント数取得
-		int nStateCnt = GetStateCnt();
-
-		//ステート変更カウント進める
-		nStateCnt++;
-
-		if (nStateCnt >= STATE_FRAME)
+		if (state == CCharacter::CHARACTER_STATE::CHARACTER_DAMAGE)
 		{
-			//通常に戻す
-			state = CCharacter::CHARACTER_STATE::CHARACTER_NORMAL;
-			//ステートカウントリセット
-			nStateCnt = 0;
+			//状態のカウント数取得
+			int nStateCnt = GetStateCnt();
 
-			//状態代入
-			SetState(state);
+			//ステート変更カウント進める
+			nStateCnt++;
+
+			if (nStateCnt >= STATE_FRAME)
+			{
+				//通常に戻す
+				state = CCharacter::CHARACTER_STATE::CHARACTER_NORMAL;
+				//ステートカウントリセット
+				nStateCnt = 0;
+
+				//状態代入
+				SetState(state);
+			}
+
+			//ステートカウント代入
+			SetStateCnt(nStateCnt);
 		}
 
-		//ステートカウント代入
-		SetStateCnt(nStateCnt);
-	}
+		//重力処理
+		Gravity();
 
-	//重力処理
-	Gravity();
+		if (m_bFlow == false)
+		{
+			//移動処理
+			PlayerMove();
+		}
+		//位置取得
+		D3DXVECTOR3 pos = GetPos();
 
-	if(m_bFlow == false)
-	{ 
-		//移動処理
-		PlayerMove();
-	}
-	//位置取得
-	D3DXVECTOR3 pos = GetPos();
+		//過去の位置
+		D3DXVECTOR3 oldpos = GetOldPos();
 
-	//過去の位置
-	D3DXVECTOR3 oldpos = GetOldPos();
+		//移動量取得
+		D3DXVECTOR3 move = GetMove();
 
-	//移動量取得
-	D3DXVECTOR3 move = GetMove();
+		//移動量を更新(減速）
+		move *= 1.0f - DAMPING_COEFFICIENT;
 
-	//移動量を更新(減速）
-	move *= 1.0f - DAMPING_COEFFICIENT;
+		//移動量代入
+		SetMove(move);
 
-	//移動量代入
-	SetMove(move);
+		//過去の位置に今の位置を代入
+		oldpos = pos;
 
-	//過去の位置に今の位置を代入
-	oldpos = pos;
+		//過去の位置代入
+		SetOldPos(oldpos);
 
-	//過去の位置代入
-	SetOldPos(oldpos);
+		//移動量追加
+		pos += move;
 
-	//移動量追加
-	pos += move;
+		//座標を更新
+		SetPos(pos);
 
-	//座標を更新
-	SetPos(pos);
+		if (m_pLockOn != nullptr)
+		{//照準をエネミーに合わせて動かす
+			m_pLockOn->SetPos(D3DXVECTOR3(GetPos().x, GetPos().y + 5.0f, -10.0f));
+		}
 
-	if (m_pLockOn != nullptr)
-	{//照準をエネミーに合わせて動かす
-		m_pLockOn->SetPos(D3DXVECTOR3(GetPos().x, GetPos().y + 5.0f, -10.0f));
-	}
+		//最大最小値取得
+		D3DXVECTOR3 minpos = GetMinPos();
+		D3DXVECTOR3 maxpos = GetMaxPos();
 
-	//最大最小値取得
-	D3DXVECTOR3 minpos = GetMinPos();
-	D3DXVECTOR3 maxpos = GetMaxPos();
-	
-	//ブロックとの接触処理
-	HitBlock();
-
-	//床との接触処理
-	HitField();
-
-	//エネミーとの接触処理
-	HitEnemy();
-
-	CGame::GAME_STATE Game_state = CGame::GetState();
-
-	if (Game_state == CGame::GAME_STATE::GAME_STATE_NORMAL && GetPos().x > CCharacter::BOSS_FIELD_X)
-	{//ボス戦状態に移行
-		Game_state = CGame::GAME_STATE::GAME_STATE_BOSS;
-
-		CSound* pSound = CManager::GetSound();
-		//サウンドの停止
-		pSound->StopSound();
-
-		pSound->PlaySound(CSound::SOUND_LABEL::SOUND_LABEL_BGM_GAME_BOSS);
-		
-		CGame::SetState(Game_state);
-
-	}
-
-	if (GetLaunding())
-	{//着地してるなら
-		//ジャンプ数リセット
-		m_nJumpCnt = 0;
-	}
-
-	if (pos.y < DEADZONE_Y)
-	{//リスポーン処理
-		ReSpawn();
-	}
-
-	//マウスの情報取得
-	CInputMouse* pMouse = CManager::GetMouse();
-
-	//どっち向いてるか取得
-	bool bWay = GetWay();
-
-	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
-	{
-		//オブジェクト取得
-		CObject* pObj = CObject::Getobject(CGauge_Slash::GAUGE_PRIORITY, nCnt);
-		if (pObj != nullptr)
-		{//ヌルポインタじゃなければ
-			//タイプ取得
-			CObject::OBJECT_TYPE type = pObj->GetType();
-
-			//敵との当たり判定
-			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_GAUGE_SLASH)
+		if (pScene == CScene::MODE::MODE_TUTORIAL)
+		{
+			if (GetOldPos().x < -300.0f
+				&& GetPos().x > -300.0f)
 			{
-				CGauge_Slash* pGauge = (CGauge_Slash*)pObj;
-				
-				//ゲージ処理
-				Gauge(pGauge);
+				SetPos(D3DXVECTOR3(GetOldPos().x, GetPos().y, GetPos().z));
+				SetMove(D3DXVECTOR3(0.0f,GetMove().y,GetMove().z));
 			}
 		}
-	}
 
-	if (pMouse->GetTrigger(1))
-	{//右クリックが入力されたら
-		//近接攻撃処理
-		PerformMelee(pos, bWay);
-	}
+		//ブロックとの接触処理
+		HitBlock();
 
+		//床との接触処理
+		HitField();
+
+		//エネミーとの接触処理
+		HitEnemy();
+
+		//ゲームの状態取得
+		CGame::GAME_STATE Game_state = CGame::GetState();
+
+		if (pScene == CScene::MODE::MODE_GAME &&Game_state == CGame::GAME_STATE::GAME_STATE_NORMAL && GetPos().x > CCharacter::BOSS_FIELD_X)
+		{//ボス戦状態に移行
+			Game_state = CGame::GAME_STATE::GAME_STATE_BOSS;
+
+			CSound* pSound = CManager::GetSound();
+			//サウンドの停止
+			pSound->StopSound();
+
+			pSound->PlaySound(CSound::SOUND_LABEL::SOUND_LABEL_BGM_GAME_BOSS);
+
+			CGame::SetState(Game_state);
+
+		}
+
+		if (GetLaunding())
+		{//着地してるなら
+			//ジャンプ数リセット
+			m_nJumpCnt = 0;
+		}
+
+		if (pos.y < DEADZONE_Y)
+		{//リスポーン処理
+			ReSpawn();
+		}
+
+		//マウスの情報取得
+		CInputMouse* pMouse = CManager::GetMouse();
+
+		//どっち向いてるか取得
+		bool bWay = GetWay();
+
+		for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
+		{
+			//オブジェクト取得
+			CObject* pObj = CObject::Getobject(CGauge_Slash::GAUGE_PRIORITY, nCnt);
+			if (pObj != nullptr)
+			{//ヌルポインタじゃなければ
+				//タイプ取得
+				CObject::OBJECT_TYPE type = pObj->GetType();
+
+				//敵との当たり判定
+				if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_GAUGE_SLASH)
+				{
+					CGauge_Slash* pGauge = (CGauge_Slash*)pObj;
+
+					//ゲージ処理
+					Gauge(pGauge);
+				}
+			}
+		}
+
+		if (pMouse->GetTrigger(1))
+		{//右クリックが入力されたら
+			//近接攻撃処理
+			PerformMelee(pos, bWay);
+		}
+	}
 }
 
 //=============================================

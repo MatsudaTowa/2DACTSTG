@@ -35,12 +35,11 @@ public:
 	virtual void Update();
 	virtual void Draw();
 
-	// 静的メンバ関数
 	static CScene* Create(MODE mode);
-	MODE GetSceneMode();
+	static MODE GetSceneMode();
 private:
 
 	// メンバ変数
-	MODE m_Mode; //現在のモード
+	static MODE m_Mode; //現在のモード
 };
 #endif
