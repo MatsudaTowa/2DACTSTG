@@ -29,7 +29,7 @@ CScore::CScore():m_nScore(0),m_pos(D3DXVECTOR3(0.0f,0.0f,0.0f))
 	else if (pScene == CScene::MODE::MODE_RESULT)
 	{
 		//èâä˙à íuë„ì¸
-		m_pos = D3DXVECTOR3(1050.0f, 460.0f, 0.0f);
+		m_pos = D3DXVECTOR3(1140.0f, 460.0f, 0.0f);
 	}
 
 	for (int nCnt = 0; nCnt < NUM_DIGIT; nCnt++)
