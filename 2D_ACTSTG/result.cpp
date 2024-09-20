@@ -7,6 +7,7 @@
 #include "result.h"
 #include "result_screen.h"
 #include "manager.h"
+#include "evaluation.h"
 
 //スコア設定
 CScore* CResult::m_pScore = nullptr;
@@ -44,6 +45,11 @@ HRESULT CResult::Init()
     }
     int nScore = m_pScore->GetScore();
     m_pScore->AddScore(nScore);
+
+    //スコアによって変える
+    {
+        CEvaluation::Create(D3DXVECTOR3(200.0f,480.0f,0.0f),D3DXVECTOR2(200.0f,200.0f),CEvaluation::EVALUATION::EVALUATION_C);
+    }
     return S_OK;
 }
 
