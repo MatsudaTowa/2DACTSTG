@@ -47,8 +47,21 @@ HRESULT CResult::Init()
     m_pScore->AddScore(nScore);
 
     //ƒXƒRƒA‚É‚æ‚Á‚Ä•Ï‚¦‚é
+    if(nScore >= 3000)
     {
         CEvaluation::Create(D3DXVECTOR3(200.0f,480.0f,0.0f),D3DXVECTOR2(200.0f,200.0f),CEvaluation::EVALUATION::EVALUATION_S);
+    }
+    else if (nScore >= 2000 && nScore < 3000)
+    {
+        CEvaluation::Create(D3DXVECTOR3(200.0f, 480.0f, 0.0f), D3DXVECTOR2(200.0f, 200.0f), CEvaluation::EVALUATION::EVALUATION_A);
+    }
+    else if (nScore >= 1000 && nScore < 2000)
+    {
+        CEvaluation::Create(D3DXVECTOR3(200.0f, 480.0f, 0.0f), D3DXVECTOR2(200.0f, 200.0f), CEvaluation::EVALUATION::EVALUATION_B);
+    }
+    else if (nScore >= 0 && nScore < 1000)
+    {
+        CEvaluation::Create(D3DXVECTOR3(200.0f, 480.0f, 0.0f), D3DXVECTOR2(200.0f, 200.0f), CEvaluation::EVALUATION::EVALUATION_C);
     }
     return S_OK;
 }

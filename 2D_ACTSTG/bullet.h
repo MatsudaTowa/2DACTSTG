@@ -17,7 +17,7 @@ public:
 	static const std::string PANETRARING_TEXTURE_NAME;	//テクスチャの名前
 	static const std::string ELEC_TEXTURE_NAME;	//テクスチャの名前
 
-	static const int BULLET_PRIORITY = 4; //描画順
+	static const int BULLET_PRIORITY = 24; //描画順
 
 	//敵か自分かの判断する列挙
 	typedef enum

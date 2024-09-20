@@ -367,7 +367,23 @@ void CEnemy::Damage(int nDamage)
 		{
 			CScore* pScore = CGame::GetScore();
 
-			pScore->AddScore(100);
+			switch (m_Type)
+			{
+			case CEnemy::ENEMY_TYPE::ENEMY_TYPE_BOSS:
+				pScore->AddScore(1000);
+				break;
+			case CEnemy::ENEMY_TYPE::ENEMY_TYPE_FLY:
+				pScore->AddScore(50);
+				break;
+			case CEnemy::ENEMY_TYPE::ENEMY_TYPE_FLOW:
+				pScore->AddScore(500);
+				break;
+			case CEnemy::ENEMY_TYPE::ENEMY_TYPE_NORMAL:
+				pScore->AddScore(100);
+				break;
+			default:
+				break;
+			}
 		}
 
 
