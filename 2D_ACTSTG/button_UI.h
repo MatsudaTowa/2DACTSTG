@@ -13,13 +13,6 @@
 class CButton_UI : public CBillboard
 {
 public:
-	typedef enum
-	{
-		BUTTON_TYPE_NONE = 0,
-		BUTTON_TYPE_PAD_Y,
-		BUTTON_TYPE_KEYBOARD_F,
-		BUTTON_TYPE_MAX,
-	}BUTTON_TYPE;
 
 	static const std::string TEXTURE_NAME_PAD_Y;	//テクスチャの名前
 	static const std::string TEXTURE_NAME_KEYBOARD_F;	//テクスチャの名前
@@ -32,7 +25,7 @@ public:
 	void Draw()override;
 	void ChangeSize();
 	//エフェクト作成
-	static CButton_UI* Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, BUTTON_TYPE type);
+	static CButton_UI* Create(D3DXVECTOR3 pos, D3DXVECTOR3 size);
 private:
 	static LPDIRECT3DTEXTURE9 m_pTextureTemp;
 };

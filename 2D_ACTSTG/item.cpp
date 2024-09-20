@@ -128,6 +128,7 @@ void CItem::HitItem()
 
 	//キーボード情報取得
 	CInputKeyboard* pKeyboard = CManager::GetKeyboard();
+	CInputPad* pPad = CManager::GetPad();
 
 	//プレイヤーアタックタイプのポインタ初期化
 	CPlayer::PLAYER_ATTACK pPlayerAttack = CPlayer::PLAYER_ATTACK::PLAYER_ATTACK_MELEE; 
@@ -166,9 +167,9 @@ void CItem::HitItem()
 					//攻撃の削除
 					if (m_pButton_UI == nullptr)
 					{
-						m_pButton_UI = CButton_UI::Create(D3DXVECTOR3(Itempos.x, Itempos.y + 20.0f, Itempos.z - 15.0f), D3DXVECTOR3(40.0f, 10.0f, 0.0f), CButton_UI::BUTTON_TYPE::BUTTON_TYPE_KEYBOARD_F);
+						m_pButton_UI = CButton_UI::Create(D3DXVECTOR3(Itempos.x, Itempos.y + 20.0f, Itempos.z - 15.0f), D3DXVECTOR3(40.0f, 10.0f, 0.0f));
 					}
-					if (pKeyboard->GetTrigger(DIK_F))
+					if (pKeyboard->GetTrigger(DIK_F) || pPad->GetTrigger(CInputPad::JOYKEY::JOYKEY_Y))
 					{
 						if (pPlayer->m_Attack != pPlayerAttack)
 						{

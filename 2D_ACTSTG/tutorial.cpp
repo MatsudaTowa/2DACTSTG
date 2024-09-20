@@ -60,9 +60,12 @@ HRESULT CTutorial::Init()
 	m_pPlayer = new CPlayer;
 	m_pPlayer->Init(D3DXVECTOR3(-900.0f, 0.5f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5);
 
-	CTutorial_UI::Create(D3DXVECTOR3(-900.0f,40.0f,100.0f),D3DXVECTOR3(60.0f,40.0f,0.0f),CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_MOVE_KEYBOARD);
-	CTutorial_UI::Create(D3DXVECTOR3(-700.0f, 40.0f, 100.0f), D3DXVECTOR3(60.0f, 20.0f, 0.0f), CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_MELEE_MOUSE);
-	CTutorial_UI::Create(D3DXVECTOR3(-500.0f, 40.0f, 100.0f), D3DXVECTOR3(60.0f, 20.0f, 0.0f), CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_SLASH_MOUSE);
+
+	CTutorial_UI::Create(D3DXVECTOR3(-900.0f, 40.0f, 100.0f), D3DXVECTOR3(60.0f, 40.0f, 0.0f), CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_MOVE);
+	CTutorial_UI::Create(D3DXVECTOR3(-700.0f, 40.0f, 100.0f), D3DXVECTOR3(60.0f, 20.0f, 0.0f), CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_MELEE);
+	CTutorial_UI::Create(D3DXVECTOR3(-500.0f, 40.0f, 100.0f), D3DXVECTOR3(60.0f, 20.0f, 0.0f), CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_SLASH);
+
+
 	CTutorial_UI::Create(D3DXVECTOR3(-300.0f, 40.0f, 100.0f), D3DXVECTOR3(60.0f, 40.0f, 0.0f), CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_GAUGE);
 
 	CItem::Create(CItem::ITEMTYPE::ITEMTYPE_PANETRARING_SLASH, D3DXVECTOR3(-600.0f, 10.0f, 0.0f),D3DXVECTOR3(10.0f,10.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
@@ -90,9 +93,10 @@ void CTutorial::Update()
 {
 	CObject::UpdateAll();
 	CInputKeyboard* pKeyboard = CManager::GetKeyboard();
+	CInputPad* pPad = CManager::GetPad();
 
 	//CFade*pFade= CFade::GetFade();
-	if (pKeyboard->GetPress(DIK_RETURN))
+	if (pKeyboard->GetPress(DIK_RETURN) || pPad->GetPress(CInputPad::JOYKEY::JOYKEY_START))
 	{
 		m_pSkipUI->m_bPress = true; //‰Ÿ‚µ‚Ä‚éó‘Ô‚É
 		m_pSkipUI->ColorChange();

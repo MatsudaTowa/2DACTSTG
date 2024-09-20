@@ -82,9 +82,10 @@ void CTitle::Update()
 {
     CObject::UpdateAll();
     CInputKeyboard* pKeyboard = CManager::GetKeyboard();
+    CInputPad* pPad = CManager::GetPad();
 
     //CFade*pFade= CFade::GetFade();
-    if (pKeyboard->GetTrigger(DIK_RETURN))
+    if (pKeyboard->GetTrigger(DIK_RETURN) || pPad->GetTrigger(CInputPad::JOYKEY::JOYKEY_A))
     {
         CManager::SetMode(CScene::MODE::MODE_TUTORIAL);
     }

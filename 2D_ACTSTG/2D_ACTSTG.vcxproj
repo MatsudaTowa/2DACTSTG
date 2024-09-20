@@ -263,6 +263,9 @@
     <ClInclude Include="tutorial.h" />
     <ClInclude Include="tutorial_UI.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="2D_ACTSTG.rc" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

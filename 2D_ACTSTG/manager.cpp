@@ -23,6 +23,9 @@ CInputKeyboard*CManager::m_pKeyboard = nullptr;
 //マウス設定
 CInputMouse* CManager::m_pMouse = nullptr;
 
+//Pad設定
+CInputPad* CManager::m_pPad = nullptr;
+
 //カメラ設定
 CCamera*CManager::m_pCamera = nullptr;
 
@@ -80,6 +83,16 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 		//マウスの初期化処理
 		if (FAILED(m_pMouse->Init(hInstance, hWnd)))
+		{
+			return E_FAIL;
+		}
+	}
+	if (m_pPad == nullptr)
+	{
+		m_pPad = new CInputPad();
+
+		//マウスの初期化処理
+		if (FAILED(m_pPad->Init(hInstance, hWnd)))
 		{
 			return E_FAIL;
 		}
@@ -174,6 +187,8 @@ void CManager::Uninit()
 	m_pKeyboard->Uninit();
 	//マウスの終了処理
 	m_pMouse->Uninit();
+	//Padの終了処理
+	m_pPad->Uninit();
 }
 
 //=============================================
@@ -192,6 +207,7 @@ void CManager::Update()
 	m_pCamera->Update();
 	m_pKeyboard->Update();
 	m_pMouse->Update();
+	m_pPad->Update();
 
 	if (m_pScene != nullptr)
 	{
@@ -264,11 +280,19 @@ CInputKeyboard* CManager::GetKeyboard()
 }
 
 //=============================================
-//マウス情報取得
+//pad情報取得
 //=============================================
 CInputMouse* CManager::GetMouse()
 {
 	return m_pMouse;
+}
+
+//=============================================
+//マウス情報取得
+//=============================================
+CInputPad* CManager::GetPad()
+{
+	return m_pPad;
 }
 
 //=============================================

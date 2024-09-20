@@ -58,6 +58,8 @@ void CFlow_Range::Update()
 	//マウスの情報取得
 	CInputMouse* pMouse = CManager::GetMouse();
 
+	CInputPad* pPad = CManager::GetPad();
+
 	//頂点設定
 	SetVtxFlow_Range(D3DXVECTOR3(0.0f, 0.0f, -1.0f), D3DXCOLOR(0.5f, 0.0f, 0.0f, 0.7f));
 
@@ -81,7 +83,7 @@ void CFlow_Range::Update()
 				{
 					pEnemy->LockOn();
 
-					if (pMouse->GetRelease(0))
+					if (pMouse->GetRelease(0) || pPad->GetRelease(CInputPad::JOYKEY::JOYKEY_X))
 					{
 						pEnemy->LockOn_Flow();
 					}
@@ -89,7 +91,7 @@ void CFlow_Range::Update()
 			}
 		}
 	}
-	if (pMouse->GetRelease(0))
+	if (pMouse->GetRelease(0) || pPad->GetRelease(CInputPad::JOYKEY::JOYKEY_X))
 	{
 		//CFlow* pFlow = CFlow::Create(D3DXVECTOR3(pEnemy->GetPos().x, pEnemy->GetPos().y + 5.0f, -10.0f),
 		//	D3DXVECTOR3(20.0f, 20.0f, 0.0f), 90, 1, CFlow::FLOW_TYPE::FLOW_TYPE_PLAYER);

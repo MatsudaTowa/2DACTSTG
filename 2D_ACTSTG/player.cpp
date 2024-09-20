@@ -341,6 +341,7 @@ void CPlayer::Update()
 
 		//マウスの情報取得
 		CInputMouse* pMouse = CManager::GetMouse();
+		CInputPad* pPad = CManager::GetPad();
 
 		//どっち向いてるか取得
 		bool bWay = GetWay();
@@ -365,7 +366,7 @@ void CPlayer::Update()
 			}
 		}
 
-		if (pMouse->GetTrigger(1))
+		if (pMouse->GetTrigger(1) || pPad->GetTrigger(CInputPad::JOYKEY::JOYKEY_B))
 		{//右クリックが入力されたら
 			//近接攻撃処理
 			PerformMelee(pos, bWay);
@@ -543,6 +544,7 @@ void CPlayer::Gauge(CGauge* pGauge)
 
 	//マウスの情報取得
 	CInputMouse* pMouse = CManager::GetMouse();
+	CInputPad* pPad = CManager::GetPad();
 
 	//位置取得
 	D3DXVECTOR3 pos = GetPos();
@@ -550,7 +552,7 @@ void CPlayer::Gauge(CGauge* pGauge)
 	//貫通斬撃
 	if (m_ReleaseCnt > SLASH_COOLTIME &&pGauge->GetSize().x > (float)SLASH_COST && m_Attack == PLAYER_ATTACK_PANETRARING_SLASH)
 	{//ゲージがあり攻撃方法が貫通斬撃だったら
-		if (pMouse->GetPress(0))
+		if (pMouse->GetPress(0) || pPad->GetPress(CInputPad::JOYKEY::JOYKEY_X))
 		{//左クリックが押されてる間
 			//ゲージ消費(後に押された時間に応じて消費量変更)
 			m_PressCnt++;
@@ -575,7 +577,7 @@ void CPlayer::Gauge(CGauge* pGauge)
 
 		}
 	}
-	if (pMouse->GetRelease(0) && m_OldPress && m_Attack == PLAYER_ATTACK_PANETRARING_SLASH)
+	if ((pMouse->GetRelease(0) ||pPad->GetRelease(CInputPad::JOYKEY::JOYKEY_X)) && m_OldPress && m_Attack == PLAYER_ATTACK_PANETRARING_SLASH)
 	{//左クリックが離されたら
 		if (m_nChargeCnt >= MAX_CHARGE)
 		{//マックスチャージ量だったら
@@ -609,7 +611,7 @@ void CPlayer::Gauge(CGauge* pGauge)
 	}
 
 	//集中斬撃
-	if (m_ReleaseCnt > SLASH_COOLTIME && pGauge->GetSize().x > SLASH_COST && pMouse->GetTrigger(0) && m_Attack == PLAYER_ATTACK_FLOW)
+	if (m_ReleaseCnt > SLASH_COOLTIME && pGauge->GetSize().x > SLASH_COST && (pMouse->GetTrigger(0) || pPad->GetTrigger(CInputPad::JOYKEY::JOYKEY_X)) && m_Attack == PLAYER_ATTACK_FLOW)
 	{
 		//集中状態の範囲のポインタ初期化
 		CFlow_Range* pFlow_Range = nullptr;
@@ -639,7 +641,7 @@ void CPlayer::Gauge(CGauge* pGauge)
 			{
 				CFlow_Range* pFlow_Range = (CFlow_Range*)pObj;
 
-				if (pGauge->GetSize().x > 0.0f && pMouse->GetPress(0) && (pFlow_Range->GetMaxPos().x < 300.0f || pFlow_Range->GetMinPos().x > -300.0f) && m_Attack == PLAYER_ATTACK_FLOW)
+				if (pGauge->GetSize().x > 0.0f && (pMouse->GetPress(0) || pPad->GetPress(CInputPad::JOYKEY::JOYKEY_X)) && (pFlow_Range->GetMaxPos().x < 300.0f || pFlow_Range->GetMinPos().x > -300.0f) && m_Attack == PLAYER_ATTACK_FLOW)
 				{//左クリックが押されてる間
 					pFlow_Range->SizeUp(GetWay());
 
@@ -656,7 +658,7 @@ void CPlayer::Gauge(CGauge* pGauge)
 		}
 	}
 
-	if (m_OldPress &&pMouse->GetRelease(0) && m_Attack == PLAYER_ATTACK_FLOW)
+	if (m_OldPress && (pMouse->GetRelease(0) || pPad->GetRelease(CInputPad::JOYKEY::JOYKEY_X)) && m_Attack == PLAYER_ATTACK_FLOW)
 	{
 		m_bFlow = false;
 		m_OldPress = false;
@@ -692,6 +694,7 @@ void CPlayer::ReSpawn()
 void CPlayer::PlayerMove()
 {
 	CInputKeyboard* pKeyboard = CManager::GetKeyboard();
+	CInputPad* pPad = CManager::GetPad();
 	D3DXVECTOR3 vecDirection(0.0f, 0.0f, 0.0f);
 
 	//カメラタイプ取得
@@ -703,24 +706,24 @@ void CPlayer::PlayerMove()
 	switch (pCameraType)
 	{//サイドビューの時は横にしか動かないように設定
 	case CCamera::CANERA_TYPE::TYPE_SIDEVIEW:
-		if (pKeyboard->GetPress(DIK_A))
+		if (pKeyboard->GetPress(DIK_A) || pPad->GetPress(CInputPad::JOYKEY::JOYKEY_LEFT))
 		{
 			vecDirection.x -= 1.0f;
 			bWay = false;
 		}
-		else if (pKeyboard->GetPress(DIK_D))
+		else if (pKeyboard->GetPress(DIK_D) || pPad->GetPress(CInputPad::JOYKEY::JOYKEY_RIGHT))
 		{
 			vecDirection.x += 1.0f;
 			bWay = true;
 		}
 		break;
 	case CCamera::CANERA_TYPE::TYPE_PARALLEL_SIDEVIEW:
-		if (pKeyboard->GetPress(DIK_A))
+		if (pKeyboard->GetPress(DIK_A) || pPad->GetPress(CInputPad::JOYKEY::JOYKEY_LEFT))
 		{
 			vecDirection.x -= 1.0f;
 			bWay = false;
 		}
-		else if (pKeyboard->GetPress(DIK_D))
+		else if (pKeyboard->GetPress(DIK_D) || pPad->GetPress(CInputPad::JOYKEY::JOYKEY_RIGHT))
 		{
 			vecDirection.x += 1.0f;
 			bWay = true;
@@ -789,7 +792,7 @@ void CPlayer::PlayerMove()
 	}
 	if (m_nJumpCnt < MAX_JUMPCNT)
 	{//ジャンプ数以下だったら
-		if (pKeyboard->GetTrigger(DIK_SPACE))
+		if (pKeyboard->GetTrigger(DIK_SPACE) || pPad->GetTrigger(CInputPad::JOYKEY::JOYKEY_A))
 		{
 			move.y = DEFAULT_JUMP;
 			bLanding = false; //空中

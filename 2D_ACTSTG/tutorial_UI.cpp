@@ -11,7 +11,7 @@ const std::string CTutorial_UI::TEXTURE_NAME_MOVE_PAD = "data\\TEXTURE\\tutorial
 const std::string CTutorial_UI::TEXTURE_NAME_MOVE_KEYBOARD = "data\\TEXTURE\\tutorial_move_keyboard.png";
 const std::string CTutorial_UI::TEXTURE_NAME_MELEE_PAD = "data\\TEXTURE\\tutorial_melee_pad_B.png";
 const std::string CTutorial_UI::TEXTURE_NAME_MELEE_MOUSE = "data\\TEXTURE\\tutorial_melee_mouse_R.png";
-const std::string CTutorial_UI::TEXTURE_NAME_SLASH_PAD = "data\\TEXTURE\\tutorial_melee_mouse_R.png";
+const std::string CTutorial_UI::TEXTURE_NAME_SLASH_PAD = "data\\TEXTURE\\tutorial_slash_pad_X.png";
 const std::string CTutorial_UI::TEXTURE_NAME_SLASH_MOUSE = "data\\TEXTURE\\tutorial_slash_mouse_L.png";
 const std::string CTutorial_UI::TEXTURE_NAME_GAUGE = "data\\TEXTURE\\tutorial_gauge.png";
 
@@ -57,6 +57,50 @@ void CTutorial_UI::Update()
 {
 	//親クラスの更新
 	CObject3D::Update();
+
+	//テクスチャ取得
+	CTexture* pTexture = CManager::GetTexture();
+
+	CInputPad* pPad = CManager::GetPad();
+
+	switch (m_type)
+	{
+	case CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_MOVE:
+		if (pPad->GetConnet())
+		{
+			BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_MOVE_PAD))); //テクスチャの設定
+		}
+		else if (!pPad->GetConnet())
+		{
+			BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_MOVE_KEYBOARD))); //テクスチャの設定
+		}
+		break;
+	case CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_MELEE:
+		if (pPad->GetConnet())
+		{
+			BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_MELEE_PAD))); //テクスチャの設定
+		}
+		else if (!pPad->GetConnet())
+		{
+			BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_MELEE_MOUSE))); //テクスチャの設定
+		}
+		break;
+	case CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_SLASH:
+		if (pPad->GetConnet())
+		{
+			BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_SLASH_PAD))); //テクスチャの設定
+		}
+		else if (!pPad->GetConnet())
+		{
+			BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_SLASH_MOUSE))); //テクスチャの設定
+		}
+		break;
+	case CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_GAUGE:
+		BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_GAUGE))); //テクスチャの設定
+		break;
+	default:
+		break;
+	}
 }
 
 //=============================================
@@ -85,25 +129,41 @@ CTutorial_UI* CTutorial_UI::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, TUTORIAL_T
 	//テクスチャ取得
 	CTexture* pTexture = CManager::GetTexture();
 
-	switch (type)
+	CInputPad* pPad = CManager::GetPad();
+
+	pTutorialUI->m_type = type;
+
+	switch (pTutorialUI->m_type)
 	{
-	case CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_MOVE_PAD:
-		pTutorialUI->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_MOVE_PAD))); //テクスチャの設定
+	case CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_MOVE:
+		if (pPad->GetConnet())
+		{
+			pTutorialUI->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_MOVE_PAD))); //テクスチャの設定
+		}
+		else if (!pPad->GetConnet())
+		{
+			pTutorialUI->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_MOVE_KEYBOARD))); //テクスチャの設定
+		}
 		break;
-	case CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_MOVE_KEYBOARD:
-		pTutorialUI->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_MOVE_KEYBOARD))); //テクスチャの設定
+	case CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_MELEE:
+		if (pPad->GetConnet())
+		{
+			pTutorialUI->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_MELEE_PAD))); //テクスチャの設定
+		}
+		else if (!pPad->GetConnet())
+		{
+			pTutorialUI->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_MELEE_MOUSE))); //テクスチャの設定
+		}
 		break;
-	case CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_MELEE_PAD:
-		pTutorialUI->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_MELEE_PAD))); //テクスチャの設定
-		break;
-	case CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_MELEE_MOUSE:
-		pTutorialUI->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_MELEE_MOUSE))); //テクスチャの設定
-		break;
-	case CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_SLASH_PAD:
-		pTutorialUI->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_SLASH_PAD))); //テクスチャの設定
-		break;
-	case CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_SLASH_MOUSE:
-		pTutorialUI->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_SLASH_MOUSE))); //テクスチャの設定
+	case CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_SLASH:
+		if (pPad->GetConnet())
+		{
+			pTutorialUI->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_SLASH_PAD))); //テクスチャの設定
+		}
+		else if (!pPad->GetConnet())
+		{
+			pTutorialUI->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_SLASH_MOUSE))); //テクスチャの設定
+		}
 		break;	
 	case CTutorial_UI::TUTORIAL_TYPE::TUTORIAL_TYPE_GAUGE:
 		pTutorialUI->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME_GAUGE))); //テクスチャの設定

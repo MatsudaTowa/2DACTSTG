@@ -9,7 +9,7 @@
 #include "object.h"
 
 //texパス
-const std::string CSkip_UI::BUTTON_A_TEXTURE_NAME = "data\\TEXTURE\\skip_A.png";
+const std::string CSkip_UI::BUTTON_START_TEXTURE_NAME = "data\\TEXTURE\\skip_start.png";
 const std::string CSkip_UI::BUTTON_ENTER_TEXTURE_NAME = "data\\TEXTURE\\skip_enter.png";
 
 //=============================================
@@ -62,6 +62,19 @@ void CSkip_UI::Update()
 	//親クラスの更新呼ぶ
 	CObject2D::Update();
 
+	CTexture* pTexture = CManager::GetTexture();
+
+	CInputPad* pPad = CManager::GetPad();
+
+	if (pPad->GetConnet())
+	{
+		BindTexture(pTexture->GetAddress(pTexture->Regist(&BUTTON_START_TEXTURE_NAME)));
+	}
+	else if (!pPad->GetConnet())
+	{
+		BindTexture(pTexture->GetAddress(pTexture->Regist(&BUTTON_ENTER_TEXTURE_NAME)));
+	}
+
 	//頂点設定
 	SetVtx(1.0f, D3DXCOLOR(m_col));
 }
@@ -82,6 +95,7 @@ CSkip_UI* CSkip_UI::Create(D3DXVECTOR3 pos, D3DXVECTOR2 size)
 {
 	CTexture* pTexture = CManager::GetTexture();
 	CSkip_UI* pSkip_UI = new CSkip_UI;
+	CInputPad* pPad = CManager::GetPad();
 
 	//nullならnullを返す
 	if (pSkip_UI == nullptr) { return nullptr; }
@@ -90,7 +104,14 @@ CSkip_UI* CSkip_UI::Create(D3DXVECTOR3 pos, D3DXVECTOR2 size)
 
 	pSkip_UI->SetSize(size); //size設定
 
-	pSkip_UI->BindTexture(pTexture->GetAddress(pTexture->Regist(&BUTTON_ENTER_TEXTURE_NAME)));
+	if (pPad->GetConnet())
+	{
+		pSkip_UI->BindTexture(pTexture->GetAddress(pTexture->Regist(&BUTTON_START_TEXTURE_NAME)));
+	}
+	else if (!pPad->GetConnet())
+	{
+		pSkip_UI->BindTexture(pTexture->GetAddress(pTexture->Regist(&BUTTON_ENTER_TEXTURE_NAME)));
+	}
 
 	pSkip_UI->SetType(OBJECT_TYPE_TUTORIAL); //タイプ設定
 

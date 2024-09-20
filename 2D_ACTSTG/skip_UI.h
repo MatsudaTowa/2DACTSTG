@@ -13,7 +13,8 @@
 class CSkip_UI : public CObject2D
 {
 public:
-	static const std::string BUTTON_A_TEXTURE_NAME;	//テクスチャの名前
+
+	static const std::string BUTTON_START_TEXTURE_NAME;	//テクスチャの名前
 	static const std::string BUTTON_ENTER_TEXTURE_NAME;	//テクスチャの名前
 	static const int TITLE_SCREEN_PRIORITY = 10;  //描画順
 	static const int CHANGE_FRAME = 8;  //色のチェンジ
