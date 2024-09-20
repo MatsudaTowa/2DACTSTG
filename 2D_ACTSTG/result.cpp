@@ -80,7 +80,8 @@ void CResult::Update()
         m_pScore->Update();
     }
     CInputKeyboard* pKeyboard = CManager::GetKeyboard();
-    if (pKeyboard->GetTrigger(DIK_RETURN))
+    CInputPad* pPad = CManager::GetPad();
+    if (pKeyboard->GetTrigger(DIK_RETURN) || pPad->GetTrigger(CInputPad::JOYKEY::JOYKEY_A))
     {
         CManager::SetMode(CScene::MODE::MODE_TITLE);
     }
