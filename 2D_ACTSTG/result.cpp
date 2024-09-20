@@ -48,7 +48,7 @@ HRESULT CResult::Init()
 
     //ƒXƒRƒA‚É‚æ‚Á‚Ä•Ï‚¦‚é
     {
-        CEvaluation::Create(D3DXVECTOR3(200.0f,480.0f,0.0f),D3DXVECTOR2(200.0f,200.0f),CEvaluation::EVALUATION::EVALUATION_C);
+        CEvaluation::Create(D3DXVECTOR3(200.0f,480.0f,0.0f),D3DXVECTOR2(200.0f,200.0f),CEvaluation::EVALUATION::EVALUATION_S);
     }
     return S_OK;
 }
