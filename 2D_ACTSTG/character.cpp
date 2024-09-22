@@ -77,7 +77,6 @@ void CCharacter::Draw()
 		CObjectX::Draw();
 		break;
 	case CCharacter::CHARACTER_STATE::CHARACTER_DAMAGE:
-	
 		//ダメージ状態の色に変更
 		CObjectX::Draw(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
 		break;

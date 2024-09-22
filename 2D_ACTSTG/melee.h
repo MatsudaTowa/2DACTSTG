@@ -15,7 +15,7 @@ class CMelee : public CAttack_Manager
 {
 public:
 	static const std::string TEXTURE_NAME;	//テクスチャの名前
-	static const int MELEE_PRIORITY = 4; //描画順
+	static const int MELEE_PRIORITY = 30; //描画順
 	CMelee(int nPriority = MELEE_PRIORITY);
 	~CMelee()override;
 	HRESULT Init()override;

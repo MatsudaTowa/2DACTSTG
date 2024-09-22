@@ -133,20 +133,20 @@ public:
 	bool GetTrigger(JOYKEY Key);
 	bool GetRelease(JOYKEY Key);
 	XINPUT_STATE* GetXInputState(void);
-	void UpdateStick(void);
+	void UpdateStick(XINPUT_STATE state);
 	STICKINPUT GetStick(void);
 	float FindAngle(D3DXVECTOR3 pos, D3DXVECTOR3 TargetPos);
 	WORD GetJoypadStick(SHORT sThumbX, SHORT sThumbY, SHORT sDeadZone);
 private:
 	//コントローラー
 	bool m_Connect; //接続されてるかどうか
-	XINPUT_STATE m_joyKeyState; //ジョイパッドのプレス情報
-	XINPUT_STATE m_joyKeyStateTrigger; //ジョイパッドのトリガー情報
-	XINPUT_STATE m_joyKeyStateRepeat; //ジョイパッドのリピート情報
-	XINPUT_STATE m_ajoyKeyStateRelease; //コントローラーのリリース情報
-	XINPUT_STATE m_aJoypadCurrentTime; //コントローラーの現在の時間
-	XINPUT_STATE m_aJoypadExecLastTime; //コントローラーの最後に真を返した時間
-	XINPUT_STATE m_JoypadInput; //コントローラーの入力情報
+	WORD m_joyKeyState; //ジョイパッドのプレス情報
+	WORD m_joyKeyStateTrigger; //ジョイパッドのトリガー情報
+	WORD m_joyKeyStateRepeat; //ジョイパッドのリピート情報
+	WORD m_ajoyKeyStateRelease; //コントローラーのリリース情報
+	WORD m_aJoypadCurrentTime; //コントローラーの現在の時間
+	WORD m_aJoypadExecLastTime; //コントローラーの最後に真を返した時間
+	WORD m_JoypadInput; //コントローラーの入力情報
 	D3DXVECTOR3 m_joyStickPos; //スティックの傾き
 	bool m_bAngle[STICKTYPE_MAX][STICKANGLE_MAX]; //スティックの入力情報
 	DWORD m_aStickCurrentTime[STICKTYPE_MAX][STICKANGLE_MAX]; //スティックの現在の時間
