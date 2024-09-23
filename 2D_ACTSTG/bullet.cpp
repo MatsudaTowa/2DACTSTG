@@ -341,6 +341,9 @@ void CElecBullet::Update()
 
 		if (m_nStandbyCnt <= 0)
 		{//0以下になったら
+			CSound* pSound = CManager::GetSound();
+
+			pSound->PlaySound(CSound::SOUND_LABEL::SOUND_LABEL_SE_BOSS_SHOT);
 			m_Electype = CElecBullet::ELECTYPE::TYPE_MOVE;
 			float x = m_TargetPos.x - GetPos().x; //敵との距離の差分計算（横）
 			float y = m_TargetPos.y - GetPos().y; //敵との距離の差分計算（縦）

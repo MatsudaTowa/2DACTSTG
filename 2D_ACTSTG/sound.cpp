@@ -7,6 +7,11 @@ const CSound::SOUNDINFO CSound::m_aSoundInfo[CSound::SOUND_LABEL::SOUND_LABEL_MA
 	{"data/SOUND/BGM/game.wav", -1,0.5f},         //BGM2
 	{"data/SOUND/BGM/boss.wav", -1,0.5f},         //BGM3
 	{"data/SOUND/BGM/result.wav", -1,0.5f},         //BGM4
+	{"data/SOUND/SE/select.wav", 0,1.5f},         //SE0
+	{"data/SOUND/SE/shot_slash.wav", 0,0.5f},         //SE1
+	{"data/SOUND/SE/flow.wav", 0,0.5f},         //SE2
+	{"data/SOUND/SE/slash.wav", 0,0.5f},         //SE3
+	{"data/SOUND/SE/boss_shot.wav", 0,0.5f},         //SE4
 };
 CSound::CSound()
 {

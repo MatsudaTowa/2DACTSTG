@@ -87,6 +87,9 @@ void CTitle::Update()
     //CFade*pFade= CFade::GetFade();
     if (pKeyboard->GetTrigger(DIK_RETURN) || pPad->GetTrigger(CInputPad::JOYKEY::JOYKEY_A))
     {
+		CSound* pSound = CManager::GetSound();
+
+		pSound->PlaySound(CSound::SOUND_LABEL::SOUND_LABEL_SE_SELECT);
         CManager::SetMode(CScene::MODE::MODE_TUTORIAL);
     }
 }

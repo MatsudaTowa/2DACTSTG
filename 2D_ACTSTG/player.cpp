@@ -591,6 +591,9 @@ void CPlayer::Gauge(CGauge* pGauge)
 		{//それ以下だったら
 			m_nSlashDamage = 1;
 		}
+		CSound* pSound = CManager::GetSound();
+
+		pSound->PlaySound(CSound::SOUND_LABEL::SOUND_LABEL_SE_SHOT);
 		//弾発射
 		ShotBullet(pos,4.0f, m_SlashSize, bWay, m_nSlashDamage, CBullet::BULLET_ALLEGIANCE_PLAYER,CBullet::BULLET_TYPE_PANETRARING_SLASH);
 
@@ -666,6 +669,9 @@ void CPlayer::Gauge(CGauge* pGauge)
 		m_OldRelease = true;
 		//離されてからのカウントリセット
 		m_ReleaseCnt = 0;
+		CSound* pSound = CManager::GetSound();
+
+		pSound->PlaySound(CSound::SOUND_LABEL::SOUND_LABEL_SE_FLOW);
 	}
 
 	if (m_OldRelease)
