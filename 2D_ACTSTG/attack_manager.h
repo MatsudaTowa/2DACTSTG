@@ -51,5 +51,7 @@ private:
 
 	int m_nLife; //õ–½
 	int m_nDamage; //ƒ_ƒ[ƒW
+	int m_nNumkill; //‰½‘Ì“|‚µ‚½‚©
+
 };
 #endif

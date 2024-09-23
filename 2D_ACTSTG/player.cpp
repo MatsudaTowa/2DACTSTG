@@ -669,9 +669,6 @@ void CPlayer::Gauge(CGauge* pGauge)
 		m_OldRelease = true;
 		//離されてからのカウントリセット
 		m_ReleaseCnt = 0;
-		CSound* pSound = CManager::GetSound();
-
-		pSound->PlaySound(CSound::SOUND_LABEL::SOUND_LABEL_SE_FLOW);
 	}
 
 	if (m_OldRelease)

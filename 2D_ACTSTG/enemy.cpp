@@ -360,40 +360,12 @@ void CEnemy::Damage(int nDamage)
 			m_bLockOn = false;
 		}
 
-		//Œ»Ý‚ÌƒV[ƒ“‚ðŽæ“¾
-		CScene::MODE pScene = CScene::GetSceneMode();
-
-		if (pScene == CScene::MODE::MODE_GAME)
-		{
-			CScore* pScore = CGame::GetScore();
-
-			switch (m_Type)
-			{
-			case CEnemy::ENEMY_TYPE::ENEMY_TYPE_BOSS:
-				pScore->AddScore(1000);
-				break;
-			case CEnemy::ENEMY_TYPE::ENEMY_TYPE_FLY:
-				pScore->AddScore(50);
-				break;
-			case CEnemy::ENEMY_TYPE::ENEMY_TYPE_FLOW:
-				pScore->AddScore(500);
-				break;
-			case CEnemy::ENEMY_TYPE::ENEMY_TYPE_NORMAL:
-				pScore->AddScore(100);
-				break;
-			default:
-				break;
-			}
-		}
-
-
 		if (m_Type == CEnemy::ENEMY_TYPE::ENEMY_TYPE_BOSS)
 		{
 			CBossEnemy::m_BossDeath = true;
 			//CManager::SetMode(CScene::MODE::MODE_RESULT);
 		}
 
-		Uninit();
 		return;
 	}
 }
@@ -486,7 +458,9 @@ void CEnemy::LockOn_Flow()
 		}
 		CFlow::Create(D3DXVECTOR3(m_pLockOn->GetPos().x, m_pLockOn->GetPos().y + 5.0f, -10.0f),
 			D3DXVECTOR3(10.0f, 10.0f, 0.0f), nFlowLife,1,CFlow::FLOW_TYPE::FLOW_TYPE_PLAYER);
+		CSound* pSound = CManager::GetSound();
 
+		pSound->PlaySound(CSound::SOUND_LABEL::SOUND_LABEL_SE_FLOW);
 		m_pLockOn->Uninit();
 		m_pLockOn = nullptr;
 		m_bLockOn = false;

@@ -10,11 +10,13 @@
 #include "player.h"
 #include "block.h"
 #include "field.h"
+#include "score.h"
+#include"game.h"
 
 //=============================================
 //コンストラクタ
 //=============================================
-CAttack_Manager::CAttack_Manager(int nPriority) : CBillboard(nPriority),m_nLife(0),m_nDamage(0)
+CAttack_Manager::CAttack_Manager(int nPriority) : CBillboard(nPriority),m_nLife(0),m_nDamage(0),m_nNumkill(0)
 {//イニシャライザーでプライオリティ設定、体力とダメージ初期化
 }
 
@@ -97,6 +99,39 @@ bool CAttack_Manager::HitEnemy()
 				if (ColisionCheck != CColision::COLISION::COLISON_NONE)
 				{//当たってたら
 					pEnemy->Damage(m_nDamage);
+					int nCurrentLife = pEnemy->GetLife();
+					if (nCurrentLife <= 0)
+					{
+						m_nNumkill++;
+						//現在のシーンを取得
+						CScene::MODE pScene = CScene::GetSceneMode();
+
+						if (pScene == CScene::MODE::MODE_GAME)
+						{
+							CScore* pScore = CGame::GetScore();
+
+							int nAddScore = 0;
+							switch (pEnemy->m_Type)
+							{
+							case CEnemy::ENEMY_TYPE::ENEMY_TYPE_BOSS:
+								nAddScore = 1000;
+								break;
+							case CEnemy::ENEMY_TYPE::ENEMY_TYPE_FLY:
+								nAddScore = 100;
+								break;
+							case CEnemy::ENEMY_TYPE::ENEMY_TYPE_FLOW:
+								nAddScore = 500;
+								break;
+							case CEnemy::ENEMY_TYPE::ENEMY_TYPE_NORMAL:
+								nAddScore = 300;
+								break;
+							default:
+								break;
+							}
+							pScore->AddScore(nAddScore);
+						}
+						pEnemy->Uninit();
+					}
 					return true;
 				}
 			}
