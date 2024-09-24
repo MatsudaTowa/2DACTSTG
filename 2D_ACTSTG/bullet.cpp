@@ -307,8 +307,6 @@ HRESULT CElecBullet::Init()
 	//スタンバイ状態の時間を設定
 	m_nStandbyCnt = CBossEnemy::BOSS_SHOT_FRAME * CBossEnemy::CREATE_BULLET;
 
-
-
 	return S_OK;
 }
 
@@ -383,9 +381,13 @@ void CElecBullet::Update()
 						//自分自身のpos取得
 						D3DXVECTOR3 pos = GetPos();
 
+						/*SetMove(D3DXVECTOR3(x, y, 0));*/
+
 						pos += pEnemy->GetMove();
 
 						SetPos(pos);
+
+						//m_fAngle+= 0.2f;
 					}
 				}
 			}

@@ -15,7 +15,7 @@ const int CEffect::TEX_SPLIT_Y = 1;
 const int CEffect::ANIMATION_FRAME = 5;
 
 //texパス
-const std::string CEffect::TEXTURE_NAME = "data\\TEXTURE\\effect000.jpg";
+const std::string CEffect::TEXTURE_NAME = "data\\TEXTURE\\120.png";
 
 //テクスチャ初期化
 LPDIRECT3DTEXTURE9 CEffect::m_pTextureTemp = nullptr;

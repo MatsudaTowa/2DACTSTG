@@ -164,6 +164,7 @@ public:
 	static const int BOSS_SHOT_FRAME = 20; //発射するカウント
 	static const int CREATE_BULLET = 6; //生成する弾の数
 	static const float BOSS_MOVE; //通常時の移動	 
+	static const float CREATE_RADIUS; //生成する弾の位置
 
 	CBossEnemy(int nPriority = ENEMY_PRIORITY);
 	~CBossEnemy()override;
@@ -177,7 +178,6 @@ public:
 private:
 	static const int BOSS_ENEMY_TURNFRAME = 120; //飛んでるエネミーの移動折り返しフレーム
 	static const int ENEMY_BOSS_LIFE = 10; //エネミーの体力
-	static const float CREATE_RADIUS; //生成する弾の位置
 
 	int m_nShotCnt; //弾を発射するカウント
 	int m_nNumBullet; //クリエイトされた弾を数える
