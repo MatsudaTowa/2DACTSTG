@@ -7,7 +7,6 @@
 #include "fade.h"
 #include"manager.h"
 
-
 //アルファ値減少量
 const float CFade::FADE_VALUE = 0.1f;
 

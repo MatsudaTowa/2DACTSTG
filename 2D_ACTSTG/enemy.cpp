@@ -14,6 +14,7 @@
 #include "flow.h"
 #include "score.h"
 #include "game.h"
+#include"sound.h"
 
 //’Êí‚ÌˆÚ“®‘¬“x
 const float CEnemy::DEFAULT_MOVE = 0.3f;
@@ -330,6 +331,12 @@ void CEnemy::Damage(int nDamage)
 	{//HP‚ª0ˆÈ‰º‚¾‚Á‚½‚ç
 		//”jŠü
 		//CItem* pItem = nullptr;
+
+		CSound* pSound = CManager::GetSound();
+		//ƒTƒEƒ“ƒh‚Ì’âŽ~
+		pSound->StopSound();
+
+		pSound->PlaySound(CSound::SOUND_LABEL::SOUND_LABEL_SE_SLASH);
 
 		switch (m_Type)
 		{
