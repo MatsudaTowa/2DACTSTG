@@ -1035,7 +1035,7 @@ void CFlyEnemy::EnemyMove()
 
 //’e‚ğ¶¬‚·‚é‰~ü‚Ì”¼Œa
 const float CBossEnemy::CREATE_RADIUS = 35.0f;
-const float CBossEnemy::BOSS_MOVE = 0.2f;
+const float CBossEnemy::BOSS_MOVE = 0.35f;
 
 bool CBossEnemy::m_BossDeath = false;
 

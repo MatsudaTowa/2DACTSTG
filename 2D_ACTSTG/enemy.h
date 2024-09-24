@@ -22,7 +22,7 @@ public:
 	static const int ENEMY_PRIORITY = 4; //描画順
 	static const float DEFAULT_MOVE; //通常時の移動	 
 
-	static const int NORMAL_SHOT_FRAME = 120; //発射するカウント
+	static const int NORMAL_SHOT_FRAME = 140; //発射するカウント
 	//エネミーの列挙定義
 	typedef enum
 	{
