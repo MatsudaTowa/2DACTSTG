@@ -333,8 +333,6 @@ void CEnemy::Damage(int nDamage)
 		//CItem* pItem = nullptr;
 
 		CSound* pSound = CManager::GetSound();
-		//ƒTƒEƒ“ƒh‚Ì’âŽ~
-		pSound->StopSound();
 
 		pSound->PlaySound(CSound::SOUND_LABEL::SOUND_LABEL_SE_SLASH);
 
